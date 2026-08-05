@@ -1,0 +1,80 @@
+{
+ "hunt_id": "example",
+ "title": "Example Hunt (fixture \u2014 not a real game)",
+ "rows": 14,
+ "cols": 11,
+ "n_clues": 7,
+ "entries": [
+  {
+   "number": 1,
+   "dir": "D",
+   "row": 0,
+   "col": 1,
+   "idx": 3,
+   "length": 6
+  },
+  {
+   "number": 2,
+   "dir": "A",
+   "row": 2,
+   "col": 0,
+   "idx": 1,
+   "length": 7
+  },
+  {
+   "number": 3,
+   "dir": "D",
+   "row": 2,
+   "col": 4,
+   "idx": 2,
+   "length": 7
+  },
+  {
+   "number": 4,
+   "dir": "D",
+   "row": 6,
+   "col": 7,
+   "idx": 5,
+   "length": 5
+  },
+  {
+   "number": 5,
+   "dir": "D",
+   "row": 7,
+   "col": 9,
+   "idx": 6,
+   "length": 7
+  },
+  {
+   "number": 6,
+   "dir": "A",
+   "row": 8,
+   "col": 4,
+   "idx": 4,
+   "length": 7
+  },
+  {
+   "number": 7,
+   "dir": "A",
+   "row": 12,
+   "col": 5,
+   "idx": 7,
+   "length": 6
+  }
+ ],
+ "meta_cells": [
+  [
+   8,
+   7
+  ],
+  [
+   12,
+   6
+  ],
+  [
+   11,
+   9
+  ]
+ ],
+ "meta_hint": "The shaded squares, in reading order of discovery, name your prize."
+}

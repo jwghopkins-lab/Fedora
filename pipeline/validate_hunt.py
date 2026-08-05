@@ -1,0 +1,150 @@
+#!/usr/bin/env python3
+"""Validate a hunt definition file (the PRIVATE content: answers + clue text).
+
+Structure ported from TRIVIUM's validate_bank.py (validate a JSON bank, report
+per-item rejections, fail loudly) but the checks are hunt-shaped:
+
+- answers: A-Z only, 3-15 chars, unique, no answer contained in another
+- grid: legal freeform crossword via gridlib (conflicts, adjacency,
+  connectivity, every word crosses, bbox)
+- unlock graph: at least one start clue; every clue reachable under its
+  any/all semantics; no dependency cycles; the final clue exists
+- {N} placeholders in clue text: N must be guaranteed-solved at reveal time
+  (i.e. N in unlocked_by, and unlock_mode == 'all' or unlocked_by == [N])
+- leak rules: no answer appears literally in ANY clue text (chaining is done
+  with {N} placeholders, never by writing an answer into a clue)
+- teams: codes unique, 6-40 chars, alphanumeric
+- meta letters (optional): meta.cells must be filled grid cells and spell
+  meta.answer
+
+Exit code 1 on any failure — gate CI on the exit code, never on output text
+(TRIVIUM trap: grepping for success phrases let a real warning sail through).
+
+Usage: validate_hunt.py <hunt.json>
+"""
+import json
+import re
+import sys
+from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import gridlib
+
+
+def check(hunt):
+    fails = []
+    clues = hunt.get("clues", [])
+    if not clues:
+        return ["no clues"]
+    idxs = [c["idx"] for c in clues]
+    if sorted(idxs) != list(range(1, len(clues) + 1)):
+        fails.append(f"idx must be 1..{len(clues)}, got {sorted(idxs)}")
+    by_idx = {c["idx"]: c for c in clues}
+
+    # answers
+    for c in clues:
+        if not re.fullmatch(r"[A-Z]{3,15}", c["answer"]):
+            fails.append(f"clue {c['idx']}: bad answer {c['answer']!r}")
+    answers = [c["answer"] for c in clues]
+    if len(set(answers)) != len(answers):
+        fails.append("duplicate answers")
+    for a in answers:
+        for b in answers:
+            if a != b and a in b:
+                fails.append(f"answer {a} is contained in {b}")
+
+    # grid legality (independent of the unlock graph)
+    placements = [{"idx": c["idx"], "answer": c["answer"], "row": c["row"],
+                   "col": c["col"], "dir": c["dir"]} for c in clues]
+    fails += gridlib.hard_violations(placements)
+
+    # unlock graph
+    starts = [c["idx"] for c in clues if not c.get("unlocked_by")]
+    if not starts:
+        fails.append("no start clue (every clue has prerequisites)")
+    for c in clues:
+        for n in c.get("unlocked_by", []):
+            if n not in by_idx:
+                fails.append(f"clue {c['idx']}: unknown prerequisite {n}")
+            if n == c["idx"]:
+                fails.append(f"clue {c['idx']}: depends on itself")
+    # reachability under any/all semantics (monotone fixpoint)
+    solved = set()
+    changed = True
+    while changed:
+        changed = False
+        for c in clues:
+            if c["idx"] in solved:
+                continue
+            need = c.get("unlocked_by", [])
+            mode = c.get("unlock_mode", "any")
+            ok = (not need or
+                  (all(n in solved for n in need) if mode == "all"
+                   else any(n in solved for n in need)))
+            if ok:
+                solved.add(c["idx"])
+                changed = True
+    unreachable = set(idxs) - solved
+    if unreachable:
+        fails.append(f"unreachable clues (cycle or bad graph): {sorted(unreachable)}")
+
+    # placeholders + leaks
+    for c in clues:
+        text = c["clue_text"]
+        if not (10 <= len(text) <= 1000):
+            fails.append(f"clue {c['idx']}: clue_text length {len(text)}")
+        for m in re.finditer(r"\{(\d+)\}", text):
+            n = int(m.group(1))
+            need = c.get("unlocked_by", [])
+            mode = c.get("unlock_mode", "any")
+            guaranteed = n in need and (mode == "all" or need == [n])
+            if not guaranteed:
+                fails.append(f"clue {c['idx']}: placeholder {{{n}}} not guaranteed "
+                             f"solved at reveal (unlocked_by={need}, mode={mode})")
+        for a in answers:
+            if re.search(rf"\b{re.escape(a)}\b", text, re.I):
+                fails.append(f"answer {a} leaks in clue {c['idx']} text")
+
+    # teams
+    codes = [t["code"] for t in hunt.get("teams", [])]
+    if len(set(codes)) != len(codes):
+        fails.append("duplicate team codes")
+    for t in hunt.get("teams", []):
+        if not re.fullmatch(r"[A-Za-z0-9]{6,40}", t["code"]):
+            fails.append(f"team {t['name']!r}: bad code")
+
+    # optional meta puzzle: marked cells must exist and spell the meta answer
+    meta = hunt.get("meta")
+    if meta:
+        letters, _, _ = gridlib.build_grid(gridlib.normalize(placements))
+        got = []
+        for (r, c) in (tuple(x) for x in meta["cells"]):
+            if (r, c) not in letters:
+                fails.append(f"meta cell ({r},{c}) is not a filled cell")
+            else:
+                got.append(letters[(r, c)])
+        if "".join(got) != meta["answer"]:
+            fails.append(f"meta cells spell {''.join(got)!r}, expected {meta['answer']!r}")
+        for a in answers:
+            if meta["answer"] == a:
+                fails.append("meta answer duplicates a grid answer")
+
+    return fails
+
+
+def main():
+    if len(sys.argv) != 2:
+        print(__doc__)
+        return 2
+    hunt = json.loads(Path(sys.argv[1]).read_text())
+    fails = check(hunt)
+    for f in fails:
+        print(f"FAIL: {f}")
+    print(f"{sys.argv[1]}: {len(hunt.get('clues', []))} clues, "
+          f"{len(hunt.get('teams', []))} teams — "
+          f"{'INVALID' if fails else 'valid'}")
+    return 1 if fails else 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

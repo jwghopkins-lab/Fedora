@@ -1,0 +1,21 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  pipeline:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      # gate on exit codes, never on grepping output for success phrases
+      - name: Validate fixture hunt
+        run: python3 pipeline/validate_hunt.py hunt/example_hunt.json
+      - name: Build fixture artifacts
+        run: python3 pipeline/build_hunt.py hunt/example_hunt.json --seed-out /tmp
+      - name: Backend semantics drive (mock)
+        run: python3 pipeline/test_backend.py
+      - name: Site build (whitelist)
+        run: python3 pipeline/deploy_pages.py --out /tmp/_site
