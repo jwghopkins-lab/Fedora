@@ -33,6 +33,29 @@ SUBS = []   # {team, clue_idx, guess, correct, t}
 LOCK = threading.Lock()
 
 
+def iso_to_epoch(v):
+    """Accept null / ISO-8601 string / epoch number, like the hunt file may hold."""
+    if v is None:
+        return None
+    if isinstance(v, (int, float)):
+        return float(v)
+    from datetime import datetime, timezone
+    return datetime.fromisoformat(v.replace("Z", "+00:00")).timestamp()
+
+
+def iso(ts):
+    from datetime import datetime, timezone
+    return datetime.fromtimestamp(ts, tz=timezone.utc).isoformat()
+
+
+STARTS_AT = iso_to_epoch(HUNT.get("starts_at"))
+ACTIVE = HUNT.get("active", True)
+
+
+def started():
+    return STARTS_AT is None or time.time() >= STARTS_AT
+
+
 def norm_code(code):
     return "".join((code or "").upper().split())
 
@@ -50,7 +73,8 @@ def solved_at(team):
 
 
 def is_unlocked(team, c):
-    if c.get("available_from") and time.time() < c["available_from"]:
+    af = iso_to_epoch(c.get("available_from"))
+    if af is not None and time.time() < af:
         return False
     need, mode = c.get("unlocked_by", []), c.get("unlock_mode", "any")
     if not need:
@@ -63,7 +87,7 @@ def state(team):
     done = solved_at(team)
     return {
         "solved": [{"idx": i, "answer": CLUES[i]["answer"],
-                    "solved_at": done[i]} for i in sorted(done)],
+                    "solved_at": iso(done[i])} for i in sorted(done)],
         "unlocked": [{"idx": i, "clue_text": CLUES[i]["clue_text"]}
                      for i in sorted(CLUES)
                      if i not in done and is_unlocked(team, CLUES[i])],
@@ -74,15 +98,24 @@ def rpc_join(body):
     team = TEAMS.get(norm_code(body.get("p_code")))
     if not team:
         return {"status": "bad_code"}
-    return {"status": "ok", "team_name": team, "hunt_id": HUNT["hunt_id"],
-            "title": HUNT["title"], "starts_at": HUNT.get("starts_at"),
-            "started": True, **state(norm_code(body["p_code"]))}
+    if not ACTIVE:
+        return {"status": "inactive"}
+    base = {"status": "ok", "team_name": team, "hunt_id": HUNT["hunt_id"],
+            "title": HUNT["title"], "starts_at": HUNT.get("starts_at")}
+    if not started():
+        # pre-start, the read path reveals nothing (mirrors fedora_join)
+        return {**base, "started": False, "solved": [], "unlocked": []}
+    return {**base, "started": True, **state(norm_code(body["p_code"]))}
 
 
 def rpc_submit(body):
     code = norm_code(body.get("p_code"))
     if code not in TEAMS:
         return {"status": "bad_code"}
+    if not ACTIVE:
+        return {"status": "inactive"}
+    if not started():
+        return {"status": "not_started", "starts_at": HUNT.get("starts_at")}
     idx = body.get("p_idx")
     c = CLUES.get(idx)
     if not c:
@@ -118,7 +151,7 @@ def rpc_leaderboard(body):
         mine = [s for s in SUBS if s["team"] == code]
         done = solved_at(code)
         rows.append({"team_name": name, "solved": len(done), "guesses": len(mine),
-                     "last_solve": max(done.values()) if done else None})
+                     "last_solve": iso(max(done.values())) if done else None})
     rows.sort(key=lambda r: (-r["solved"], r["last_solve"] or float("inf")))
     return rows
 

@@ -82,3 +82,58 @@ try:
     print("MOCK DRIVE PASS")
 finally:
     srv.kill()
+
+
+# ---- variant hunts: the paths the fixture's nulls would otherwise never test
+import copy
+import tempfile
+
+BASEHUNT = json.loads((MOCK.parent.parent / "hunt" / "example_hunt.json").read_text())
+
+
+def with_variant(mutate, port, checks):
+    hunt = copy.deepcopy(BASEHUNT)
+    mutate(hunt)
+    with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
+        json.dump(hunt, f)
+        path = f.name
+    global BASE
+    BASE = f"http://localhost:{port}"
+    p = subprocess.Popen(["python3", str(MOCK), str(port), path], env=os.environ)
+    time.sleep(0.8)
+    try:
+        checks()
+    finally:
+        p.kill()
+
+
+def pre_start_checks():
+    r = rpc("fedora_join", p_code="TESTTEAM1")
+    expect(r["status"] == "ok" and r["started"] is False,
+           "pre-start join reports started=false")
+    expect(r["solved"] == [] and r["unlocked"] == [],
+           "pre-start join reveals NO clue text (leak fix)")
+    r = rpc("fedora_submit", p_code="TESTTEAM1", p_idx=1, p_guess="CRIMSON")
+    expect(r["status"] == "not_started", "pre-start submit blocked")
+
+
+def inactive_checks():
+    r = rpc("fedora_join", p_code="TESTTEAM1")
+    expect(r["status"] == "inactive", "inactive hunt refuses join")
+    r = rpc("fedora_submit", p_code="TESTTEAM1", p_idx=1, p_guess="CRIMSON")
+    expect(r["status"] == "inactive", "inactive hunt refuses submit")
+
+
+def timed_clue_checks():
+    r = rpc("fedora_join", p_code="TESTTEAM1")
+    expect([u["idx"] for u in r["unlocked"]] == [2],
+           "future available_from keeps clue 1 hidden, clue 2 open")
+    r = rpc("fedora_submit", p_code="TESTTEAM1", p_idx=1, p_guess="CRIMSON")
+    expect(r["status"] == "locked", "timed clue rejects submit before release")
+
+
+with_variant(lambda h: h.update(starts_at="2999-01-01T00:00:00Z"), PORT + 1, pre_start_checks)
+with_variant(lambda h: h.update(active=False), PORT + 2, inactive_checks)
+with_variant(lambda h: h["clues"][0].update(available_from="2999-01-01T00:00:00Z"),
+             PORT + 3, timed_clue_checks)
+print("VARIANT DRIVES PASS")

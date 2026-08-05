@@ -217,9 +217,11 @@ let GRID = null;          // grid.json: rows, cols, entries[{idx,number,dir,row,
 let CELLS = null;         // "r,c" -> {entries: [idx...], num, mnum, el}
 let SRV = { solved: {}, unlocked: {} };   // idx -> {answer, at} / idx -> clue_text
 let TEAM = null, CODE = null;
+let STARTED = true, STARTS_AT = null;
 let sel = null;           // {idx, i} — selected entry (by hunt idx) + cursor offset
 let badKeys = new Set();
 let pollInt = null;
+let submitting = false;   // sync() must not clobber state mid-submit
 
 function toast(msg) {
   $("toast").textContent = msg;
@@ -379,6 +381,13 @@ function renderClues() {
     if (state === "open") div.onclick = () => select(e.idx, firstGap(e.idx));
     list.appendChild(div);
   }
+  if (!STARTED) {
+    const wait = document.createElement("div");
+    wait.className = "metacard";
+    wait.innerHTML = `<b>The hunt has not started.</b> Clues appear here at the
+      off${STARTS_AT ? " — " + escapeHtml(new Date(STARTS_AT).toLocaleString()) : ""}.`;
+    list.prepend(wait);
+  }
   const meta = document.createElement("div");
   meta.className = "metacard";
   meta.innerHTML = `<b>The marked squares</b> — ${escapeHtml(GRID.meta_hint || "")}` +
@@ -486,6 +495,7 @@ async function submitSel() {
   const word = assembled(idx);
   if (word.includes("·")) { toast("Fill the whole word first"); return; }
   $("submitbtn").disabled = true;
+  submitting = true;
   try {
     const r = await rpc("fedora_submit", { p_code: CODE, p_idx: idx, p_guess: word });
     if (r.status === "correct") {
@@ -517,6 +527,7 @@ async function submitSel() {
   } catch (err) {
     toast("No signal — try again");
   } finally {
+    submitting = false;
     $("submitbtn").disabled = false;
   }
 }
@@ -529,13 +540,17 @@ function applyState(r) {
   for (const u of r.unlocked || []) SRV.unlocked[u.idx] = u.clue_text;
 }
 async function sync() {
+  if (submitting) return;   // a poll snapshot can predate an in-flight solve
   try {
     const r = await rpc("fedora_join", { p_code: CODE });
-    if (r.status !== "ok") return;
+    if (r.status !== "ok" || submitting) return;
+    const wasStarted = STARTED;
+    STARTED = r.started !== false;
+    STARTS_AT = r.starts_at;
     const before = Object.keys(SRV.solved).length + ":" + Object.keys(SRV.unlocked).length;
     applyState(r);
     const after = Object.keys(SRV.solved).length + ":" + Object.keys(SRV.unlocked).length;
-    if (before !== after) {
+    if (before !== after || wasStarted !== STARTED) {
       if (sel && !isOpen(sel.idx)) deselect(); else { renderClues(); updateGrid(); }
       if (Object.keys(SRV.solved).length === GRID.n_clues) showWin();
     }
@@ -549,6 +564,14 @@ async function join(code) {
       : "Hunt unavailable: " + r.status;
     return false;
   }
+  if (r.hunt_id !== GRID.hunt_id) {
+    // a stale code for another hunt must not be mapped onto this grid
+    LS.del("code");
+    $("joinerr").textContent = "That code belongs to a different hunt.";
+    return false;
+  }
+  STARTED = r.started !== false;
+  STARTS_AT = r.starts_at;
   CODE = code; TEAM = r.team_name;
   LS.set("code", code);
   $("hunttitle").textContent = r.title || GRID.title;

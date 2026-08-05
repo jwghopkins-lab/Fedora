@@ -108,10 +108,17 @@ begin
   if not found then return jsonb_build_object('status', 'bad_code'); end if;
   select * into h from public.hunts where id = t.hunt_id;
   if not h.active then return jsonb_build_object('status', 'inactive'); end if;
+  -- before the start gun, the read path must reveal NOTHING: the submit gate
+  -- alone is not enough — teams could otherwise read the opening clues the
+  -- night before and pre-position
+  if h.starts_at is not null and now() < h.starts_at then
+    return jsonb_build_object('status', 'ok', 'team_name', t.name,
+      'hunt_id', h.id, 'title', h.title, 'starts_at', h.starts_at,
+      'started', false, 'solved', '[]'::jsonb, 'unlocked', '[]'::jsonb);
+  end if;
   return jsonb_build_object('status', 'ok', 'team_name', t.name,
                             'hunt_id', h.id, 'title', h.title,
-                            'starts_at', h.starts_at,
-                            'started', h.starts_at is null or now() >= h.starts_at)
+                            'starts_at', h.starts_at, 'started', true)
          || public.fedora_state(t.id, h.id);
 end $$;
 
@@ -132,6 +139,10 @@ begin
   end if;
   select * into c from public.clues where hunt_id = h.id and idx = p_idx;
   if not found then return jsonb_build_object('status', 'no_such_clue'); end if;
+  -- serialize concurrent submits for this (team, clue): without this, parallel
+  -- requests all read the same last_try under READ COMMITTED and the cooldown
+  -- is a no-op against a scripted brute force
+  perform pg_advisory_xact_lock(hashtext(t.id::text || ':' || p_idx::text));
   if exists (select 1 from public.submissions s
              where s.team_id = t.id and s.clue_idx = p_idx and s.correct) then
     return jsonb_build_object('status', 'already_solved');
@@ -148,6 +159,8 @@ begin
   end if;
   guess := regexp_replace(upper(coalesce(p_guess, '')), '[^A-Z]', '', 'g');
   if guess = '' then return jsonb_build_object('status', 'empty'); end if;
+  -- longer than any legal answer: plain 'wrong', not a CHECK-constraint 500
+  if char_length(guess) > 40 then return jsonb_build_object('status', 'wrong'); end if;
   select array_agg(k.idx) into before_unlocked from public.clues k
     where k.hunt_id = h.id and public.fedora_is_unlocked(t.id, k);
   is_right := (guess = c.answer);
