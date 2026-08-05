@@ -1,80 +1,84 @@
 {
- "hunt_id": "example",
- "title": "Example Hunt (fixture \u2014 not a real game)",
+ "hunt_id": "london-1",
+ "title": "FEDORA I: The Measure of London",
  "rows": 14,
- "cols": 11,
+ "cols": 10,
  "n_clues": 7,
  "entries": [
   {
    "number": 1,
    "dir": "D",
    "row": 0,
-   "col": 1,
+   "col": 7,
    "idx": 3,
    "length": 6
   },
   {
    "number": 2,
-   "dir": "A",
-   "row": 2,
-   "col": 0,
-   "idx": 1,
-   "length": 7
+   "dir": "D",
+   "row": 1,
+   "col": 2,
+   "idx": 6,
+   "length": 9
   },
   {
    "number": 3,
-   "dir": "D",
-   "row": 2,
+   "dir": "A",
+   "row": 3,
    "col": 4,
-   "idx": 2,
-   "length": 7
+   "idx": 7,
+   "length": 6
   },
   {
    "number": 4,
-   "dir": "D",
-   "row": 6,
-   "col": 7,
-   "idx": 5,
-   "length": 5
+   "dir": "A",
+   "row": 5,
+   "col": 0,
+   "idx": 4,
+   "length": 9
   },
   {
    "number": 5,
    "dir": "D",
-   "row": 7,
-   "col": 9,
-   "idx": 6,
-   "length": 7
+   "row": 5,
+   "col": 4,
+   "idx": 2,
+   "length": 5
   },
   {
    "number": 6,
    "dir": "A",
-   "row": 8,
-   "col": 4,
-   "idx": 4,
-   "length": 7
+   "row": 9,
+   "col": 1,
+   "idx": 5,
+   "length": 5
   },
   {
-   "number": 7,
-   "dir": "A",
-   "row": 12,
-   "col": 5,
-   "idx": 7,
-   "length": 6
+   "number": 6,
+   "dir": "D",
+   "row": 9,
+   "col": 1,
+   "idx": 1,
+   "length": 5
   }
  ],
  "meta_cells": [
   [
-   8,
-   7
-  ],
-  [
-   12,
-   6
+   9,
+   5
   ],
   [
    11,
-   9
+   1
+  ],
+  [
+   3,
+   7
+  ],
+  [
+   1,
+   2
   ]
  ],
- "meta_hint": "The shaded squares, in reading order of discovery, name your prize."
+ "meta_hint": "The four marked squares, in their marked order, name a beast. Add a banner to it and you have the name of the door where this ends. First team inside buys nothing all night."
 }

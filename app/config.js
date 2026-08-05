@@ -4,5 +4,5 @@
 window.FEDORA_CONFIG = {
   SUPABASE_URL: "",
   SUPABASE_ANON_KEY: "",
-  HUNT_ID: "example",
+  HUNT_ID: "london-1",
 };

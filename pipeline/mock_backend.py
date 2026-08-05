@@ -140,6 +140,12 @@ class Handler(SimpleHTTPRequestHandler):
         self.wfile.write(body)
 
     def do_GET(self):
+        if self.path == "/grid.json":
+            # serve geometry derived from THIS hunt file, not the committed
+            # production grid.json — they are different hunts
+            import build_hunt
+            self._json(200, build_hunt.grid_json(HUNT))
+            return
         if self.path == "/config.js":
             body = (f'window.FEDORA_CONFIG = {{ SUPABASE_URL: "http://localhost:{PORT}",'
                     f' SUPABASE_ANON_KEY: "mock-anon-key",'

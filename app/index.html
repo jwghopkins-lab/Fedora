@@ -1,0 +1,655 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>FEDORA — the city is the board</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<style>
+  /* Theme + grid/keyboard chassis ported from TRIVIUM app/index.html; the
+     accent is Fedora's own (aged brass, not TRIVIUM blue). */
+  :root {
+    --paper: #F5F3EE; --panel: #FFFFFF; --ink: #241F19; --ink-soft: #6B6155;
+    --line: #D3CCC0; --accent: #9A6320; --accent-soft: #F0E2CC;
+    --cell: #FFFFFF; --cell-active: #9A6320; --cell-word: #F0E2CC;
+    --wrong: #C0392B; --wrong-soft: #F7DAD5; --good: #1E7B4F; --good-soft: #DDEEE4;
+    --key: #E8E4DB; --key-ink: #241F19;
+    --key-face: #FFFFFF; --key-alt: #D8D2C6; --key-shadow: 0 1px 1px rgba(30,25,20,.10);
+    --kb-plane: #DDD8CD;
+    --shadow: 0 1px 3px rgba(30,25,20,.12);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #171412; --panel: #211D19; --ink: #EDE7DE; --ink-soft: #A29786;
+      --line: #443D34; --accent: #D89A55; --accent-soft: #3D2F1C;
+      --cell: #2A2520; --cell-active: #A96F2A; --cell-word: #3D2F1C;
+      --wrong: #E06A5B; --wrong-soft: #4A2622; --good: #4BBF87; --good-soft: #1E3A2C;
+      --key: #322C25; --key-ink: #EDE7DE;
+      --key-face: #3B342C; --key-alt: #2A2520; --key-shadow: none;
+      --kb-plane: #12100D;
+      --shadow: 0 1px 3px rgba(0,0,0,.4);
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
+  body { background: var(--paper); color: var(--ink);
+         font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+         display: flex; flex-direction: column; align-items: center;
+         overscroll-behavior: none; touch-action: manipulation; }
+  .screen { width: 100%; max-width: 520px; display: none; flex-direction: column;
+            min-height: 100dvh; padding: 8px 10px calc(8px + env(safe-area-inset-bottom)); }
+  .screen.on { display: flex; }
+  header { display: flex; align-items: baseline; gap: 10px; padding: 4px 2px 2px; }
+  .wordmark { font-family: Georgia, "Times New Roman", serif; font-weight: 700;
+              font-size: 1.45rem; letter-spacing: .1em; }
+  .wordmark span { color: var(--accent); }
+  .tagline { font-size: .68rem; color: var(--ink-soft); letter-spacing: .08em; text-transform: uppercase; }
+  .spacer { flex: 1; }
+  #teamtag { font-size: .78rem; color: var(--ink-soft); text-align: right; max-width: 40%;
+             overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .banner { background: var(--wrong-soft); color: var(--wrong); border-radius: 8px;
+            font-size: .74rem; padding: 7px 10px; margin: 6px 0; }
+  .card2 { background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+           padding: 16px 14px; margin: 10px 0; box-shadow: var(--shadow); }
+  .card2 h2 { font-family: Georgia, serif; font-size: 1.15rem; margin-bottom: 8px; }
+  .card2 p { font-size: .84rem; color: var(--ink-soft); line-height: 1.45; margin-bottom: 8px; }
+  input[type=text] { width: 100%; padding: 11px 12px; font-size: 1rem; border-radius: 9px;
+                     border: 1px solid var(--line); background: var(--cell); color: var(--ink);
+                     text-transform: uppercase; letter-spacing: .06em; }
+  .btn { border: none; border-radius: 10px; padding: 12px 0; font-size: .95rem;
+         font-weight: 600; cursor: pointer; width: 100%; }
+  .btn.primary { background: var(--accent); color: #fff; }
+  .btn.primary:disabled { opacity: .45; cursor: default; }
+  .btn.ghost { background: var(--key); color: var(--key-ink); }
+  .err { color: var(--wrong); font-size: .8rem; margin-top: 8px; min-height: 1.1em; }
+
+  #gridwrap { display: flex; justify-content: center; padding: 2px 0 6px; }
+  #grid { display: grid; gap: 2px; }
+  .cell { width: var(--cs); height: var(--cs); background: var(--cell);
+          border: 1px solid var(--line); border-radius: 3px; position: relative;
+          display: flex; align-items: center; justify-content: center;
+          font-weight: 700; font-size: calc(var(--cs) * .52); cursor: pointer; user-select: none; }
+  .cell.void { background: transparent; border: none; cursor: default; }
+  .cell .num { position: absolute; top: 0; left: 2px; font-size: calc(var(--cs) * .26);
+               font-weight: 600; color: var(--ink-soft); }
+  .cell.word { background: var(--cell-word); }
+  .cell.active { background: var(--cell-active); color: #fff; }
+  .cell.active .num, .cell.active .mnum { color: rgba(255,255,255,.85); }
+  .cell.dim { opacity: .38; cursor: default; }
+  .cell.fixed .ltr { color: var(--good); }
+  .cell.active.fixed .ltr { color: #fff; }
+  .cell.badword { color: var(--wrong); background: var(--wrong-soft); }
+  .cell.meta { box-shadow: inset 0 0 0 2px var(--accent); }
+  .cell .mnum { position: absolute; bottom: 0; right: 2px; font-size: calc(var(--cs) * .26);
+                font-weight: 700; color: var(--accent); }
+
+  #cluelist { flex: 1; overflow-y: auto; padding: 2px 1px 8px; min-height: 90px; }
+  .cluecard { background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+              padding: 10px 12px; margin-bottom: 8px; box-shadow: var(--shadow); cursor: pointer; }
+  .cluecard.locked { opacity: .55; cursor: default; }
+  .cluecard.done { border-color: var(--good); opacity: .8; cursor: default; }
+  .cluecard.sel { border-color: var(--accent); background: var(--accent-soft); }
+  .cluehead { display: flex; align-items: baseline; gap: 8px; font-size: .74rem;
+              color: var(--ink-soft); font-weight: 600; }
+  .cluehead .stepno { color: var(--accent); font-weight: 700; }
+  .cluehead .state { margin-left: auto; }
+  .cluebody { font-family: Georgia, serif; font-size: .92rem; line-height: 1.4; margin-top: 5px; }
+  .cluebody .earned { color: var(--accent); font-weight: 700; }
+  .done .cluebody { color: var(--good); font-family: ui-monospace, Menlo, monospace;
+                    font-size: .9rem; letter-spacing: .12em; }
+  .metacard { border: 1.5px dashed var(--accent); border-radius: 12px; padding: 10px 12px;
+              margin-bottom: 8px; font-size: .8rem; color: var(--ink-soft); line-height: 1.45; }
+  .metacard .slots { font-family: ui-monospace, Menlo, monospace; font-size: 1.3rem;
+                     letter-spacing: .35em; color: var(--accent); font-weight: 700; margin-top: 4px; }
+
+  #submitbar { display: none; gap: 8px; padding: 4px 0 6px; }
+  #submitbar.show { display: flex; }
+  #submitbar .btn { padding: 10px 0; font-size: .9rem; }
+  #submitbtn { flex: 1; }
+  #deselbtn { width: 52px; flex: none; }
+
+  #kb { display: none; flex-direction: column; gap: var(--kgap);
+        margin-inline: -6px; padding: 5px 4px calc(5px + env(safe-area-inset-bottom));
+        background: var(--kb-plane); border-radius: 12px;
+        --kgap: 7px; --kw: calc((100% - 9 * var(--kgap)) / 10); }
+  #kb.show { display: flex; }
+  .krow { display: flex; gap: var(--kgap); justify-content: center; }
+  .key { width: var(--kw); flex: none; height: 42px; border: none; border-radius: 7px;
+         background: var(--key-face); color: var(--key-ink); font-size: 1.1rem;
+         font-weight: 600; line-height: 1; cursor: pointer; box-shadow: var(--key-shadow);
+         display: flex; align-items: center; justify-content: center; user-select: none; }
+  .key:active { background: var(--accent); color: #fff; }
+  .key.wide { width: calc(var(--kw) * 1.5 + var(--kgap) * .5); background: var(--key-alt); }
+  .krow[data-extra]::before { content: ""; flex: none;
+                              width: calc(var(--kw) * 1.5 + var(--kgap) * .5); }
+  .toolrow { display: flex; gap: 6px; justify-content: center; padding: 4px 0; }
+  .tool { border: 1px solid var(--line); background: var(--panel); color: var(--ink-soft);
+          font-size: .74rem; padding: 5px 12px; border-radius: 999px; cursor: pointer; }
+  .tool:focus-visible, .key:focus-visible, .btn:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 1px; }
+
+  #modal { position: fixed; inset: 0; background: rgba(14,12,10,.55); display: none;
+           align-items: center; justify-content: center; padding: 18px; z-index: 20; }
+  #modal.show { display: flex; }
+  .card { background: var(--panel); color: var(--ink); border-radius: 16px; padding: 22px 20px;
+          max-width: 380px; width: 100%; box-shadow: 0 12px 40px rgba(0,0,0,.35);
+          max-height: 86dvh; overflow-y: auto; }
+  .card h2 { font-family: Georgia, serif; font-size: 1.35rem; margin-bottom: 6px; }
+  .card .sub { color: var(--ink-soft); font-size: .82rem; margin-bottom: 10px; line-height: 1.4; }
+  .lb { margin-top: 8px; font-size: .86rem; }
+  .lbrow { display: flex; gap: 8px; padding: 3px 0; align-items: baseline;
+           font-variant-numeric: tabular-nums; }
+  .lbrow.me { color: var(--accent); font-weight: 700; }
+  .lbrow .n { width: 2em; color: var(--ink-soft); }
+  .lbrow .s { margin-left: auto; font-family: ui-monospace, Menlo, monospace; }
+  .btnrow { display: flex; gap: 8px; margin-top: 14px; }
+  .btnrow .btn { flex: 1; padding: 11px 0; font-size: .9rem; }
+  #toast { position: fixed; bottom: 200px; left: 50%; transform: translateX(-50%);
+           background: var(--ink); color: var(--paper); font-size: .8rem; padding: 8px 16px;
+           border-radius: 999px; opacity: 0; transition: opacity .25s; pointer-events: none;
+           z-index: 30; white-space: nowrap; }
+  #toast.show { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+
+<!-- Screen 1: team join -->
+<div class="screen on" id="s-join">
+  <header><div><div class="wordmark">FED<span>O</span>RA</div>
+    <div class="tagline">the city is the board</div></div></header>
+  <div id="offline-banner" class="banner" style="display:none">
+    No backend configured — this build can't check answers. (Local dev: run
+    pipeline/mock_backend.py and open that port instead.)</div>
+  <div class="card2">
+    <h2>Enter your team code</h2>
+    <p>One code per team — any number of phones can share it. Solving a clue on
+       one phone unlocks it for the whole team. The clues lead somewhere real:
+       you cannot solve this from a sofa.</p>
+    <input type="text" id="codein" maxlength="40" placeholder="TEAM CODE"
+           autocomplete="off" autocapitalize="characters">
+    <div class="err" id="joinerr"></div>
+    <button class="btn primary" id="joinbtn" disabled>Join the hunt</button>
+  </div>
+</div>
+
+<!-- Screen 2: the hunt -->
+<div class="screen" id="s-game">
+  <header>
+    <div><div class="wordmark">FED<span>O</span>RA</div>
+      <div class="tagline" id="hunttitle"></div></div>
+    <div class="spacer"></div>
+    <div id="teamtag"></div>
+  </header>
+  <div id="gridwrap"><div id="grid"></div></div>
+  <div id="cluelist"></div>
+  <div class="toolrow">
+    <button class="tool" id="lbbtn">Leaderboard</button>
+    <button class="tool" id="refreshbtn">↻ Sync</button>
+  </div>
+  <div id="submitbar">
+    <button class="btn ghost" id="deselbtn" aria-label="Close keyboard">✕</button>
+    <button class="btn primary" id="submitbtn">Submit</button>
+  </div>
+  <div id="kb">
+    <div class="krow" data-keys="QWERTYUIOP"></div>
+    <div class="krow" data-keys="ASDFGHJKL"></div>
+    <div class="krow" data-keys="ZXCVBNM" data-extra="1"></div>
+  </div>
+</div>
+
+<div id="modal"><div class="card" id="modalcard"></div></div>
+<div id="toast"></div>
+
+<script src="config.js"></script>
+<script>
+"use strict";
+const $ = (id) => document.getElementById(id);
+const CFG = window.FEDORA_CONFIG || {};
+const ONLINE = !!(CFG.SUPABASE_URL && CFG.SUPABASE_ANON_KEY);
+const LS = {
+  get: (k, d) => { try { return JSON.parse(localStorage.getItem("fedora." + k)) ?? d; }
+                   catch { return d; } },
+  set: (k, v) => localStorage.setItem("fedora." + k, JSON.stringify(v)),
+  del: (k) => localStorage.removeItem("fedora." + k),
+};
+
+let GRID = null;          // grid.json: rows, cols, entries[{idx,number,dir,row,col,length}]
+let CELLS = null;         // "r,c" -> {entries: [idx...], num, mnum, el}
+let SRV = { solved: {}, unlocked: {} };   // idx -> {answer, at} / idx -> clue_text
+let TEAM = null, CODE = null;
+let sel = null;           // {idx, i} — selected entry (by hunt idx) + cursor offset
+let badKeys = new Set();
+let pollInt = null;
+
+function toast(msg) {
+  $("toast").textContent = msg;
+  $("toast").classList.add("show");
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => $("toast").classList.remove("show"), 2200);
+}
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+
+/* ---- server ---- */
+async function rpc(fn, args) {
+  const res = await fetch(`${CFG.SUPABASE_URL}/rest/v1/rpc/${fn}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", apikey: CFG.SUPABASE_ANON_KEY,
+               Authorization: `Bearer ${CFG.SUPABASE_ANON_KEY}` },
+    body: JSON.stringify(args),
+  });
+  if (!res.ok) throw new Error(`rpc ${fn}: HTTP ${res.status}`);
+  return res.json();
+}
+
+/* ---- geometry ---- */
+const byIdx = (idx) => GRID.entries.find((e) => e.idx === idx);
+function entryCells(e) {
+  const out = [];
+  for (let k = 0; k < e.length; k++)
+    out.push(e.dir === "A" ? [e.row, e.col + k] : [e.row + k, e.col]);
+  return out;
+}
+function entryLabel(e) {
+  return `${e.number} ${e.dir === "A" ? "Across" : "Down"}`;
+}
+function buildCells() {
+  CELLS = {};
+  for (const e of GRID.entries) {
+    entryCells(e).forEach(([r, c], k) => {
+      const key = r + "," + c;
+      CELLS[key] = CELLS[key] || { entries: [] };
+      CELLS[key].entries.push(e.idx);
+      if (k === 0) CELLS[key].num = CELLS[key].num || e.number;
+    });
+  }
+  (GRID.meta_cells || []).forEach(([r, c], i) => {
+    const cc = CELLS[r + "," + c];
+    if (cc) cc.mnum = i + 1;
+  });
+}
+// letter fixed by a SOLVED word at this cell, or null
+function fixedLetter(key) {
+  for (const idx of CELLS[key].entries) {
+    const s = SRV.solved[idx];
+    if (!s) continue;
+    const e = byIdx(idx);
+    const cells = entryCells(e);
+    const k = cells.findIndex(([r, c]) => r + "," + c === key);
+    if (k >= 0) return s.answer[k];
+  }
+  return null;
+}
+const isOpen = (idx) => idx in SRV.unlocked;
+const isDone = (idx) => idx in SRV.solved;
+function cellPlayable(key) {
+  return CELLS[key].entries.some((idx) => isOpen(idx));
+}
+
+/* ---- local typed letters (per device; solved letters live server-side) ---- */
+function fillState() { return LS.get("fill." + GRID.hunt_id, {}); }
+function saveFill(f) { LS.set("fill." + GRID.hunt_id, f); }
+
+/* ---- rendering ---- */
+function sizeCells() {
+  const g = $("grid");
+  const byWidth = Math.floor((Math.min(window.innerWidth, 520) - 24) / GRID.cols) - 2;
+  const byHeight = Math.floor((window.innerHeight * 0.40) / GRID.rows) - 2;
+  const cs = Math.max(16, Math.min(byWidth, byHeight, 40));
+  g.style.setProperty("--cs", cs + "px");
+  g.style.gridTemplateColumns = `repeat(${GRID.cols}, var(--cs))`;
+}
+function renderGrid() {
+  const g = $("grid");
+  g.innerHTML = "";
+  sizeCells();
+  for (let r = 0; r < GRID.rows; r++) for (let c = 0; c < GRID.cols; c++) {
+    const key = r + "," + c;
+    const div = document.createElement("div");
+    if (!CELLS[key]) div.className = "cell void";
+    else {
+      div.className = "cell";
+      div.dataset.key = key;
+      if (CELLS[key].num) {
+        const n = document.createElement("span");
+        n.className = "num"; n.textContent = CELLS[key].num;
+        div.appendChild(n);
+      }
+      if (CELLS[key].mnum) {
+        div.classList.add("meta");
+        const m = document.createElement("span");
+        m.className = "mnum"; m.textContent = CELLS[key].mnum;
+        div.appendChild(m);
+      }
+      const l = document.createElement("span");
+      l.className = "ltr";
+      div.appendChild(l);
+      div.onclick = () => tapCell(r, c);
+      CELLS[key].el = div;
+    }
+    g.appendChild(div);
+  }
+  updateGrid();
+}
+function updateGrid() {
+  const fill = fillState();
+  const selCells = sel ? new Set(entryCells(byIdx(sel.idx)).map(([r, c]) => r + "," + c)) : new Set();
+  const activeKey = sel ? entryCells(byIdx(sel.idx))[sel.i].join(",") : null;
+  for (const [key, cc] of Object.entries(CELLS)) {
+    if (!cc.el) continue;
+    const fx = fixedLetter(key);
+    cc.el.querySelector(".ltr").textContent = fx || fill[key] || "";
+    cc.el.classList.toggle("fixed", !!fx);
+    cc.el.classList.toggle("dim", !fx && !cellPlayable(key));
+    cc.el.classList.toggle("word", selCells.has(key) && key !== activeKey);
+    cc.el.classList.toggle("active", key === activeKey);
+    cc.el.classList.toggle("badword", badKeys.has(key));
+  }
+}
+function clueOrder(a, b) {
+  const rank = (i) => (isOpen(i) ? 0 : !isDone(i) ? 1 : 2);
+  return rank(a.idx) - rank(b.idx) || a.idx - b.idx;
+}
+function renderedClue(text) {
+  // {N} placeholders carry an earned answer into a later clue; the server only
+  // reveals such a clue once N is solved, so the lookup cannot miss.
+  return escapeHtml(text).replace(/\{(\d+)\}/g, (_, n) =>
+    `<span class="earned">${(SRV.solved[n] || {}).answer || "?"}</span>`);
+}
+function renderClues() {
+  const list = $("cluelist");
+  list.innerHTML = "";
+  const entries = [...GRID.entries].sort(clueOrder);
+  for (const e of entries) {
+    const div = document.createElement("div");
+    const state = isDone(e.idx) ? "done" : isOpen(e.idx) ? "open" : "locked";
+    div.className = "cluecard " + state + (sel && sel.idx === e.idx ? " sel" : "");
+    div.dataset.idx = e.idx;
+    const head = `<div class="cluehead"><span class="stepno">Clue ${e.idx}</span>` +
+      `<span>${entryLabel(e)} · ${e.length} letters</span>` +
+      `<span class="state">${state === "done" ? "✓" : state === "locked" ? "🔒" : ""}</span></div>`;
+    let body;
+    if (state === "done") body = `<div class="cluebody">${SRV.solved[e.idx].answer}</div>`;
+    else if (state === "open") body = `<div class="cluebody">${renderedClue(SRV.unlocked[e.idx])}</div>`;
+    else body = `<div class="cluebody" style="color:var(--ink-soft);font-size:.8rem">
+                 Locked — earn it by solving on.</div>`;
+    div.innerHTML = head + body;
+    if (state === "open") div.onclick = () => select(e.idx, firstGap(e.idx));
+    list.appendChild(div);
+  }
+  const meta = document.createElement("div");
+  meta.className = "metacard";
+  meta.innerHTML = `<b>The marked squares</b> — ${escapeHtml(GRID.meta_hint || "")}` +
+                   `<div class="slots">${metaSlots().join(" ")}</div>`;
+  list.appendChild(meta);
+}
+function metaSlots() {
+  return (GRID.meta_cells || []).map(([r, c]) => fixedLetter(r + "," + c) || "·");
+}
+
+/* ---- selection + typing (cursor rules ported from TRIVIUM) ---- */
+function firstGap(idx) {
+  const fill = fillState();
+  const cells = entryCells(byIdx(idx));
+  for (let k = 0; k < cells.length; k++) {
+    const key = cells[k].join(",");
+    if (!fixedLetter(key) && !fill[key]) return k;
+  }
+  return 0;
+}
+function select(idx, i) {
+  sel = { idx, i: i ?? 0 };
+  badKeys.clear();
+  $("submitbar").classList.add("show");
+  $("kb").classList.add("show");
+  $("submitbtn").textContent = `Submit ${entryLabel(byIdx(idx))}`;
+  renderClues();
+  updateGrid();
+}
+function deselect() {
+  sel = null;
+  $("submitbar").classList.remove("show");
+  $("kb").classList.remove("show");
+  renderClues();
+  updateGrid();
+}
+function tapCell(r, c) {
+  const key = r + "," + c;
+  const info = CELLS[key];
+  if (!info || !cellPlayable(key)) return;
+  const open = info.entries.filter((idx) => isOpen(idx));
+  let idx;
+  if (sel && open.includes(sel.idx) && open.length === 2) {
+    // tapping inside the selected word on a shared cell toggles direction
+    const inSel = entryCells(byIdx(sel.idx)).some(([rr, cc]) => rr === r && cc === c);
+    idx = inSel ? open.find((i) => i !== sel.idx) : open[0];
+  } else idx = open.includes(sel && sel.idx) && open.length === 1 ? open[0] : open[0];
+  const e = byIdx(idx);
+  select(idx, e.dir === "A" ? c - e.col : r - e.row);
+}
+function typeLetter(ch) {
+  if (!sel) return;
+  badKeys.clear();
+  const e = byIdx(sel.idx);
+  const cells = entryCells(e);
+  const key = cells[sel.i].join(",");
+  const fill = fillState();
+  if (!fixedLetter(key)) {
+    fill[key] = ch;
+    saveFill(fill);
+  }
+  // advance: skip cells fixed by solved crossings or already typed-full word
+  let ni = sel.i + 1;
+  while (ni < cells.length && fixedLetter(cells[ni].join(","))) ni++;
+  if (ni < cells.length) sel.i = ni;
+  updateGrid();
+}
+function backspace() {
+  if (!sel) return;
+  badKeys.clear();
+  const cells = entryCells(byIdx(sel.idx));
+  const fill = fillState();
+  let key = cells[sel.i].join(",");
+  const editable = (k) => !fixedLetter(k);
+  const hadLetter = editable(key) && !!fill[key];
+  if (!hadLetter && sel.i > 0) {
+    // retreat to the previous editable cell and clear that instead
+    let pi = sel.i - 1;
+    while (pi > 0 && !editable(cells[pi].join(","))) pi--;
+    sel.i = pi; key = cells[pi].join(",");
+  }
+  if (editable(key)) delete fill[key];
+  saveFill(fill);
+  if (hadLetter && sel.i > 0) {
+    let pi = sel.i - 1;
+    while (pi > 0 && !editable(cells[pi].join(","))) pi--;
+    if (editable(cells[pi].join(","))) sel.i = pi;
+  }
+  updateGrid();
+}
+
+/* ---- submit ---- */
+function assembled(idx) {
+  const fill = fillState();
+  let word = "";
+  for (const [r, c] of entryCells(byIdx(idx))) {
+    const key = r + "," + c;
+    word += fixedLetter(key) || fill[key] || "·";
+  }
+  return word;
+}
+async function submitSel() {
+  if (!sel) return;
+  const idx = sel.idx;
+  const word = assembled(idx);
+  if (word.includes("·")) { toast("Fill the whole word first"); return; }
+  $("submitbtn").disabled = true;
+  try {
+    const r = await rpc("fedora_submit", { p_code: CODE, p_idx: idx, p_guess: word });
+    if (r.status === "correct") {
+      SRV.solved[idx] = { answer: r.answer, at: Date.now() };
+      delete SRV.unlocked[idx];
+      for (const u of r.newly_unlocked || []) SRV.unlocked[u.idx] = u.clue_text;
+      // typed letters for this word are now server-truth; drop local copies
+      const fill = fillState();
+      for (const [rr, cc] of entryCells(byIdx(idx))) delete fill[rr + "," + cc];
+      saveFill(fill);
+      deselect();
+      const newly = (r.newly_unlocked || []).length;
+      toast(newly ? `✓ ${r.answer} — ${newly} new clue${newly > 1 ? "s" : ""} unlocked`
+                  : `✓ ${r.answer}`);
+      if (Object.keys(SRV.solved).length === GRID.n_clues) showWin();
+    } else if (r.status === "wrong") {
+      entryCells(byIdx(idx)).forEach(([rr, cc]) => badKeys.add(rr + "," + cc));
+      updateGrid();
+      toast("Not it — the street knows better");
+    } else if (r.status === "cooldown") {
+      toast(`Steady on — try again in ${r.retry_in}s`);
+    } else if (r.status === "already_solved") {
+      await sync();
+    } else if (r.status === "not_started") {
+      toast("The hunt hasn't started yet");
+    } else {
+      toast("Hmm: " + r.status);
+    }
+  } catch (err) {
+    toast("No signal — try again");
+  } finally {
+    $("submitbtn").disabled = false;
+  }
+}
+
+/* ---- join / sync ---- */
+function applyState(r) {
+  SRV.solved = {};
+  for (const s of r.solved || []) SRV.solved[s.idx] = { answer: s.answer, at: s.solved_at };
+  SRV.unlocked = {};
+  for (const u of r.unlocked || []) SRV.unlocked[u.idx] = u.clue_text;
+}
+async function sync() {
+  try {
+    const r = await rpc("fedora_join", { p_code: CODE });
+    if (r.status !== "ok") return;
+    const before = Object.keys(SRV.solved).length + ":" + Object.keys(SRV.unlocked).length;
+    applyState(r);
+    const after = Object.keys(SRV.solved).length + ":" + Object.keys(SRV.unlocked).length;
+    if (before !== after) {
+      if (sel && !isOpen(sel.idx)) deselect(); else { renderClues(); updateGrid(); }
+      if (Object.keys(SRV.solved).length === GRID.n_clues) showWin();
+    }
+  } catch {}
+}
+async function join(code) {
+  const r = await rpc("fedora_join", { p_code: code });
+  if (r.status !== "ok") {
+    $("joinerr").textContent = r.status === "bad_code"
+      ? "That code opens no doors. Check it with your quartermaster."
+      : "Hunt unavailable: " + r.status;
+    return false;
+  }
+  CODE = code; TEAM = r.team_name;
+  LS.set("code", code);
+  $("hunttitle").textContent = r.title || GRID.title;
+  $("teamtag").textContent = r.team_name;
+  applyState(r);
+  $("s-join").classList.remove("on");
+  $("s-game").classList.add("on");
+  renderGrid();
+  renderClues();
+  clearInterval(pollInt);
+  pollInt = setInterval(sync, 30000);
+  if (Object.keys(SRV.solved).length === GRID.n_clues) showWin();
+  return true;
+}
+
+/* ---- modals ---- */
+async function showBoard() {
+  let rows = [];
+  try { rows = await rpc("fedora_leaderboard", { p_hunt: GRID.hunt_id }); }
+  catch { toast("No signal — try again"); return; }
+  const lb = rows.map((t, i) =>
+    `<div class="lbrow${t.team_name === TEAM ? " me" : ""}">` +
+    `<span class="n">${i + 1}.</span><span>${escapeHtml(t.team_name)}</span>` +
+    `<span class="s">${t.solved}/${GRID.n_clues}</span></div>`).join("");
+  $("modalcard").innerHTML = `<h2>Standings</h2>
+    <div class="sub">Clues cracked per team. The pub decides the rest.</div>
+    <div class="lb">${lb || "No teams yet."}</div>
+    <div class="btnrow"><button class="btn ghost" id="mclose">Close</button></div>`;
+  $("modal").classList.add("show");
+  $("mclose").onclick = () => $("modal").classList.remove("show");
+}
+function showWin() {
+  clearInterval(pollInt);
+  $("modalcard").innerHTML = `<h2>The grid is yours.</h2>
+    <div class="sub">${escapeHtml(GRID.meta_hint || "")}</div>
+    <div class="metacard" style="margin:0 0 4px"><div class="slots">${metaSlots().join(" ")}</div></div>
+    <div class="sub" style="margin-top:8px">You know where to go. First team through
+    the door takes the crown — and the first round.</div>
+    <div class="btnrow">
+      <button class="btn ghost" id="mboard">Standings</button>
+      <button class="btn primary" id="mclose2">Onward</button>
+    </div>`;
+  $("modal").classList.add("show");
+  $("mboard").onclick = () => { $("modal").classList.remove("show"); showBoard(); };
+  $("mclose2").onclick = () => $("modal").classList.remove("show");
+}
+
+/* ---- input plumbing ---- */
+document.querySelectorAll(".krow").forEach((row) => {
+  for (const ch of row.dataset.keys) {
+    const b = document.createElement("button");
+    b.className = "key"; b.textContent = ch;
+    b.onclick = () => typeLetter(ch);
+    row.appendChild(b);
+  }
+  if (row.dataset.extra) {
+    const del = document.createElement("button");
+    del.className = "key wide"; del.textContent = "⌫";
+    del.onclick = backspace;
+    row.appendChild(del);
+  }
+});
+document.addEventListener("keydown", (ev) => {
+  if (!$("s-game").classList.contains("on") || $("modal").classList.contains("show")) return;
+  if (/^[a-zA-Z]$/.test(ev.key)) { typeLetter(ev.key.toUpperCase()); ev.preventDefault(); }
+  else if (ev.key === "Backspace") { backspace(); ev.preventDefault(); }
+  else if (ev.key === "Enter" && sel) { submitSel(); ev.preventDefault(); }
+  else if (ev.key === "Escape") deselect();
+});
+$("submitbtn").onclick = submitSel;
+$("deselbtn").onclick = deselect;
+$("lbbtn").onclick = showBoard;
+$("refreshbtn").onclick = () => { sync(); toast("Synced"); };
+$("codein").oninput = () => { $("joinbtn").disabled = !$("codein").value.trim(); };
+$("joinbtn").onclick = async () => {
+  $("joinbtn").disabled = true;
+  $("joinerr").textContent = "";
+  try { if (!(await join($("codein").value.trim().toUpperCase()))) $("joinbtn").disabled = false; }
+  catch { $("joinerr").textContent = "Can't reach the server — check your signal.";
+          $("joinbtn").disabled = false; }
+};
+window.addEventListener("resize", () => { if (GRID && CELLS) { sizeCells(); } });
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden && CODE) sync();
+});
+
+/* ---- boot ---- */
+(async () => {
+  if (!ONLINE) $("offline-banner").style.display = "block";
+  try {
+    GRID = await (await fetch("grid.json")).json();
+  } catch {
+    $("joinerr").textContent = "grid.json missing — no hunt is published here yet.";
+    return;
+  }
+  buildCells();
+  const saved = LS.get("code", null);
+  if (saved && ONLINE) {
+    try { await join(saved); } catch { /* fall through to join screen */ }
+  }
+})();
+</script>
+</body>
+</html>
