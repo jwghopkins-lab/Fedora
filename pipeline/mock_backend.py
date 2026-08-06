@@ -50,10 +50,19 @@ def iso(ts):
 
 STARTS_AT = iso_to_epoch(HUNT.get("starts_at"))
 ACTIVE = HUNT.get("active", True)
+STRIKE_LIMIT = HUNT.get("strike_limit")
 
 
 def started():
     return STARTS_AT is None or time.time() >= STARTS_AT
+
+
+def strikes(team):
+    return sum(1 for s in SUBS if s["team"] == team and not s["correct"])
+
+
+def eligible(team):
+    return STRIKE_LIMIT is None or strikes(team) <= STRIKE_LIMIT
 
 
 def norm_code(code):
@@ -100,12 +109,16 @@ def rpc_join(body):
         return {"status": "bad_code"}
     if not ACTIVE:
         return {"status": "inactive"}
+    code = norm_code(body["p_code"])
     base = {"status": "ok", "team_name": team, "hunt_id": HUNT["hunt_id"],
-            "title": HUNT["title"], "starts_at": HUNT.get("starts_at")}
+            "title": HUNT["title"], "starts_at": HUNT.get("starts_at"),
+            "strike_limit": STRIKE_LIMIT}
     if not started():
         # pre-start, the read path reveals nothing (mirrors fedora_join)
-        return {**base, "started": False, "solved": [], "unlocked": []}
-    return {**base, "started": True, **state(norm_code(body["p_code"]))}
+        return {**base, "started": False, "strikes": 0, "eligible": True,
+                "solved": [], "unlocked": []}
+    return {**base, "started": True, "strikes": strikes(code),
+            "eligible": eligible(code), **state(code)}
 
 
 def rpc_submit(body):
@@ -137,7 +150,8 @@ def rpc_submit(body):
     SUBS.append({"team": code, "clue_idx": idx, "guess": guess,
                  "correct": correct, "t": time.time()})
     if not correct:
-        return {"status": "wrong"}
+        return {"status": "wrong", "strikes": strikes(code),
+                "strike_limit": STRIKE_LIMIT, "eligible": eligible(code)}
     newly = [{"idx": i, "clue_text": CLUES[i]["clue_text"]}
              for i in sorted(CLUES)
              if i != idx and i not in before and is_unlocked(code, CLUES[i])]
@@ -151,8 +165,10 @@ def rpc_leaderboard(body):
         mine = [s for s in SUBS if s["team"] == code]
         done = solved_at(code)
         rows.append({"team_name": name, "solved": len(done), "guesses": len(mine),
+                     "eligible": eligible(code),
                      "last_solve": iso(max(done.values())) if done else None})
-    rows.sort(key=lambda r: (-r["solved"], r["last_solve"] or float("inf")))
+    rows.sort(key=lambda r: (-r["eligible"], -r["solved"],
+                             r["last_solve"] or "9999"))
     return rows
 
 

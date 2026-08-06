@@ -7,10 +7,13 @@
 -- text leaves the database only after its prerequisites are solved by that team.
 
 create table public.hunts (
-  id         text primary key check (id ~ '^[a-z0-9-]{3,40}$'),
-  title      text not null,
-  starts_at  timestamptz,                       -- null = open immediately
-  active     boolean not null default true
+  id           text primary key check (id ~ '^[a-z0-9-]{3,40}$'),
+  title        text not null,
+  starts_at    timestamptz,                     -- null = open immediately
+  active       boolean not null default true,
+  -- total wrong guesses a team may make and still be able to WIN; beyond it
+  -- they keep playing but are marked out of the running. null = no limit.
+  strike_limit int check (strike_limit > 0)
 );
 
 create table public.clues (
@@ -73,6 +76,12 @@ returns boolean language sql stable security definer set search_path = '' as $$
              end)
 $$;
 
+create or replace function public.fedora_strikes(p_team uuid)
+returns int language sql stable security definer set search_path = '' as $$
+  select count(*)::int from public.submissions s
+  where s.team_id = p_team and not s.correct
+$$;
+
 create or replace function public.fedora_state(p_team uuid, p_hunt text)
 returns jsonb language sql stable security definer set search_path = '' as $$
   select jsonb_build_object(
@@ -114,11 +123,16 @@ begin
   if h.starts_at is not null and now() < h.starts_at then
     return jsonb_build_object('status', 'ok', 'team_name', t.name,
       'hunt_id', h.id, 'title', h.title, 'starts_at', h.starts_at,
-      'started', false, 'solved', '[]'::jsonb, 'unlocked', '[]'::jsonb);
+      'started', false, 'strikes', 0, 'strike_limit', h.strike_limit,
+      'eligible', true, 'solved', '[]'::jsonb, 'unlocked', '[]'::jsonb);
   end if;
   return jsonb_build_object('status', 'ok', 'team_name', t.name,
                             'hunt_id', h.id, 'title', h.title,
-                            'starts_at', h.starts_at, 'started', true)
+                            'starts_at', h.starts_at, 'started', true,
+                            'strikes', public.fedora_strikes(t.id),
+                            'strike_limit', h.strike_limit,
+                            'eligible', h.strike_limit is null
+                              or public.fedora_strikes(t.id) <= h.strike_limit)
          || public.fedora_state(t.id, h.id);
 end $$;
 
@@ -166,7 +180,12 @@ begin
   is_right := (guess = c.answer);
   insert into public.submissions (team_id, hunt_id, clue_idx, guess, correct)
     values (t.id, h.id, p_idx, guess, is_right);
-  if not is_right then return jsonb_build_object('status', 'wrong'); end if;
+  if not is_right then
+    return jsonb_build_object('status', 'wrong',
+      'strikes', public.fedora_strikes(t.id), 'strike_limit', h.strike_limit,
+      'eligible', h.strike_limit is null
+        or public.fedora_strikes(t.id) <= h.strike_limit);
+  end if;
   return jsonb_build_object('status', 'correct', 'idx', p_idx, 'answer', c.answer,
     'newly_unlocked', coalesce((
       select jsonb_agg(jsonb_build_object('idx', k.idx, 'clue_text', k.clue_text)
@@ -179,21 +198,26 @@ end $$;
 
 create or replace function public.fedora_leaderboard(p_hunt text)
 returns jsonb language sql stable security definer set search_path = '' as $$
-  select coalesce(jsonb_agg(row order by row->'solved' desc, row->>'last_solve' asc nulls last),
+  select coalesce(jsonb_agg(row order by row->'eligible' desc,
+                            row->'solved' desc, row->>'last_solve' asc nulls last),
                   '[]'::jsonb)
   from (
     select jsonb_build_object('team_name', t.name,
              'solved', count(distinct s.clue_idx) filter (where s.correct),
              'guesses', count(s.id),
+             'eligible', h.strike_limit is null
+               or count(*) filter (where not s.correct) <= h.strike_limit,
              'last_solve', max(s.created_at) filter (where s.correct)) as row
     from public.teams t
+    join public.hunts h on h.id = t.hunt_id
     left join public.submissions s on s.team_id = t.id
     where t.hunt_id = p_hunt
-    group by t.id, t.name) rows
+    group by t.id, t.name, h.strike_limit) rows
 $$;
 
 revoke execute on function public.fedora_is_unlocked(uuid, public.clues) from public, anon, authenticated;
 revoke execute on function public.fedora_state(uuid, text) from public, anon, authenticated;
+revoke execute on function public.fedora_strikes(uuid) from public, anon, authenticated;
 grant execute on function public.fedora_join(text) to anon;
 grant execute on function public.fedora_submit(text, int, text) to anon;
 grant execute on function public.fedora_leaderboard(text) to anon;

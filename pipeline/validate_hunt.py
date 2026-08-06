@@ -105,6 +105,42 @@ def check(hunt):
             if re.search(rf"\b{re.escape(a)}\b", text, re.I):
                 fails.append(f"answer {a} leaks in clue {c['idx']} text")
 
+    # crossing-leak analysis (warnings, printed by main): a word crossed by a
+    # word that is solvable WITHOUT it can have letters revealed before it is
+    # answered — fatal for candidate-ambiguity clues (e.g. a CHAIN/PERCH 50/50)
+    # where the whole point is that no letter distinguishes the candidates.
+    hunt["_leak_warnings"] = []
+    _, per_dir, _ = gridlib.build_grid(placements)
+    p_by_idx = {p["idx"]: i for i, p in enumerate(placements)}
+    for w in clues:
+        reach = set()
+        changed = True
+        while changed:
+            changed = False
+            for c in clues:
+                if c["idx"] == w["idx"] or c["idx"] in reach:
+                    continue
+                need = c.get("unlocked_by", [])
+                mode = c.get("unlock_mode", "any")
+                if not need:
+                    ok = True
+                elif mode == "all":
+                    ok = w["idx"] not in need and all(n in reach for n in need)
+                else:
+                    ok = any(n in reach for n in need if n != w["idx"])
+                if ok:
+                    reach.add(c["idx"])
+                    changed = True
+        wi = p_by_idx[w["idx"]]
+        for cell, dirs in per_dir.items():
+            if len(dirs) == 2 and wi in dirs.values():
+                other = next(i for i in dirs.values() if i != wi)
+                oidx = placements[other]["idx"]
+                if oidx in reach:
+                    hunt["_leak_warnings"].append(
+                        f"clue {w['idx']} ({w['answer']}): letter at {cell} can be "
+                        f"revealed by clue {oidx} before {w['idx']} is solved")
+
     # teams
     codes = [t["code"] for t in hunt.get("teams", [])]
     if len(set(codes)) != len(codes):
@@ -140,9 +176,12 @@ def main():
     fails = check(hunt)
     for f in fails:
         print(f"FAIL: {f}")
+    for w in hunt.get("_leak_warnings", []):
+        print(f"LEAK-WARN: {w}")
     print(f"{sys.argv[1]}: {len(hunt.get('clues', []))} clues, "
           f"{len(hunt.get('teams', []))} teams — "
-          f"{'INVALID' if fails else 'valid'}")
+          f"{'INVALID' if fails else 'valid'} "
+          f"({len(hunt.get('_leak_warnings', []))} crossing-leak warnings)")
     return 1 if fails else 0
 
 

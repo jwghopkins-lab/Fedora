@@ -79,6 +79,8 @@ try:
     r = rpc("fedora_join", p_code="TESTTEAM1")
     expect(len(r["solved"]) == 5 and [u["idx"] for u in r["unlocked"]] == [3, 7],
            "rejoin resumes: 5 solved, 3 and 7 open")
+    expect(r["strikes"] == 1 and r["strike_limit"] == 3 and r["eligible"] is True,
+           "join reports 1 strike of 3 (cooldown-rejected retry logs nothing)")
     print("MOCK DRIVE PASS")
 finally:
     srv.kill()
@@ -99,7 +101,8 @@ def with_variant(mutate, port, checks):
         path = f.name
     global BASE
     BASE = f"http://localhost:{port}"
-    p = subprocess.Popen(["python3", str(MOCK), str(port), path], env=os.environ)
+    p = subprocess.Popen(["python3", str(MOCK), str(port), path],
+                         env={**os.environ, "MOCK_COOLDOWN_S": "0.3"})
     time.sleep(0.8)
     try:
         checks()
@@ -132,8 +135,29 @@ def timed_clue_checks():
     expect(r["status"] == "locked", "timed clue rejects submit before release")
 
 
+def strikes_checks():
+    r = rpc("fedora_submit", p_code="TESTTEAM1", p_idx=1, p_guess="NOPEA")
+    expect(r["status"] == "wrong" and r["strikes"] == 1 and r["eligible"] is True,
+           "first wrong guess: 1 strike, still eligible (limit 1)")
+    time.sleep(0.35)
+    r = rpc("fedora_submit", p_code="TESTTEAM1", p_idx=1, p_guess="NOPEB")
+    expect(r["status"] == "wrong" and r["strikes"] == 2 and r["eligible"] is False,
+           "second wrong guess: over the limit, no longer eligible")
+    time.sleep(0.35)
+    r = rpc("fedora_submit", p_code="TESTTEAM1", p_idx=1, p_guess="CRIMSON")
+    expect(r["status"] == "correct", "ineligible team can still play and solve")
+    board = rpc("fedora_leaderboard", p_hunt="example")
+    us = [t for t in board if t["team_name"] == "Test Team"][0]
+    rival = [t for t in board if t["team_name"] == "Rival Team"][0]
+    expect(us["eligible"] is False and rival["eligible"] is True,
+           "leaderboard flags us ineligible, rival eligible")
+    expect(board[0]["team_name"] == "Rival Team",
+           "eligible team sorts above ineligible despite fewer solves")
+
+
 with_variant(lambda h: h.update(starts_at="2999-01-01T00:00:00Z"), PORT + 1, pre_start_checks)
 with_variant(lambda h: h.update(active=False), PORT + 2, inactive_checks)
 with_variant(lambda h: h["clues"][0].update(available_from="2999-01-01T00:00:00Z"),
              PORT + 3, timed_clue_checks)
+with_variant(lambda h: h.update(strike_limit=1), PORT + 4, strikes_checks)
 print("VARIANT DRIVES PASS")

@@ -39,9 +39,10 @@ def seed_sql(hunt):
         "-- transaction (nothing is applied).",
         "begin;",
         f"delete from public.hunts where id = {q(hid)};",
-        "insert into public.hunts (id, title, starts_at, active) values",
+        "insert into public.hunts (id, title, starts_at, active, strike_limit) values",
         f"  ({q(hid)}, {q(hunt['title'])}, "
-        f"{q(hunt['starts_at']) if hunt.get('starts_at') else 'null'}, true);",
+        f"{q(hunt['starts_at']) if hunt.get('starts_at') else 'null'}, true, "
+        f"{hunt['strike_limit'] if hunt.get('strike_limit') else 'null'});",
     ]
     for c in hunt["clues"]:
         arr = "'{" + ",".join(str(n) for n in c.get("unlocked_by", [])) + "}'::int[]"

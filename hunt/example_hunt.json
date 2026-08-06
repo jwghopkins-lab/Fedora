@@ -1,59 +1,133 @@
 {
-  "_comment": "FIXTURE ONLY — fake content used by CI, the mock backend and as format documentation. A real hunt file has this exact shape but is NEVER committed (it holds answers): it lives outside the repo and is delivered to Supabase via build_hunt.py's seed SQL. field_notes = what the organiser must verify on-site before launch.",
-  "hunt_id": "example",
-  "title": "Example Hunt (fixture — not a real game)",
-  "starts_at": null,
-  "clues": [
-    {
-      "idx": 1, "answer": "CRIMSON", "row": 2, "col": 0, "dir": "A",
-      "unlocked_by": [], "unlock_mode": "any", "available_from": null,
-      "clue_text": "FIXTURE: The colour of the imaginary rug in the example hall. (7)",
-      "field_notes": "n/a — fixture"
-    },
-    {
-      "idx": 2, "answer": "SUNDIAL", "row": 2, "col": 4, "dir": "D",
-      "unlocked_by": [], "unlock_mode": "any", "available_from": null,
-      "clue_text": "FIXTURE: The example timepiece with no hands in the pretend courtyard. (7)",
-      "field_notes": "n/a — fixture"
-    },
-    {
-      "idx": 3, "answer": "MARBLE", "row": 0, "col": 1, "dir": "D",
-      "unlocked_by": [1], "unlock_mode": "any", "available_from": null,
-      "clue_text": "FIXTURE: What the imaginary staircase is made of. (6)",
-      "field_notes": "n/a — fixture"
-    },
-    {
-      "idx": 4, "answer": "LANTERN", "row": 8, "col": 4, "dir": "A",
-      "unlocked_by": [2], "unlock_mode": "any", "available_from": null,
-      "clue_text": "FIXTURE: The light carried by the example night-watchman. (7)",
-      "field_notes": "n/a — fixture"
-    },
-    {
-      "idx": 5, "answer": "OTTER", "row": 6, "col": 7, "dir": "D",
-      "unlocked_by": [3, 4], "unlock_mode": "any", "available_from": null,
-      "clue_text": "FIXTURE: The animal on the pretend weathervane by the example river. (5)",
-      "field_notes": "n/a — fixture"
-    },
-    {
-      "idx": 6, "answer": "ORCHARD", "row": 7, "col": 9, "dir": "D",
-      "unlocked_by": [4], "unlock_mode": "any", "available_from": null,
-      "clue_text": "FIXTURE: Where the example apple trees grow behind the wall. (7)",
-      "field_notes": "n/a — fixture"
-    },
-    {
-      "idx": 7, "answer": "BELFRY", "row": 12, "col": 5, "dir": "A",
-      "unlocked_by": [5, 6], "unlock_mode": "all", "available_from": null,
-      "clue_text": "FIXTURE: Under the {5} statue, the tower room where the example bells hang. (6)",
-      "field_notes": "n/a — fixture"
-    }
-  ],
-  "meta": {
-    "answer": "TEA",
-    "cells": [[8, 7], [12, 6], [11, 9]],
-    "public_hint": "The shaded squares, in reading order of discovery, name your prize."
+ "_comment": "FIXTURE ONLY — fake content used by CI, the mock backend and as format documentation. A real hunt file has this exact shape but is NEVER committed (it holds answers): it lives outside the repo and is delivered to Supabase via build_hunt.py's seed SQL. field_notes = what the organiser must verify on-site before launch.",
+ "hunt_id": "example",
+ "title": "Example Hunt (fixture — not a real game)",
+ "starts_at": null,
+ "clues": [
+  {
+   "idx": 1,
+   "answer": "CRIMSON",
+   "row": 2,
+   "col": 0,
+   "dir": "A",
+   "unlocked_by": [],
+   "unlock_mode": "any",
+   "available_from": null,
+   "clue_text": "FIXTURE: The colour of the imaginary rug in the example hall. (7)",
+   "field_notes": "n/a — fixture"
   },
-  "teams": [
-    { "name": "Test Team", "code": "TESTTEAM1" },
-    { "name": "Rival Team", "code": "RIVALTEAM2" }
-  ]
+  {
+   "idx": 2,
+   "answer": "SUNDIAL",
+   "row": 2,
+   "col": 4,
+   "dir": "D",
+   "unlocked_by": [],
+   "unlock_mode": "any",
+   "available_from": null,
+   "clue_text": "FIXTURE: The example timepiece with no hands in the pretend courtyard. (7)",
+   "field_notes": "n/a — fixture"
+  },
+  {
+   "idx": 3,
+   "answer": "MARBLE",
+   "row": 0,
+   "col": 1,
+   "dir": "D",
+   "unlocked_by": [
+    1
+   ],
+   "unlock_mode": "any",
+   "available_from": null,
+   "clue_text": "FIXTURE: What the imaginary staircase is made of. (6)",
+   "field_notes": "n/a — fixture"
+  },
+  {
+   "idx": 4,
+   "answer": "LANTERN",
+   "row": 8,
+   "col": 4,
+   "dir": "A",
+   "unlocked_by": [
+    2
+   ],
+   "unlock_mode": "any",
+   "available_from": null,
+   "clue_text": "FIXTURE: The light carried by the example night-watchman. (7)",
+   "field_notes": "n/a — fixture"
+  },
+  {
+   "idx": 5,
+   "answer": "OTTER",
+   "row": 6,
+   "col": 7,
+   "dir": "D",
+   "unlocked_by": [
+    3,
+    4
+   ],
+   "unlock_mode": "any",
+   "available_from": null,
+   "clue_text": "FIXTURE: The animal on the pretend weathervane by the example river. (5)",
+   "field_notes": "n/a — fixture"
+  },
+  {
+   "idx": 6,
+   "answer": "ORCHARD",
+   "row": 7,
+   "col": 9,
+   "dir": "D",
+   "unlocked_by": [
+    4
+   ],
+   "unlock_mode": "any",
+   "available_from": null,
+   "clue_text": "FIXTURE: Where the example apple trees grow behind the wall. (7)",
+   "field_notes": "n/a — fixture"
+  },
+  {
+   "idx": 7,
+   "answer": "BELFRY",
+   "row": 12,
+   "col": 5,
+   "dir": "A",
+   "unlocked_by": [
+    5,
+    6
+   ],
+   "unlock_mode": "all",
+   "available_from": null,
+   "clue_text": "FIXTURE: Under the {5} statue, the tower room where the example bells hang. (6)",
+   "field_notes": "n/a — fixture"
+  }
+ ],
+ "meta": {
+  "answer": "TEA",
+  "cells": [
+   [
+    8,
+    7
+   ],
+   [
+    12,
+    6
+   ],
+   [
+    11,
+    9
+   ]
+  ],
+  "public_hint": "The shaded squares, in reading order of discovery, name your prize."
+ },
+ "teams": [
+  {
+   "name": "Test Team",
+   "code": "TESTTEAM1"
+  },
+  {
+   "name": "Rival Team",
+   "code": "RIVALTEAM2"
+  }
+ ],
+ "strike_limit": 3
 }

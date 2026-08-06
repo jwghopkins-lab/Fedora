@@ -218,6 +218,7 @@ let CELLS = null;         // "r,c" -> {entries: [idx...], num, mnum, el}
 let SRV = { solved: {}, unlocked: {} };   // idx -> {answer, at} / idx -> clue_text
 let TEAM = null, CODE = null;
 let STARTED = true, STARTS_AT = null;
+let STRIKES = 0, STRIKE_LIMIT = null, ELIGIBLE = true;
 let sel = null;           // {idx, i} — selected entry (by hunt idx) + cursor offset
 let badKeys = new Set();
 let pollInt = null;
@@ -388,6 +389,17 @@ function renderClues() {
       off${STARTS_AT ? " — " + escapeHtml(new Date(STARTS_AT).toLocaleString()) : ""}.`;
     list.prepend(wait);
   }
+  if (STRIKE_LIMIT != null) {
+    const s = document.createElement("div");
+    s.className = "metacard";
+    s.style.borderColor = ELIGIBLE ? "var(--line)" : "var(--wrong)";
+    s.innerHTML = ELIGIBLE
+      ? `<b>Wrong guesses: ${STRIKES}/${STRIKE_LIMIT}.</b> Go over and you can
+         still play — but you can't win. Guess like you mean it.`
+      : `<b style="color:var(--wrong)">Out of the running.</b> Too many wrong
+         guesses — finish the hunt for glory, not the crown.`;
+    list.prepend(s);
+  }
   const meta = document.createElement("div");
   meta.className = "metacard";
   meta.innerHTML = `<b>The marked squares</b> — ${escapeHtml(GRID.meta_hint || "")}` +
@@ -512,9 +524,16 @@ async function submitSel() {
                   : `✓ ${r.answer}`);
       if (Object.keys(SRV.solved).length === GRID.n_clues) showWin();
     } else if (r.status === "wrong") {
+      const wasEligible = ELIGIBLE;
+      if (r.strike_limit != null) {
+        STRIKES = r.strikes; STRIKE_LIMIT = r.strike_limit; ELIGIBLE = r.eligible;
+      }
       entryCells(byIdx(idx)).forEach(([rr, cc]) => badKeys.add(rr + "," + cc));
+      renderClues();
       updateGrid();
-      toast("Not it — the street knows better");
+      toast(wasEligible && !ELIGIBLE
+        ? "Wrong — and that was one too many. You're out of the running."
+        : "Not it — the street knows better");
     } else if (r.status === "cooldown") {
       toast(`Steady on — try again in ${r.retry_in}s`);
     } else if (r.status === "already_solved") {
@@ -547,6 +566,8 @@ async function sync() {
     const wasStarted = STARTED;
     STARTED = r.started !== false;
     STARTS_AT = r.starts_at;
+    STRIKES = r.strikes || 0; STRIKE_LIMIT = r.strike_limit ?? null;
+    ELIGIBLE = r.eligible !== false;
     const before = Object.keys(SRV.solved).length + ":" + Object.keys(SRV.unlocked).length;
     applyState(r);
     const after = Object.keys(SRV.solved).length + ":" + Object.keys(SRV.unlocked).length;
@@ -572,6 +593,8 @@ async function join(code) {
   }
   STARTED = r.started !== false;
   STARTS_AT = r.starts_at;
+  STRIKES = r.strikes || 0; STRIKE_LIMIT = r.strike_limit ?? null;
+  ELIGIBLE = r.eligible !== false;
   CODE = code; TEAM = r.team_name;
   LS.set("code", code);
   $("hunttitle").textContent = r.title || GRID.title;
@@ -593,8 +616,10 @@ async function showBoard() {
   try { rows = await rpc("fedora_leaderboard", { p_hunt: GRID.hunt_id }); }
   catch { toast("No signal — try again"); return; }
   const lb = rows.map((t, i) =>
-    `<div class="lbrow${t.team_name === TEAM ? " me" : ""}">` +
-    `<span class="n">${i + 1}.</span><span>${escapeHtml(t.team_name)}</span>` +
+    `<div class="lbrow${t.team_name === TEAM ? " me" : ""}"` +
+    `${t.eligible === false ? ' style="opacity:.55"' : ""}>` +
+    `<span class="n">${i + 1}.</span><span>${escapeHtml(t.team_name)}` +
+    `${t.eligible === false ? " ✕" : ""}</span>` +
     `<span class="s">${t.solved}/${GRID.n_clues}</span></div>`).join("");
   $("modalcard").innerHTML = `<h2>Standings</h2>
     <div class="sub">Clues cracked per team. The pub decides the rest.</div>
