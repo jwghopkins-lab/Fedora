@@ -41,22 +41,42 @@ def check(hunt):
         fails.append(f"idx must be 1..{len(clues)}, got {sorted(idxs)}")
     by_idx = {c["idx"]: c for c in clues}
 
-    # answers
-    for c in clues:
-        if not re.fullmatch(r"[A-Z]{3,15}", c["answer"]):
-            fails.append(f"clue {c['idx']}: bad answer {c['answer']!r}")
-    answers = [c["answer"] for c in clues]
-    if len(set(answers)) != len(answers):
-        fails.append("duplicate answers")
-    for a in answers:
-        for b in answers:
-            if a != b and a in b:
-                fails.append(f"answer {a} is contained in {b}")
-
-    # grid legality (independent of the unlock graph)
-    placements = [{"idx": c["idx"], "answer": c["answer"], "row": c["row"],
-                   "col": c["col"], "dir": c["dir"]} for c in clues]
-    fails += gridlib.hard_violations(placements)
+    # two hunt shapes: GRID (crossword; every clue has answer+row/col/dir) and
+    # QA (question journey; clues have qtype + answers[], no geometry)
+    is_grid = all("row" in c and "col" in c and "dir" in c for c in clues)
+    placements = []
+    if is_grid:
+        for c in clues:
+            if not re.fullmatch(r"[A-Z]{3,15}", c["answer"]):
+                fails.append(f"clue {c['idx']}: bad answer {c['answer']!r}")
+        answers = [c["answer"] for c in clues]
+        if len(set(answers)) != len(answers):
+            fails.append("duplicate answers")
+        for a in answers:
+            for b in answers:
+                if a != b and a in b:
+                    fails.append(f"answer {a} is contained in {b}")
+        placements = [{"idx": c["idx"], "answer": c["answer"], "row": c["row"],
+                       "col": c["col"], "dir": c["dir"]} for c in clues]
+        fails += gridlib.hard_violations(placements)
+    else:
+        answers = []
+        for c in clues:
+            qt = c.get("qtype", "text")
+            if qt not in ("text", "number"):
+                fails.append(f"clue {c['idx']}: bad qtype {qt!r}")
+            acc = c.get("answers", [])
+            norm = [re.sub(r"[^A-Z0-9]", "", a.upper()) for a in acc]
+            if qt == "text" and not norm:
+                fails.append(f"clue {c['idx']}: text question with no accepted answers")
+            if any(not a for a in norm):
+                fails.append(f"clue {c['idx']}: empty accepted answer after normalization")
+            if len(set(norm)) != len(norm):
+                fails.append(f"clue {c['idx']}: duplicate accepted answers")
+            if qt == "number":
+                for a in norm:
+                    if not a.isdigit() or len(a) > 4:
+                        fails.append(f"clue {c['idx']}: non-numeric accepted answer {a!r}")
 
     # unlock graph
     starts = [c["idx"] for c in clues if not c.get("unlocked_by")]
@@ -91,7 +111,7 @@ def check(hunt):
     # placeholders + leaks
     for c in clues:
         text = c["clue_text"]
-        if not (10 <= len(text) <= 1000):
+        if not (10 <= len(text) <= 2000):
             fails.append(f"clue {c['idx']}: clue_text length {len(text)}")
         for m in re.finditer(r"\{(\d+)\}", text):
             n = int(m.group(1))
@@ -104,12 +124,30 @@ def check(hunt):
         for a in answers:
             if re.search(rf"\b{re.escape(a)}\b", text, re.I):
                 fails.append(f"answer {a} leaks in clue {c['idx']} text")
+    if not is_grid:
+        # accepted answers must not appear in ANY clue text
+        for c in clues:
+            for a in c.get("answers", []):
+                for c2 in clues:
+                    if re.search(rf"\b{re.escape(a)}\b", c2["clue_text"], re.I):
+                        fails.append(f"accepted answer {a!r} (clue {c['idx']}) "
+                                     f"appears in clue {c2['idx']} text")
 
     # crossing-leak analysis (warnings, printed by main): a word crossed by a
     # word that is solvable WITHOUT it can have letters revealed before it is
     # answered — fatal for candidate-ambiguity clues (e.g. a CHAIN/PERCH 50/50)
     # where the whole point is that no letter distinguishes the candidates.
+    # teams (both hunt shapes)
+    codes = [t["code"] for t in hunt.get("teams", [])]
+    if len(set(codes)) != len(codes):
+        fails.append("duplicate team codes")
+    for t in hunt.get("teams", []):
+        if not re.fullmatch(r"[A-Za-z0-9]{6,40}", t["code"]):
+            fails.append(f"team {t['name']!r}: bad code")
+
     hunt["_leak_warnings"] = []
+    if not is_grid:
+        return fails
     _, per_dir, _ = gridlib.build_grid(placements)
     p_by_idx = {p["idx"]: i for i, p in enumerate(placements)}
     for w in clues:
@@ -140,14 +178,6 @@ def check(hunt):
                     hunt["_leak_warnings"].append(
                         f"clue {w['idx']} ({w['answer']}): letter at {cell} can be "
                         f"revealed by clue {oidx} before {w['idx']} is solved")
-
-    # teams
-    codes = [t["code"] for t in hunt.get("teams", [])]
-    if len(set(codes)) != len(codes):
-        fails.append("duplicate team codes")
-    for t in hunt.get("teams", []):
-        if not re.fullmatch(r"[A-Za-z0-9]{6,40}", t["code"]):
-            fails.append(f"team {t['name']!r}: bad code")
 
     # optional meta puzzle: marked cells must exist and spell the meta answer
     meta = hunt.get("meta")

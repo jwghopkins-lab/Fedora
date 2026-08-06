@@ -69,8 +69,28 @@ def norm_code(code):
     return "".join((code or "").upper().split())
 
 
-def norm_guess(g):
-    return "".join(ch for ch in (g or "").upper() if "A" <= ch <= "Z")
+def norm_text(g):
+    return "".join(ch for ch in (g or "").upper() if ch.isalnum() and ord(ch) < 128)
+
+
+def norm_number(g):
+    d = "".join(ch for ch in (g or "") if ch.isdigit())
+    if not d:
+        return ""
+    return d.lstrip("0") or "0"
+
+
+def qtype_of(c):
+    return c.get("qtype", "text")
+
+
+def answers_of(c):
+    # legacy grid-hunt files carry a single 'answer'; v3 files carry 'answers'
+    if "answers" in c:
+        return [norm_text(a) for a in c["answers"]]
+    if "answer" in c:
+        return [norm_text(c["answer"])]
+    return []
 
 
 def solved_at(team):
@@ -92,12 +112,20 @@ def is_unlocked(team, c):
     return all(n in done for n in need) if mode == "all" else any(n in done for n in need)
 
 
+def first_correct_guess(team, idx):
+    for s in SUBS:
+        if s["team"] == team and s["clue_idx"] == idx and s["correct"]:
+            return s["guess"]
+    return None
+
+
 def state(team):
     done = solved_at(team)
     return {
-        "solved": [{"idx": i, "answer": CLUES[i]["answer"],
+        "solved": [{"idx": i, "answer": first_correct_guess(team, i),
                     "solved_at": iso(done[i])} for i in sorted(done)],
-        "unlocked": [{"idx": i, "clue_text": CLUES[i]["clue_text"]}
+        "unlocked": [{"idx": i, "qtype": qtype_of(CLUES[i]),
+                      "clue_text": CLUES[i]["clue_text"]}
                      for i in sorted(CLUES)
                      if i not in done and is_unlocked(team, CLUES[i])],
     }
@@ -112,13 +140,13 @@ def rpc_join(body):
     code = norm_code(body["p_code"])
     base = {"status": "ok", "team_name": team, "hunt_id": HUNT["hunt_id"],
             "title": HUNT["title"], "starts_at": HUNT.get("starts_at"),
-            "strike_limit": STRIKE_LIMIT}
+            "n_clues": len(CLUES), "strike_limit": STRIKE_LIMIT}
     if not started():
         # pre-start, the read path reveals nothing (mirrors fedora_join)
-        return {**base, "started": False, "strikes": 0, "eligible": True,
-                "solved": [], "unlocked": []}
-    return {**base, "started": True, "strikes": strikes(code),
-            "eligible": eligible(code), **state(code)}
+        return {**base, "intro": None, "started": False, "strikes": 0,
+                "eligible": True, "solved": [], "unlocked": []}
+    return {**base, "intro": HUNT.get("intro"), "started": True,
+            "strikes": strikes(code), "eligible": eligible(code), **state(code)}
 
 
 def rpc_submit(body):
@@ -142,20 +170,29 @@ def rpc_submit(body):
     if last is not None and time.time() - last < COOLDOWN:
         return {"status": "cooldown",
                 "retry_in": int(COOLDOWN - (time.time() - last)) + 1}
-    guess = norm_guess(body.get("p_guess"))
-    if not guess:
-        return {"status": "empty"}
+    if qtype_of(c) == "number":
+        guess = norm_number(body.get("p_guess"))
+        if not guess:
+            return {"status": "empty"}
+        acc = answers_of(c)
+        correct = len(guess) <= 4 and (not acc or guess in acc)
+    else:
+        guess = norm_text(body.get("p_guess"))
+        if not guess:
+            return {"status": "empty"}
+        guess = guess[:40]
+        correct = guess in answers_of(c)
     before = {i for i in CLUES if is_unlocked(code, CLUES[i])}
-    correct = guess == c["answer"]
     SUBS.append({"team": code, "clue_idx": idx, "guess": guess,
                  "correct": correct, "t": time.time()})
     if not correct:
         return {"status": "wrong", "strikes": strikes(code),
                 "strike_limit": STRIKE_LIMIT, "eligible": eligible(code)}
-    newly = [{"idx": i, "clue_text": CLUES[i]["clue_text"]}
+    newly = [{"idx": i, "qtype": qtype_of(CLUES[i]),
+              "clue_text": CLUES[i]["clue_text"]}
              for i in sorted(CLUES)
              if i != idx and i not in before and is_unlocked(code, CLUES[i])]
-    return {"status": "correct", "idx": idx, "answer": c["answer"],
+    return {"status": "correct", "idx": idx, "answer": guess,
             "newly_unlocked": newly}
 
 

@@ -14,6 +14,7 @@ via validate_hunt, then emits two things:
 Usage: build_hunt.py <hunt.json> [--seed-out DIR]     (seed dir default: /tmp)
 """
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -39,19 +40,25 @@ def seed_sql(hunt):
         "-- transaction (nothing is applied).",
         "begin;",
         f"delete from public.hunts where id = {q(hid)};",
-        "insert into public.hunts (id, title, starts_at, active, strike_limit) values",
+        "insert into public.hunts (id, title, intro, starts_at, active, strike_limit) values",
         f"  ({q(hid)}, {q(hunt['title'])}, "
+        f"{q(hunt['intro']) if hunt.get('intro') else 'null'}, "
         f"{q(hunt['starts_at']) if hunt.get('starts_at') else 'null'}, true, "
         f"{hunt['strike_limit'] if hunt.get('strike_limit') else 'null'});",
     ]
     for c in hunt["clues"]:
         arr = "'{" + ",".join(str(n) for n in c.get("unlocked_by", [])) + "}'::int[]"
         avail = q(c["available_from"]) if c.get("available_from") else "null"
+        # v3: accepted-answer sets; legacy grid hunts carry a single 'answer'
+        acc = c.get("answers", [c["answer"]] if "answer" in c else [])
+        norm = [re.sub(r"[^A-Z0-9]", "", a.upper()) for a in acc]
+        aarr = ("array[" + ",".join(q(a) for a in norm) + "]::text[]"
+                if norm else "'{}'::text[]")
         out.append(
-            "insert into public.clues (hunt_id, idx, answer, clue_text, unlocked_by, "
-            "unlock_mode, available_from) values\n"
-            f"  ({q(hid)}, {c['idx']}, {q(c['answer'])}, {q(c['clue_text'])}, "
-            f"{arr}, {q(c.get('unlock_mode', 'any'))}, {avail});")
+            "insert into public.clues (hunt_id, idx, qtype, answers, clue_text, "
+            "unlocked_by, unlock_mode, available_from) values\n"
+            f"  ({q(hid)}, {c['idx']}, {q(c.get('qtype', 'text'))}, {aarr}, "
+            f"{q(c['clue_text'])}, {arr}, {q(c.get('unlock_mode', 'any'))}, {avail});")
     for t in hunt.get("teams", []):
         out.append("insert into public.teams (hunt_id, name, code) values\n"
                    f"  ({q(hid)}, {q(t['name'])}, {q(t['code'].upper())});")
@@ -94,12 +101,16 @@ def main():
         for f in fails:
             print(f"FAIL: {f}")
         return 1
-    gj = grid_json(hunt)
-    (BASE / "app" / "grid.json").write_text(json.dumps(gj, indent=1))
+    is_grid = all("row" in c and "col" in c and "dir" in c for c in hunt["clues"])
+    if is_grid:
+        gj = grid_json(hunt)
+        (BASE / "app" / "grid.json").write_text(json.dumps(gj, indent=1))
+        print(f"app/grid.json: {gj['rows']}x{gj['cols']}, {gj['n_clues']} clues "
+              f"(public, no content)")
+    else:
+        print(f"QA hunt ({len(hunt['clues'])} questions) — no grid artifact")
     seed = seed_dir / f"seed_{hunt['hunt_id']}.sql"
     seed.write_text(seed_sql(hunt))
-    print(f"app/grid.json: {gj['rows']}x{gj['cols']}, {gj['n_clues']} clues "
-          f"(public, no content)")
     print(f"{seed}: PRIVATE seed — paste into Supabase SQL editor, never commit")
     return 0
 

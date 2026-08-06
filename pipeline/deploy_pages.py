@@ -16,7 +16,7 @@ from pathlib import Path
 BASE = Path(__file__).resolve().parent.parent
 APP = BASE / "app"
 
-WHITELIST = ["index.html", "config.js"]
+WHITELIST = ["index.html", "quest.html", "config.js"]
 OPTIONAL = ["grid.json"]
 
 

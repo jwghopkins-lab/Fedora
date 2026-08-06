@@ -11,8 +11,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       # gate on exit codes, never on grepping output for success phrases
-      - name: Validate fixture hunt
-        run: python3 pipeline/validate_hunt.py hunt/example_hunt.json
+      - name: Validate fixture hunts
+        run: |
+          python3 pipeline/validate_hunt.py hunt/example_hunt.json
+          python3 pipeline/validate_hunt.py hunt/example_quest.json
       - name: Build fixture artifacts
         run: python3 pipeline/build_hunt.py hunt/example_hunt.json --seed-out /tmp
       - name: Backend semantics drive (mock)

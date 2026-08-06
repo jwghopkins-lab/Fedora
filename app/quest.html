@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>FEDORA — quest</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<style>
+  /* Chassis shared with the crossword edition (index.html); no grid here —
+     this is the question-journey UI: parts reveal in sequence as answers land. */
+  :root {
+    --paper: #F5F3EE; --panel: #FFFFFF; --ink: #241F19; --ink-soft: #6B6155;
+    --line: #D3CCC0; --accent: #9A6320; --accent-soft: #F0E2CC;
+    --wrong: #C0392B; --wrong-soft: #F7DAD5; --good: #1E7B4F; --good-soft: #DDEEE4;
+    --key: #E8E4DB; --key-ink: #241F19; --shadow: 0 1px 3px rgba(30,25,20,.12);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #171412; --panel: #211D19; --ink: #EDE7DE; --ink-soft: #A29786;
+      --line: #443D34; --accent: #D89A55; --accent-soft: #3D2F1C;
+      --wrong: #E06A5B; --wrong-soft: #4A2622; --good: #4BBF87; --good-soft: #1E3A2C;
+      --key: #322C25; --key-ink: #EDE7DE; --shadow: 0 1px 3px rgba(0,0,0,.4);
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; }
+  body { background: var(--paper); color: var(--ink);
+         font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+         display: flex; flex-direction: column; align-items: center; }
+  .screen { width: 100%; max-width: 560px; display: none; flex-direction: column;
+            min-height: 100dvh; padding: 8px 12px calc(16px + env(safe-area-inset-bottom)); }
+  .screen.on { display: flex; }
+  header { display: flex; align-items: baseline; gap: 10px; padding: 6px 2px; }
+  .wordmark { font-family: Georgia, "Times New Roman", serif; font-weight: 700;
+              font-size: 1.45rem; letter-spacing: .1em; }
+  .wordmark span { color: var(--accent); }
+  .tagline { font-size: .68rem; color: var(--ink-soft); letter-spacing: .08em; text-transform: uppercase; }
+  .spacer { flex: 1; }
+  #teamtag { font-size: .78rem; color: var(--ink-soft); text-align: right; max-width: 40%;
+             overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .banner { background: var(--wrong-soft); color: var(--wrong); border-radius: 8px;
+            font-size: .74rem; padding: 7px 10px; margin: 6px 0; }
+  .card2 { background: var(--panel); border: 1px solid var(--line); border-radius: 12px;
+           padding: 16px 14px; margin: 10px 0; box-shadow: var(--shadow); }
+  .card2 h2 { font-family: Georgia, serif; font-size: 1.15rem; margin-bottom: 8px; }
+  .card2 p { font-size: .84rem; color: var(--ink-soft); line-height: 1.45; margin-bottom: 8px; }
+  input[type=text] { width: 100%; padding: 11px 12px; font-size: 1rem; border-radius: 9px;
+                     border: 1px solid var(--line); background: var(--panel); color: var(--ink); }
+  .btn { border: none; border-radius: 10px; padding: 12px 0; font-size: .95rem;
+         font-weight: 600; cursor: pointer; width: 100%; }
+  .btn.primary { background: var(--accent); color: #fff; }
+  .btn.primary:disabled { opacity: .45; cursor: default; }
+  .btn.ghost { background: var(--key); color: var(--key-ink); }
+  .err { color: var(--wrong); font-size: .8rem; margin-top: 8px; min-height: 1.1em; }
+
+  #progress { display: flex; align-items: center; gap: 10px; padding: 4px 2px 2px; }
+  #progressbar { flex: 1; height: 8px; border-radius: 999px; background: var(--key); overflow: hidden; }
+  #progressfill { height: 100%; width: 0; background: var(--accent); border-radius: 999px;
+                  transition: width .4s ease; }
+  #progresstext { font-size: .78rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .strikeline { font-size: .74rem; color: var(--ink-soft); padding: 0 2px 6px; }
+  .strikeline b.out { color: var(--wrong); }
+
+  #journey { flex: 1; }
+  .part { background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
+          padding: 14px; margin-bottom: 10px; box-shadow: var(--shadow); }
+  .part.intro { border-style: dashed; border-color: var(--accent); }
+  .part.done { border-color: var(--good); }
+  .part.sealed { opacity: .5; }
+  .phead { display: flex; align-items: baseline; gap: 8px; font-size: .72rem;
+           font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+           color: var(--ink-soft); margin-bottom: 6px; }
+  .phead .no { color: var(--accent); }
+  .phead .state { margin-left: auto; }
+  .ptext { font-family: Georgia, serif; font-size: .96rem; line-height: 1.5; }
+  .pans { margin-top: 10px; display: flex; gap: 8px; }
+  .pans input { flex: 1; padding: 11px 12px; font-size: 1.05rem; border-radius: 9px;
+                border: 1.5px solid var(--line); background: var(--paper); color: var(--ink); }
+  .pans input:focus-visible { outline: 2px solid var(--accent); }
+  .pans .btn { width: 110px; flex: none; padding: 10px 0; }
+  .done .answer { font-family: ui-monospace, Menlo, monospace; font-size: 1.05rem;
+                  letter-spacing: .08em; color: var(--good); font-weight: 700; margin-top: 8px; }
+  .part.shake { animation: shake .35s; }
+  @keyframes shake { 25% { transform: translateX(-6px) } 75% { transform: translateX(6px) } }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+
+  .toolrow { display: flex; gap: 6px; justify-content: center; padding: 8px 0 2px; }
+  .tool { border: 1px solid var(--line); background: var(--panel); color: var(--ink-soft);
+          font-size: .74rem; padding: 6px 12px; border-radius: 999px; cursor: pointer; }
+  .tool:focus-visible, .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  #modal { position: fixed; inset: 0; background: rgba(14,12,10,.55); display: none;
+           align-items: center; justify-content: center; padding: 18px; z-index: 20; }
+  #modal.show { display: flex; }
+  .card { background: var(--panel); color: var(--ink); border-radius: 16px; padding: 22px 20px;
+          max-width: 380px; width: 100%; box-shadow: 0 12px 40px rgba(0,0,0,.35);
+          max-height: 86dvh; overflow-y: auto; }
+  .card h2 { font-family: Georgia, serif; font-size: 1.35rem; margin-bottom: 6px; }
+  .card .sub { color: var(--ink-soft); font-size: .82rem; margin-bottom: 10px; line-height: 1.4; }
+  .lb { margin-top: 8px; font-size: .86rem; }
+  .lbrow { display: flex; gap: 8px; padding: 3px 0; align-items: baseline;
+           font-variant-numeric: tabular-nums; }
+  .lbrow.me { color: var(--accent); font-weight: 700; }
+  .lbrow .n { width: 2em; color: var(--ink-soft); }
+  .lbrow .s { margin-left: auto; font-family: ui-monospace, Menlo, monospace; }
+  .btnrow { display: flex; gap: 8px; margin-top: 14px; }
+  .btnrow .btn { flex: 1; padding: 11px 0; font-size: .9rem; }
+  #toast { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+           background: var(--ink); color: var(--paper); font-size: .8rem; padding: 8px 16px;
+           border-radius: 999px; opacity: 0; transition: opacity .25s; pointer-events: none;
+           z-index: 30; white-space: nowrap; max-width: 90vw; }
+  #toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<div class="screen on" id="s-join">
+  <header><div><div class="wordmark">FED<span>O</span>RA</div>
+    <div class="tagline">the city is the board</div></div></header>
+  <div id="offline-banner" class="banner" style="display:none">
+    No backend configured — this build can't check answers.</div>
+  <div class="card2">
+    <h2>Enter your team code</h2>
+    <p>One code per team — any number of phones can share it. Progress is shared
+       live. The questions lead somewhere real: this cannot be finished from a
+       sofa.</p>
+    <input type="text" id="codein" maxlength="40" placeholder="TEAM CODE"
+           autocomplete="off" autocapitalize="characters">
+    <div class="err" id="joinerr"></div>
+    <button class="btn primary" id="joinbtn" disabled>Join the hunt</button>
+  </div>
+</div>
+
+<div class="screen" id="s-quest">
+  <header>
+    <div><div class="wordmark">FED<span>O</span>RA</div>
+      <div class="tagline" id="hunttitle"></div></div>
+    <div class="spacer"></div>
+    <div id="teamtag"></div>
+  </header>
+  <div id="progress">
+    <div id="progressbar"><div id="progressfill"></div></div>
+    <div id="progresstext"></div>
+  </div>
+  <div class="strikeline" id="strikeline"></div>
+  <div id="journey"></div>
+  <div class="toolrow">
+    <button class="tool" id="lbbtn">Leaderboard</button>
+    <button class="tool" id="refreshbtn">↻ Sync</button>
+  </div>
+</div>
+
+<div id="modal"><div class="card" id="modalcard"></div></div>
+<div id="toast"></div>
+
+<script src="config.js"></script>
+<script>
+"use strict";
+const $ = (id) => document.getElementById(id);
+const CFG = window.FEDORA_CONFIG || {};
+const ONLINE = !!(CFG.SUPABASE_URL && CFG.SUPABASE_ANON_KEY);
+const LS = {
+  get: (k, d) => { try { return JSON.parse(localStorage.getItem("fedoraq." + k)) ?? d; }
+                   catch { return d; } },
+  set: (k, v) => localStorage.setItem("fedoraq." + k, JSON.stringify(v)),
+  del: (k) => localStorage.removeItem("fedoraq." + k),
+};
+
+let CODE = null, TEAM = null, HUNT = null, INTRO = null, NCLUES = 0;
+let STARTED = true, STARTS_AT = null;
+let STRIKES = 0, STRIKE_LIMIT = null, ELIGIBLE = true;
+let SOLVED = {};       // idx -> {answer, at}
+let UNLOCKED = {};     // idx -> {qtype, clue_text}
+let submitting = false;
+let pollInt = null;
+
+function toast(msg) {
+  $("toast").textContent = msg;
+  $("toast").classList.add("show");
+  clearTimeout(toast._t);
+  toast._t = setTimeout(() => $("toast").classList.remove("show"), 2400);
+}
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, (c) =>
+    ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+}
+async function rpc(fn, args) {
+  const res = await fetch(`${CFG.SUPABASE_URL}/rest/v1/rpc/${fn}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", apikey: CFG.SUPABASE_ANON_KEY,
+               Authorization: `Bearer ${CFG.SUPABASE_ANON_KEY}` },
+    body: JSON.stringify(args),
+  });
+  if (!res.ok) throw new Error(`rpc ${fn}: HTTP ${res.status}`);
+  return res.json();
+}
+
+function applyState(r) {
+  SOLVED = {};
+  for (const s of r.solved || []) SOLVED[s.idx] = { answer: s.answer, at: s.solved_at };
+  UNLOCKED = {};
+  for (const u of r.unlocked || []) UNLOCKED[u.idx] = { qtype: u.qtype, clue_text: u.clue_text };
+  STARTED = r.started !== false;
+  STARTS_AT = r.starts_at;
+  STRIKES = r.strikes || 0; STRIKE_LIMIT = r.strike_limit ?? null;
+  ELIGIBLE = r.eligible !== false;
+  if (r.intro !== undefined && r.intro !== null) INTRO = r.intro;
+  if (r.n_clues) NCLUES = r.n_clues;
+}
+
+function render() {
+  const nDone = Object.keys(SOLVED).length;
+  $("progressfill").style.width = NCLUES ? (100 * nDone / NCLUES) + "%" : "0";
+  $("progresstext").textContent = `${nDone}/${NCLUES}`;
+  $("strikeline").innerHTML = STRIKE_LIMIT == null ? "" : ELIGIBLE
+    ? `Wrong answers: <b>${STRIKES}/${STRIKE_LIMIT}</b> — go over and you can
+       finish, but you can't win.`
+    : `<b class="out">Out of the running</b> — too many wrong answers. Finish
+       for glory, not the crown.`;
+
+  const j = $("journey");
+  j.innerHTML = "";
+  if (!STARTED) {
+    const w = document.createElement("div");
+    w.className = "part intro";
+    w.innerHTML = `<div class="ptext">The hunt has not started${STARTS_AT
+      ? " — first light at " + escapeHtml(new Date(STARTS_AT).toLocaleString()) : ""}.</div>`;
+    j.appendChild(w);
+    return;
+  }
+  if (INTRO) {
+    const w = document.createElement("div");
+    w.className = "part intro";
+    w.innerHTML = `<div class="phead"><span class="no">The brief</span></div>
+      <div class="ptext">${escapeHtml(INTRO)}</div>`;
+    j.appendChild(w);
+  }
+  for (let i = 1; i <= NCLUES; i++) {
+    const div = document.createElement("div");
+    div.dataset.idx = i;
+    if (SOLVED[i]) {
+      div.className = "part done";
+      div.innerHTML = `<div class="phead"><span class="no">Part ${i}</span>
+        <span class="state">✓</span></div>
+        <div class="answer">${escapeHtml(SOLVED[i].answer)}</div>`;
+    } else if (UNLOCKED[i]) {
+      const u = UNLOCKED[i];
+      div.className = "part open";
+      const inputAttrs = u.qtype === "number"
+        ? 'inputmode="numeric" pattern="[0-9]*" placeholder="a whole number"'
+        : 'autocapitalize="characters" placeholder="your answer"';
+      div.innerHTML = `<div class="phead"><span class="no">Part ${i}</span></div>
+        <div class="ptext">${escapeHtml(u.clue_text)}</div>
+        <div class="pans">
+          <input type="text" maxlength="40" ${inputAttrs} aria-label="Answer to part ${i}">
+          <button class="btn primary">Submit</button>
+        </div>`;
+      const inp = div.querySelector("input");
+      const btn = div.querySelector("button");
+      btn.onclick = () => submit(i, inp, btn, div);
+      inp.addEventListener("keydown", (ev) => {
+        if (ev.key === "Enter") { submit(i, inp, btn, div); ev.preventDefault(); }
+      });
+    } else {
+      div.className = "part sealed";
+      div.innerHTML = `<div class="phead"><span class="no">Part ${i}</span>
+        <span class="state">🔒</span></div>
+        <div class="ptext" style="font-size:.8rem;color:var(--ink-soft)">
+        Sealed until the part before it falls.</div>`;
+    }
+    j.appendChild(div);
+  }
+}
+
+async function submit(idx, inp, btn, div) {
+  const raw = inp.value.trim();
+  if (!raw) { toast("Type an answer first"); return; }
+  btn.disabled = true;
+  submitting = true;
+  try {
+    const r = await rpc("fedora_submit", { p_code: CODE, p_idx: idx, p_guess: raw });
+    if (r.status === "correct") {
+      SOLVED[idx] = { answer: r.answer, at: Date.now() };
+      delete UNLOCKED[idx];
+      for (const u of r.newly_unlocked || [])
+        UNLOCKED[u.idx] = { qtype: u.qtype, clue_text: u.clue_text };
+      render();
+      const nDone = Object.keys(SOLVED).length;
+      if (nDone === NCLUES) showWin();
+      else {
+        toast(`✓ Part ${idx} down`);
+        const next = document.querySelector(".part.open");
+        if (next) next.scrollIntoView({ behavior: "smooth", block: "center" });
+      }
+    } else if (r.status === "wrong") {
+      const wasEligible = ELIGIBLE;
+      if (r.strike_limit != null) {
+        STRIKES = r.strikes; STRIKE_LIMIT = r.strike_limit; ELIGIBLE = r.eligible;
+      }
+      div.classList.remove("shake"); void div.offsetWidth; div.classList.add("shake");
+      render();
+      const again = document.querySelector(`.part[data-idx="${idx}"] input`);
+      if (again) { again.value = raw; }
+      toast(wasEligible && !ELIGIBLE
+        ? "Wrong — and that was one too many. You're out of the running."
+        : "The square disagrees. Look again.");
+    } else if (r.status === "cooldown") {
+      toast(`Steady on — try again in ${r.retry_in}s`);
+    } else if (r.status === "empty") {
+      toast(UNLOCKED[idx] && UNLOCKED[idx].qtype === "number"
+        ? "Numbers only for this one" : "Type an answer first");
+    } else if (r.status === "already_solved") {
+      await sync();
+    } else if (r.status === "not_started") {
+      toast("The hunt hasn't started yet");
+    } else {
+      toast("Hmm: " + r.status);
+    }
+  } catch {
+    toast("No signal — try again");
+  } finally {
+    submitting = false;
+    btn.disabled = false;
+  }
+}
+
+async function sync() {
+  if (submitting || !CODE) return;
+  try {
+    const r = await rpc("fedora_join", { p_code: CODE });
+    if (r.status !== "ok" || submitting) return;
+    applyState(r);
+    render();
+    if (Object.keys(SOLVED).length === NCLUES && NCLUES > 0) showWin();
+  } catch {}
+}
+
+async function join(code) {
+  const r = await rpc("fedora_join", { p_code: code });
+  if (r.status !== "ok") {
+    $("joinerr").textContent = r.status === "bad_code"
+      ? "That code opens no doors. Check it with your quartermaster."
+      : "Hunt unavailable: " + r.status;
+    return false;
+  }
+  if (CFG.QUEST_HUNT_ID && r.hunt_id !== CFG.QUEST_HUNT_ID) {
+    LS.del("code");
+    $("joinerr").textContent = "That code belongs to a different hunt.";
+    return false;
+  }
+  CODE = code; TEAM = r.team_name; HUNT = r.hunt_id;
+  LS.set("code", code);
+  applyState(r);
+  $("hunttitle").textContent = r.title || "";
+  $("teamtag").textContent = r.team_name;
+  $("s-join").classList.remove("on");
+  $("s-quest").classList.add("on");
+  render();
+  clearInterval(pollInt);
+  pollInt = setInterval(sync, 30000);
+  if (NCLUES && Object.keys(SOLVED).length === NCLUES) showWin();
+  return true;
+}
+
+async function showBoard() {
+  let rows = [];
+  try { rows = await rpc("fedora_leaderboard", { p_hunt: HUNT }); }
+  catch { toast("No signal — try again"); return; }
+  const lb = rows.map((t, i) =>
+    `<div class="lbrow${t.team_name === TEAM ? " me" : ""}"` +
+    `${t.eligible === false ? ' style="opacity:.55"' : ""}>` +
+    `<span class="n">${i + 1}.</span><span>${escapeHtml(t.team_name)}` +
+    `${t.eligible === false ? " ✕" : ""}</span>` +
+    `<span class="s">${t.solved}/${NCLUES}</span></div>`).join("");
+  $("modalcard").innerHTML = `<h2>Standings</h2>
+    <div class="sub">Parts cracked per team. ✕ = out of the running.</div>
+    <div class="lb">${lb || "No teams yet."}</div>
+    <div class="btnrow"><button class="btn ghost" id="mclose">Close</button></div>`;
+  $("modal").classList.add("show");
+  $("mclose").onclick = () => $("modal").classList.remove("show");
+}
+function showWin() {
+  clearInterval(pollInt);
+  $("modalcard").innerHTML = `<h2>The square has given up its numbers.</h2>
+    <div class="sub">Every part is logged. Compare notes with the other teams —
+    if your counts agree, the city has spoken.</div>
+    <div class="btnrow">
+      <button class="btn ghost" id="mboard">Standings</button>
+      <button class="btn primary" id="mclose2">Done</button>
+    </div>`;
+  $("modal").classList.add("show");
+  $("mboard").onclick = () => { $("modal").classList.remove("show"); showBoard(); };
+  $("mclose2").onclick = () => $("modal").classList.remove("show");
+}
+
+$("lbbtn").onclick = showBoard;
+$("refreshbtn").onclick = () => { sync(); toast("Synced"); };
+$("codein").oninput = () => { $("joinbtn").disabled = !$("codein").value.trim(); };
+$("joinbtn").onclick = async () => {
+  $("joinbtn").disabled = true;
+  $("joinerr").textContent = "";
+  try { if (!(await join($("codein").value.trim().toUpperCase()))) $("joinbtn").disabled = false; }
+  catch { $("joinerr").textContent = "Can't reach the server — check your signal.";
+          $("joinbtn").disabled = false; }
+};
+document.addEventListener("visibilitychange", () => {
+  if (!document.hidden && CODE) sync();
+});
+
+(async () => {
+  if (!ONLINE) { $("offline-banner").style.display = "block"; return; }
+  const saved = LS.get("code", null);
+  if (saved) { try { await join(saved); } catch {} }
+})();
+</script>
+</body>
+</html>
