@@ -66,17 +66,34 @@ def check(hunt):
             if qt not in ("text", "number"):
                 fails.append(f"clue {c['idx']}: bad qtype {qt!r}")
             acc = c.get("answers", [])
+            if any(not isinstance(a, str) for a in acc):
+                fails.append(f"clue {c['idx']}: accepted answers must be strings "
+                             f"(write numbers as \"42\", not 42)")
+                acc = [str(a) for a in acc]
             norm = [re.sub(r"[^A-Z0-9]", "", a.upper()) for a in acc]
             if qt == "text" and not norm:
                 fails.append(f"clue {c['idx']}: text question with no accepted answers")
             if any(not a for a in norm):
                 fails.append(f"clue {c['idx']}: empty accepted answer after normalization")
+            if any(len(a) > 40 for a in norm):
+                fails.append(f"clue {c['idx']}: accepted answer over 40 chars")
             if len(set(norm)) != len(norm):
                 fails.append(f"clue {c['idx']}: duplicate accepted answers")
             if qt == "number":
                 for a in norm:
                     if not a.isdigit() or len(a) > 4:
                         fails.append(f"clue {c['idx']}: non-numeric accepted answer {a!r}")
+                    elif a != (a.lstrip("0") or "0"):
+                        fails.append(f"clue {c['idx']}: leading-zero number {a!r} can "
+                                     f"never match a normalized guess — write it as "
+                                     f"{a.lstrip('0') or '0'!r}")
+    sl = hunt.get("strike_limit")
+    if sl is not None and (isinstance(sl, bool) or not isinstance(sl, int) or sl < 1):
+        fails.append(f"strike_limit must be a positive integer or null, got {sl!r}")
+    for c in clues:
+        if not isinstance(c.get("clue_text"), str):
+            fails.append(f"clue {c.get('idx', '?')}: missing clue_text")
+            c["clue_text"] = "(missing clue_text placeholder)"
 
     # unlock graph
     starts = [c["idx"] for c in clues if not c.get("unlocked_by")]

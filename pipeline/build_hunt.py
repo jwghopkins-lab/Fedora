@@ -44,14 +44,19 @@ def seed_sql(hunt):
         f"  ({q(hid)}, {q(hunt['title'])}, "
         f"{q(hunt['intro']) if hunt.get('intro') else 'null'}, "
         f"{q(hunt['starts_at']) if hunt.get('starts_at') else 'null'}, true, "
-        f"{hunt['strike_limit'] if hunt.get('strike_limit') else 'null'});",
+        f"{int(hunt['strike_limit']) if hunt.get('strike_limit') is not None else 'null'});",
     ]
     for c in hunt["clues"]:
         arr = "'{" + ",".join(str(n) for n in c.get("unlocked_by", [])) + "}'::int[]"
         avail = q(c["available_from"]) if c.get("available_from") else "null"
-        # v3: accepted-answer sets; legacy grid hunts carry a single 'answer'
-        acc = c.get("answers", [c["answer"]] if "answer" in c else [])
-        norm = [re.sub(r"[^A-Z0-9]", "", a.upper()) for a in acc]
+        # v3: accepted-answer sets; legacy grid hunts carry a single 'answer'.
+        # Number answers get the runtime's number normalization (leading zeros
+        # stripped) so seeded values always remain matchable.
+        acc = [str(a) for a in c.get("answers", [c["answer"]] if "answer" in c else [])]
+        if c.get("qtype", "text") == "number":
+            norm = [(re.sub(r"\D", "", a).lstrip("0") or "0") for a in acc]
+        else:
+            norm = [re.sub(r"[^A-Z0-9]", "", a.upper()) for a in acc]
         aarr = ("array[" + ",".join(q(a) for a in norm) + "]::text[]"
                 if norm else "'{}'::text[]")
         out.append(

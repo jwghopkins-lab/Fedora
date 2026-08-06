@@ -85,12 +85,13 @@ def qtype_of(c):
 
 
 def answers_of(c):
-    # legacy grid-hunt files carry a single 'answer'; v3 files carry 'answers'
-    if "answers" in c:
-        return [norm_text(a) for a in c["answers"]]
-    if "answer" in c:
-        return [norm_text(c["answer"])]
-    return []
+    # legacy grid-hunt files carry a single 'answer'; v3 files carry 'answers'.
+    # number answers use the number normalization (leading zeros stripped) so
+    # a seeded value can always be matched by a normalized guess.
+    raw = c["answers"] if "answers" in c else ([c["answer"]] if "answer" in c else [])
+    if qtype_of(c) == "number":
+        return [norm_number(str(a)) for a in raw]
+    return [norm_text(str(a)) for a in raw]
 
 
 def solved_at(team):
@@ -174,14 +175,21 @@ def rpc_submit(body):
         guess = norm_number(body.get("p_guess"))
         if not guess:
             return {"status": "empty"}
+        guess = guess[:40]
         acc = answers_of(c)
-        correct = len(guess) <= 4 and (not acc or guess in acc)
+        if not acc:
+            correct = True            # collect mode: any whole number is data
+        else:
+            correct = len(guess) <= 4 and guess in acc
     else:
         guess = norm_text(body.get("p_guess"))
         if not guess:
             return {"status": "empty"}
-        guess = guess[:40]
-        correct = guess in answers_of(c)
+        if len(guess) > 40:
+            guess = guess[:40]
+            correct = False           # mirrors the SQL: over-length is wrong
+        else:
+            correct = guess in answers_of(c)
     before = {i for i in CLUES if is_unlocked(code, CLUES[i])}
     SUBS.append({"team": code, "clue_idx": idx, "guess": guess,
                  "correct": correct, "t": time.time()})

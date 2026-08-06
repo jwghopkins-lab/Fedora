@@ -182,11 +182,13 @@ begin
     if guess = '' then return jsonb_build_object('status', 'empty'); end if;
     guess := ltrim(guess, '0');
     if guess = '' then guess := '0'; end if;   -- "000" means zero
-    if char_length(guess) > 4 then
-      is_right := false;   -- no plausible field count has 5+ digits
+    guess := left(guess, 40);                  -- storable, never a CHECK 500
+    if cardinality(c.answers) = 0 then
+      is_right := true;    -- collect mode: ANY whole number is data
+    elsif char_length(guess) > 4 then
+      is_right := false;   -- compete mode: no plausible field count has 5+ digits
     else
-      -- empty accepted-set = collect mode: any whole number is correct
-      is_right := cardinality(c.answers) = 0 or guess = any (c.answers);
+      is_right := guess = any (c.answers);
     end if;
   else
     guess := regexp_replace(upper(coalesce(p_guess, '')), '[^A-Z0-9]', '', 'g');

@@ -308,6 +308,7 @@ async function submit(idx, inp, btn, div) {
       toast(UNLOCKED[idx] && UNLOCKED[idx].qtype === "number"
         ? "Numbers only for this one" : "Type an answer first");
     } else if (r.status === "already_solved") {
+      submitting = false;   // sync() is gated on this flag
       await sync();
     } else if (r.status === "not_started") {
       toast("The hunt hasn't started yet");
@@ -327,8 +328,18 @@ async function sync() {
   try {
     const r = await rpc("fedora_join", { p_code: CODE });
     if (r.status !== "ok" || submitting) return;
+    // a re-render must never eat an answer someone is mid-typing
+    const typed = {};
+    document.querySelectorAll(".part.open").forEach((p) => {
+      const inp = p.querySelector("input");
+      if (inp && inp.value) typed[p.dataset.idx] = inp.value;
+    });
     applyState(r);
     render();
+    for (const [idx, val] of Object.entries(typed)) {
+      const inp = document.querySelector(`.part.open[data-idx="${idx}"] input`);
+      if (inp) inp.value = val;
+    }
     if (Object.keys(SOLVED).length === NCLUES && NCLUES > 0) showWin();
   } catch {}
 }
@@ -336,6 +347,7 @@ async function sync() {
 async function join(code) {
   const r = await rpc("fedora_join", { p_code: code });
   if (r.status !== "ok") {
+    if (r.status === "bad_code") LS.del("code");   // stale saved codes must not loop
     $("joinerr").textContent = r.status === "bad_code"
       ? "That code opens no doors. Check it with your quartermaster."
       : "Hunt unavailable: " + r.status;
