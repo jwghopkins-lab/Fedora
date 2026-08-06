@@ -1,0 +1,30 @@
+name: healthcheck
+
+# Probes the LIVE Supabase backend from a runner (the dev sandbox cannot reach
+# supabase.co). Deliberately leak-free: a bogus join must return bad_code, and
+# the leaderboard is public-to-players information anyway.
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Probe live RPCs using the committed config
+        run: |
+          URL=$(grep -o 'SUPABASE_URL: "[^"]*"' app/config.js | cut -d'"' -f2)
+          KEY=$(grep -o 'SUPABASE_ANON_KEY: "[^"]*"' app/config.js | cut -d'"' -f2)
+          test -n "$URL" && test -n "$KEY"
+          H1="apikey: $KEY"; H2="Authorization: Bearer $KEY"
+          join=$(curl -sfS -X POST "$URL/rest/v1/rpc/fedora_join" \
+            -H "$H1" -H "$H2" -H "Content-Type: application/json" \
+            -d '{"p_code":"DEFINITELYNOTACODE"}')
+          echo "join(bogus) -> $join"
+          echo "$join" | grep -q '"bad_code"'
+          board=$(curl -sfS -X POST "$URL/rest/v1/rpc/fedora_leaderboard" \
+            -H "$H1" -H "$H2" -H "Content-Type: application/json" \
+            -d '{"p_hunt":"london-1"}')
+          echo "leaderboard -> $board"
+          echo "$board" | grep -q '"team_name"'
+          echo "BACKEND LIVE: schema installed, hunt seeded, RPCs reachable"
