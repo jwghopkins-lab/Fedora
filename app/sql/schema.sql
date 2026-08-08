@@ -1,5 +1,6 @@
--- Fedora hunt backend v4 — run in the Supabase SQL editor of the dedicated
--- project.
+-- Fedora hunt backend v5 — run in the Supabase SQL editor of the dedicated
+-- project. It CREATES objects rather than replacing them, so over an existing
+-- install run app/sql/reset.sql first (destructive — read its header).
 --
 -- Each clue has a TYPE (number/text), a KIND (wits/dig/ground, which drives the
 -- UI badge) and an ACCEPTED SET. An empty accepted set means COLLECT MODE for
@@ -8,7 +9,8 @@
 --
 -- Player-facing API is five functions and nothing else: join, submit, skip
 -- (the escape hatch, so one unanswerable clue cannot end a run), hint (released
--- 5 minutes after a clue unlocks, logged against the team) and leaderboard.
+-- hunts.hint_wait_s after a clue unlocks, logged against the team) and
+-- leaderboard.
 --
 -- Security: clients hold no answers and no locked clue text; every table is
 -- deny-all (RLS on, no policies, zero anon grants); per-(team,clue) advisory
