@@ -1,32 +1,76 @@
 {
-  "_comment": "FIXTURE ONLY — fake QA-journey hunt used by CI and the mock. qtype 'number' with empty answers[] = collect mode (any whole number accepted, logged as data). qtype 'text' = membership of answers[] (never revealed to players).",
-  "hunt_id": "example-quest",
-  "title": "Example Quest (fixture — not a real game)",
-  "intro": "FIXTURE: An imaginary journey through an example town. Solve each part to reveal the next.",
-  "starts_at": null,
-  "strike_limit": 2,
-  "clues": [
-    {
-      "idx": 1, "qtype": "number", "answers": [],
-      "unlocked_by": [], "unlock_mode": "any", "available_from": null,
-      "clue_text": "FIXTURE: Count the imaginary lampposts on Example Street. Any whole number is accepted (collect mode).",
-      "field_notes": "n/a — fixture"
-    },
-    {
-      "idx": 2, "qtype": "number", "answers": ["42"],
-      "unlocked_by": [1], "unlock_mode": "any", "available_from": null,
-      "clue_text": "FIXTURE: The pretend house number of the example bakery (compete mode: exactly one right value).",
-      "field_notes": "n/a — fixture"
-    },
-    {
-      "idx": 3, "qtype": "text", "answers": ["GRIFFIN", "GRYPHON", "THEGRIFFIN"],
-      "unlocked_by": [2], "unlock_mode": "any", "available_from": null,
-      "clue_text": "FIXTURE: Name the imaginary beast on the example inn sign (several spellings accepted, none revealed).",
-      "field_notes": "n/a — fixture"
-    }
-  ],
-  "teams": [
-    { "name": "Test Team", "code": "TESTTEAM1" },
-    { "name": "Rival Team", "code": "RIVALTEAM2" }
-  ]
+ "_comment": "FIXTURE ONLY \u2014 fake QA-journey hunt used by CI and the mock. qtype 'number' with empty answers[] = collect mode (any whole number accepted, logged as data). qtype 'text' = membership of answers[] (never revealed to players).",
+ "hunt_id": "example-quest",
+ "title": "Example Quest (fixture \u2014 not a real game)",
+ "intro": "FIXTURE: An imaginary journey through an example town. Solve each part to reveal the next.",
+ "starts_at": null,
+ "strike_limit": 2,
+ "clues": [
+  {
+   "idx": 1,
+   "qtype": "number",
+   "answers": [],
+   "unlocked_by": [],
+   "unlock_mode": "any",
+   "available_from": null,
+   "clue_text": "FIXTURE: Count the imaginary lampposts on Example Street. Any whole number is accepted (collect mode).",
+   "field_notes": "n/a \u2014 fixture",
+   "kind": "wits"
+  },
+  {
+   "idx": 2,
+   "qtype": "number",
+   "answers": [
+    "42"
+   ],
+   "unlocked_by": [
+    1
+   ],
+   "unlock_mode": "any",
+   "available_from": null,
+   "clue_text": "FIXTURE: The pretend house number of the example bakery (compete mode: exactly one right value).",
+   "field_notes": "n/a \u2014 fixture",
+   "kind": "dig"
+  },
+  {
+   "idx": 3,
+   "qtype": "text",
+   "answers": [
+    "GRIFFIN",
+    "GRYPHON",
+    "THEGRIFFIN"
+   ],
+   "unlocked_by": [
+    2
+   ],
+   "unlock_mode": "any",
+   "available_from": null,
+   "clue_text": "FIXTURE: Name the imaginary beast on the example inn sign (several spellings accepted, none revealed).",
+   "field_notes": "n/a \u2014 fixture",
+   "kind": "ground"
+  },
+  {
+   "idx": 4,
+   "kind": "ground",
+   "qtype": "text",
+   "answers": [],
+   "unlocked_by": [
+    3
+   ],
+   "unlock_mode": "any",
+   "available_from": null,
+   "clue_text": "FIXTURE: An inscription we have not read yet \u2014 collect mode accepts anything.",
+   "field_notes": "n/a \u2014 fixture; exercises empty-accept-list TEXT (collect mode)"
+  }
+ ],
+ "teams": [
+  {
+   "name": "Test Team",
+   "code": "TESTTEAM1"
+  },
+  {
+   "name": "Rival Team",
+   "code": "RIVALTEAM2"
+  }
+ ]
 }

@@ -71,8 +71,10 @@ def check(hunt):
                              f"(write numbers as \"42\", not 42)")
                 acc = [str(a) for a in acc]
             norm = [re.sub(r"[^A-Z0-9]", "", a.upper()) for a in acc]
-            if qt == "text" and not norm:
-                fails.append(f"clue {c['idx']}: text question with no accepted answers")
+            k = c.get("kind", "ground")
+            if k not in ("wits", "dig", "ground"):
+                fails.append(f"clue {c['idx']}: bad kind {k!r}")
+            # empty accept-list = collect mode (any answer logged) for BOTH types
             if any(not a for a in norm):
                 fails.append(f"clue {c['idx']}: empty accepted answer after normalization")
             if any(len(a) > 40 for a in norm):

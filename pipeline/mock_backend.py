@@ -97,9 +97,15 @@ def answers_of(c):
 def solved_at(team):
     out = {}
     for s in SUBS:
-        if s["team"] == team and s["correct"] and s["clue_idx"] not in out:
+        if s["team"] == team and (s["correct"] or s.get("skipped")) \
+                and s["clue_idx"] not in out:
             out[s["clue_idx"]] = s["t"]
     return out
+
+
+def was_skipped(team, idx):
+    return any(s["team"] == team and s["clue_idx"] == idx and s.get("skipped")
+               for s in SUBS)
 
 
 def is_unlocked(team, c):
@@ -113,19 +119,20 @@ def is_unlocked(team, c):
     return all(n in done for n in need) if mode == "all" else any(n in done for n in need)
 
 
-def first_correct_guess(team, idx):
-    for s in SUBS:
-        if s["team"] == team and s["clue_idx"] == idx and s["correct"]:
-            return s["guess"]
-    return None
+def latest_accepted_guess(team, idx):
+    hits = [s for s in SUBS if s["team"] == team and s["clue_idx"] == idx
+            and (s["correct"] or s.get("skipped"))]
+    return hits[-1]["guess"] if hits else None
 
 
 def state(team):
     done = solved_at(team)
     return {
-        "solved": [{"idx": i, "answer": first_correct_guess(team, i),
+        "solved": [{"idx": i, "answer": latest_accepted_guess(team, i),
+                    "skipped": was_skipped(team, i),
                     "solved_at": iso(done[i])} for i in sorted(done)],
         "unlocked": [{"idx": i, "qtype": qtype_of(CLUES[i]),
+                      "kind": CLUES[i].get("kind", "ground"),
                       "clue_text": CLUES[i]["clue_text"]}
                      for i in sorted(CLUES)
                      if i not in done and is_unlocked(team, CLUES[i])],
@@ -162,7 +169,7 @@ def rpc_submit(body):
     c = CLUES.get(idx)
     if not c:
         return {"status": "no_such_clue"}
-    if idx in solved_at(code):
+    if idx in solved_at(code) and answers_of(c):
         return {"status": "already_solved"}
     if not is_unlocked(code, c):
         return {"status": "locked"}
@@ -172,6 +179,9 @@ def rpc_submit(body):
         return {"status": "cooldown",
                 "retry_in": int(COOLDOWN - (time.time() - last)) + 1}
     if qtype_of(c) == "number":
+        import re as _re
+        if len(_re.findall(r"[0-9]+", str(body.get("p_guess") or ""))) > 1:
+            return {"status": "ambiguous"}
         guess = norm_number(body.get("p_guess"))
         if not guess:
             return {"status": "empty"}
@@ -185,18 +195,17 @@ def rpc_submit(body):
         guess = norm_text(body.get("p_guess"))
         if not guess:
             return {"status": "empty"}
-        if len(guess) > 40:
-            guess = guess[:40]
-            correct = False           # mirrors the SQL: over-length is wrong
-        else:
-            correct = guess in answers_of(c)
+        guess = guess[:40]
+        acc = answers_of(c)
+        correct = (not acc) or guess in acc   # empty list = collect mode
     before = {i for i in CLUES if is_unlocked(code, CLUES[i])}
     SUBS.append({"team": code, "clue_idx": idx, "guess": guess,
-                 "correct": correct, "t": time.time()})
+                 "correct": correct, "skipped": False, "t": time.time()})
     if not correct:
         return {"status": "wrong", "strikes": strikes(code),
                 "strike_limit": STRIKE_LIMIT, "eligible": eligible(code)}
     newly = [{"idx": i, "qtype": qtype_of(CLUES[i]),
+              "kind": CLUES[i].get("kind", "ground"),
               "clue_text": CLUES[i]["clue_text"]}
              for i in sorted(CLUES)
              if i != idx and i not in before and is_unlocked(code, CLUES[i])]
@@ -204,12 +213,37 @@ def rpc_submit(body):
             "newly_unlocked": newly}
 
 
+def rpc_skip(body):
+    code = norm_code(body.get("p_code"))
+    if code not in TEAMS:
+        return {"status": "bad_code"}
+    idx = body.get("p_idx")
+    c = CLUES.get(idx)
+    if not c:
+        return {"status": "no_such_clue"}
+    if not is_unlocked(code, c):
+        return {"status": "locked"}
+    if idx in solved_at(code):
+        return {"status": "already_done"}
+    before = {i for i in CLUES if is_unlocked(code, CLUES[i])}
+    SUBS.append({"team": code, "clue_idx": idx, "guess": "SKIPPED",
+                 "correct": False, "skipped": True, "t": time.time()})
+    newly = [{"idx": i, "qtype": qtype_of(CLUES[i]),
+              "kind": CLUES[i].get("kind", "ground"),
+              "clue_text": CLUES[i]["clue_text"]}
+             for i in sorted(CLUES)
+             if i != idx and i not in before and is_unlocked(code, CLUES[i])]
+    return {"status": "skipped", "idx": idx, "newly_unlocked": newly}
+
+
 def rpc_leaderboard(body):
     rows = []
     for code, name in TEAMS.items():
         mine = [s for s in SUBS if s["team"] == code]
         done = solved_at(code)
-        rows.append({"team_name": name, "solved": len(done), "guesses": len(mine),
+        nskip = sum(1 for i in done if was_skipped(code, i))
+        rows.append({"team_name": name, "solved": len(done) - nskip,
+                     "skipped": nskip, "guesses": len(mine),
                      "eligible": eligible(code),
                      "last_solve": iso(max(done.values())) if done else None})
     rows.sort(key=lambda r: (-r["eligible"], -r["solved"],
@@ -266,6 +300,10 @@ class Handler(SimpleHTTPRequestHandler):
             time.sleep(int(os.environ.get("SLOW_POST_MS", "0")) / 1000)
             with LOCK:
                 self._json(200, rpc_submit(body))
+            return
+        if route == "/rest/v1/rpc/fedora_skip":
+            with LOCK:
+                self._json(200, rpc_skip(body))
             return
         if route == "/rest/v1/rpc/fedora_join":
             with LOCK:

@@ -60,9 +60,10 @@ def seed_sql(hunt):
         aarr = ("array[" + ",".join(q(a) for a in norm) + "]::text[]"
                 if norm else "'{}'::text[]")
         out.append(
-            "insert into public.clues (hunt_id, idx, qtype, answers, clue_text, "
+            "insert into public.clues (hunt_id, idx, qtype, kind, answers, clue_text, "
             "unlocked_by, unlock_mode, available_from) values\n"
-            f"  ({q(hid)}, {c['idx']}, {q(c.get('qtype', 'text'))}, {aarr}, "
+            f"  ({q(hid)}, {c['idx']}, {q(c.get('qtype', 'text'))}, "
+            f"{q(c.get('kind', 'ground'))}, {aarr}, "
             f"{q(c['clue_text'])}, {arr}, {q(c.get('unlock_mode', 'any'))}, {avail});")
     for t in hunt.get("teams", []):
         out.append("insert into public.teams (hunt_id, name, code) values\n"

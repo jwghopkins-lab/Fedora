@@ -3,21 +3,29 @@
 <head>
 <meta charset="utf-8">
 <title>FEDORA — quest</title>
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<!-- user-scalable removed: players need to pinch-zoom small cast lettering,
+     and the inputs are already 16px so iOS never auto-zooms on focus -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <style>
-  /* Chassis shared with the crossword edition (index.html); no grid here —
-     this is the question-journey UI: parts reveal in sequence as answers land. */
   :root {
     --paper: #F5F3EE; --panel: #FFFFFF; --ink: #241F19; --ink-soft: #6B6155;
-    --line: #D3CCC0; --accent: #9A6320; --accent-soft: #F0E2CC;
-    --wrong: #C0392B; --wrong-soft: #F7DAD5; --good: #1E7B4F; --good-soft: #DDEEE4;
+    --line: #D3CCC0; --accent: #8A5518; --accent-soft: #F0E2CC;
+    --accent-ink: #FFFFFF;                       /* text ON accent */
+    --wrong: #B4291B; --wrong-soft: #F7DAD5; --good: #1E7B4F; --good-soft: #DDEEE4;
+    --k-wits: #3C5F8A; --k-wits-soft: #E1E8F2;
+    --k-dig: #3F6B44; --k-dig-soft: #E0EDE1;
+    --k-ground: #8A5518; --k-ground-soft: #F5E4CE;
     --key: #E8E4DB; --key-ink: #241F19; --shadow: 0 1px 3px rgba(30,25,20,.12);
   }
   @media (prefers-color-scheme: dark) {
     :root {
       --paper: #171412; --panel: #211D19; --ink: #EDE7DE; --ink-soft: #A29786;
-      --line: #443D34; --accent: #D89A55; --accent-soft: #3D2F1C;
-      --wrong: #E06A5B; --wrong-soft: #4A2622; --good: #4BBF87; --good-soft: #1E3A2C;
+      --line: #443D34; --accent: #E0A65E; --accent-soft: #3D2F1C;
+      --accent-ink: #1A1512;                     /* dark ink on light brass */
+      --wrong: #F08877; --wrong-soft: #4A2622; --good: #63CD97; --good-soft: #1E3A2C;
+      --k-wits: #8FB2DE; --k-wits-soft: #24303F;
+      --k-dig: #8FC796; --k-dig-soft: #1F3222;
+      --k-ground: #E0A65E; --k-ground-soft: #3D2F1C;
       --key: #322C25; --key-ink: #EDE7DE; --shadow: 0 1px 3px rgba(0,0,0,.4);
     }
   }
@@ -27,7 +35,7 @@
          font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
          display: flex; flex-direction: column; align-items: center; }
   .screen { width: 100%; max-width: 560px; display: none; flex-direction: column;
-            min-height: 100dvh; padding: 8px 12px calc(16px + env(safe-area-inset-bottom)); }
+            min-height: 100dvh; padding: 8px 12px calc(20px + env(safe-area-inset-bottom)); }
   .screen.on { display: flex; }
   header { display: flex; align-items: baseline; gap: 10px; padding: 6px 2px; }
   .wordmark { font-family: Georgia, "Times New Roman", serif; font-weight: 700;
@@ -43,12 +51,12 @@
            padding: 16px 14px; margin: 10px 0; box-shadow: var(--shadow); }
   .card2 h2 { font-family: Georgia, serif; font-size: 1.15rem; margin-bottom: 8px; }
   .card2 p { font-size: .84rem; color: var(--ink-soft); line-height: 1.45; margin-bottom: 8px; }
-  input[type=text] { width: 100%; padding: 11px 12px; font-size: 1rem; border-radius: 9px;
+  input[type=text] { width: 100%; padding: 12px; font-size: 1rem; border-radius: 9px;
                      border: 1px solid var(--line); background: var(--panel); color: var(--ink); }
-  .btn { border: none; border-radius: 10px; padding: 12px 0; font-size: .95rem;
-         font-weight: 600; cursor: pointer; width: 100%; }
-  .btn.primary { background: var(--accent); color: #fff; }
-  .btn.primary:disabled { opacity: .45; cursor: default; }
+  .btn { border: none; border-radius: 10px; padding: 13px 0; font-size: .95rem;
+         font-weight: 600; cursor: pointer; width: 100%; min-height: 44px; }
+  .btn.primary { background: var(--accent); color: var(--accent-ink); }
+  .btn.primary:disabled { opacity: .5; cursor: default; }
   .btn.ghost { background: var(--key); color: var(--key-ink); }
   .err { color: var(--wrong); font-size: .8rem; margin-top: 8px; min-height: 1.1em; }
 
@@ -65,28 +73,46 @@
           padding: 14px; margin-bottom: 10px; box-shadow: var(--shadow); }
   .part.intro { border-style: dashed; border-color: var(--accent); }
   .part.done { border-color: var(--good); }
+  .part.skipped { border-color: var(--ink-soft); }
   .part.sealed { opacity: .5; }
-  .phead { display: flex; align-items: baseline; gap: 8px; font-size: .72rem;
-           font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
-           color: var(--ink-soft); margin-bottom: 6px; }
+  .phead { display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+           font-size: .72rem; font-weight: 700; letter-spacing: .06em;
+           text-transform: uppercase; color: var(--ink-soft); margin-bottom: 8px; }
   .phead .no { color: var(--accent); }
   .phead .state { margin-left: auto; }
-  .ptext { font-family: Georgia, serif; font-size: .96rem; line-height: 1.5; }
-  .pans { margin-top: 10px; display: flex; gap: 8px; }
-  .pans input { flex: 1; padding: 11px 12px; font-size: 1.05rem; border-radius: 9px;
-                border: 1.5px solid var(--line); background: var(--paper); color: var(--ink); }
+  .pill { font-size: .62rem; font-weight: 800; letter-spacing: .1em; padding: 3px 8px;
+          border-radius: 999px; white-space: nowrap; }
+  .pill.wits   { background: var(--k-wits-soft);   color: var(--k-wits); }
+  .pill.dig    { background: var(--k-dig-soft);    color: var(--k-dig); }
+  .pill.ground { background: var(--k-ground);      color: var(--accent-ink); }
+  .ptext { font-family: Georgia, serif; font-size: 1rem; line-height: 1.55;
+           white-space: pre-line; }   /* clue text carries real line breaks */
+  .ptext .caret { opacity: .55; font-family: system-ui, sans-serif; }
+  .pans { margin-top: 12px; display: flex; gap: 8px; }
+  .pans input { flex: 1; padding: 12px; font-size: 1.05rem; border-radius: 9px;
+                border: 1.5px solid var(--line); background: var(--paper); color: var(--ink);
+                min-height: 44px; }
   .pans input:focus-visible { outline: 2px solid var(--accent); }
-  .pans .btn { width: 110px; flex: none; padding: 10px 0; }
+  .pans .btn { width: 108px; flex: none; padding: 11px 0; }
+  .prow2 { margin-top: 8px; display: flex; justify-content: flex-end; }
+  .skipbtn { border: 1px solid var(--line); background: transparent; color: var(--ink-soft);
+             font-size: .72rem; padding: 8px 12px; border-radius: 999px; cursor: pointer;
+             min-height: 36px; }
   .done .answer { font-family: ui-monospace, Menlo, monospace; font-size: 1.05rem;
                   letter-spacing: .08em; color: var(--good); font-weight: 700; margin-top: 8px; }
+  .skipped .answer { color: var(--ink-soft); }
   .part.shake { animation: shake .35s; }
   @keyframes shake { 25% { transform: translateX(-6px) } 75% { transform: translateX(6px) } }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 
-  .toolrow { display: flex; gap: 6px; justify-content: center; padding: 8px 0 2px; }
+  .kindkey { font-size: .78rem; color: var(--ink-soft); line-height: 1.5; margin-top: 10px; }
+  .kindkey div { margin: 6px 0; }
+  .toolrow { display: flex; gap: 6px; justify-content: center; padding: 10px 0 2px; }
   .tool { border: 1px solid var(--line); background: var(--panel); color: var(--ink-soft);
-          font-size: .74rem; padding: 6px 12px; border-radius: 999px; cursor: pointer; }
-  .tool:focus-visible, .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+          font-size: .76rem; padding: 11px 16px; border-radius: 999px; cursor: pointer;
+          min-height: 44px; }
+  .tool:focus-visible, .btn:focus-visible, .skipbtn:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 1px; }
   #modal { position: fixed; inset: 0; background: rgba(14,12,10,.55); display: none;
            align-items: center; justify-content: center; padding: 18px; z-index: 20; }
   #modal.show { display: flex; }
@@ -94,19 +120,20 @@
           max-width: 380px; width: 100%; box-shadow: 0 12px 40px rgba(0,0,0,.35);
           max-height: 86dvh; overflow-y: auto; }
   .card h2 { font-family: Georgia, serif; font-size: 1.35rem; margin-bottom: 6px; }
-  .card .sub { color: var(--ink-soft); font-size: .82rem; margin-bottom: 10px; line-height: 1.4; }
+  .card .sub { color: var(--ink-soft); font-size: .82rem; margin-bottom: 10px; line-height: 1.45; }
   .lb { margin-top: 8px; font-size: .86rem; }
-  .lbrow { display: flex; gap: 8px; padding: 3px 0; align-items: baseline;
+  .lbrow { display: flex; gap: 8px; padding: 4px 0; align-items: baseline;
            font-variant-numeric: tabular-nums; }
   .lbrow.me { color: var(--accent); font-weight: 700; }
   .lbrow .n { width: 2em; color: var(--ink-soft); }
   .lbrow .s { margin-left: auto; font-family: ui-monospace, Menlo, monospace; }
   .btnrow { display: flex; gap: 8px; margin-top: 14px; }
-  .btnrow .btn { flex: 1; padding: 11px 0; font-size: .9rem; }
-  #toast { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
-           background: var(--ink); color: var(--paper); font-size: .8rem; padding: 8px 16px;
-           border-radius: 999px; opacity: 0; transition: opacity .25s; pointer-events: none;
-           z-index: 30; white-space: nowrap; max-width: 90vw; }
+  .btnrow .btn { flex: 1; padding: 12px 0; font-size: .9rem; }
+  #toast { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+           background: var(--ink); color: var(--paper); font-size: .82rem; padding: 10px 16px;
+           border-radius: 14px; opacity: 0; transition: opacity .25s; pointer-events: none;
+           z-index: 30; width: calc(100% - 32px); max-width: 420px; text-align: center;
+           line-height: 1.35; }
   #toast.show { opacity: 1; }
 </style>
 </head>
@@ -119,12 +146,13 @@
     No backend configured — this build can't check answers.</div>
   <div class="card2">
     <h2>Enter your team code</h2>
-    <p>One code per team — any number of phones can share it. Progress is shared
-       live. The questions lead somewhere real: this cannot be finished from a
-       sofa.</p>
+    <p>One code per team — any number of phones can share it, and progress is
+       shared live. The questions lead somewhere real: this cannot be finished
+       from a sofa.</p>
     <input type="text" id="codein" maxlength="40" placeholder="TEAM CODE"
-           autocomplete="off" autocapitalize="characters">
-    <div class="err" id="joinerr"></div>
+           autocomplete="off" autocapitalize="characters" autocorrect="off"
+           spellcheck="false" enterkeyhint="go" aria-label="Team code">
+    <div class="err" id="joinerr" role="alert" aria-live="assertive"></div>
     <button class="btn primary" id="joinbtn" disabled>Join the hunt</button>
   </div>
 </div>
@@ -140,7 +168,7 @@
     <div id="progressbar"><div id="progressfill"></div></div>
     <div id="progresstext"></div>
   </div>
-  <div class="strikeline" id="strikeline"></div>
+  <div class="strikeline" id="strikeline" aria-live="polite"></div>
   <div id="journey"></div>
   <div class="toolrow">
     <button class="tool" id="lbbtn">Leaderboard</button>
@@ -149,7 +177,7 @@
 </div>
 
 <div id="modal"><div class="card" id="modalcard"></div></div>
-<div id="toast"></div>
+<div id="toast" role="status" aria-live="polite"></div>
 
 <script src="config.js"></script>
 <script>
@@ -160,44 +188,63 @@ const ONLINE = !!(CFG.SUPABASE_URL && CFG.SUPABASE_ANON_KEY);
 const LS = {
   get: (k, d) => { try { return JSON.parse(localStorage.getItem("fedoraq." + k)) ?? d; }
                    catch { return d; } },
-  set: (k, v) => localStorage.setItem("fedoraq." + k, JSON.stringify(v)),
-  del: (k) => localStorage.removeItem("fedoraq." + k),
+  set: (k, v) => { try { localStorage.setItem("fedoraq." + k, JSON.stringify(v)); }
+                   catch {} },
+  del: (k) => { try { localStorage.removeItem("fedoraq." + k); } catch {} },
 };
+const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+const KIND_LABEL = { wits: "Wits", dig: "The Dig", ground: "Ground Truth" };
 
 let CODE = null, TEAM = null, HUNT = null, INTRO = null, NCLUES = 0;
 let STARTED = true, STARTS_AT = null;
 let STRIKES = 0, STRIKE_LIMIT = null, ELIGIBLE = true;
-let SOLVED = {};       // idx -> {answer, at}
-let UNLOCKED = {};     // idx -> {qtype, clue_text}
-let submitting = false;
+let SOLVED = {};       // idx -> {answer, at, skipped}
+let UNLOCKED = {};     // idx -> {qtype, kind, clue_text}
+let inflight = 0;      // >0 while a submit/skip is outstanding
+let stateGen = 0;      // monotonic: a stale sync response must never win
 let pollInt = null;
+const typing = new Map();   // idx -> interval id, for in-progress reveals
 
 function toast(msg) {
   $("toast").textContent = msg;
   $("toast").classList.add("show");
   clearTimeout(toast._t);
-  toast._t = setTimeout(() => $("toast").classList.remove("show"), 2400);
+  toast._t = setTimeout(() => $("toast").classList.remove("show"), 3200);
 }
 function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, (c) =>
     ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 }
-async function rpc(fn, args) {
-  const res = await fetch(`${CFG.SUPABASE_URL}/rest/v1/rpc/${fn}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json", apikey: CFG.SUPABASE_ANON_KEY,
-               Authorization: `Bearer ${CFG.SUPABASE_ANON_KEY}` },
-    body: JSON.stringify(args),
-  });
-  if (!res.ok) throw new Error(`rpc ${fn}: HTTP ${res.status}`);
-  return res.json();
+// every network call gets a deadline: a hung fetch outdoors is indistinguishable
+// from a dead app, and a lost response used to look like an unsolved clue
+async function rpc(fn, args, ms = 12000) {
+  const ac = new AbortController();
+  const t = setTimeout(() => ac.abort(), ms);
+  try {
+    const res = await fetch(`${CFG.SUPABASE_URL}/rest/v1/rpc/${fn}`, {
+      method: "POST", signal: ac.signal,
+      headers: { "Content-Type": "application/json", apikey: CFG.SUPABASE_ANON_KEY,
+                 Authorization: `Bearer ${CFG.SUPABASE_ANON_KEY}` },
+      body: JSON.stringify(args),
+    });
+    if (!res.ok) { const e = new Error(`HTTP ${res.status}`); e.http = res.status; throw e; }
+    return res.json();
+  } finally { clearTimeout(t); }
+}
+function netMsg(err) {
+  if (err && err.name === "AbortError") return "That took too long — tap Submit again.";
+  if (err && err.http === 429) return "Too many requests — wait a moment.";
+  if (err && err.http >= 500) return "The server is having a moment. Try again.";
+  return "No signal — try again.";
 }
 
 function applyState(r) {
   SOLVED = {};
-  for (const s of r.solved || []) SOLVED[s.idx] = { answer: s.answer, at: s.solved_at };
+  for (const s of r.solved || [])
+    SOLVED[s.idx] = { answer: s.answer, at: s.solved_at, skipped: !!s.skipped };
   UNLOCKED = {};
-  for (const u of r.unlocked || []) UNLOCKED[u.idx] = { qtype: u.qtype, clue_text: u.clue_text };
+  for (const u of r.unlocked || [])
+    UNLOCKED[u.idx] = { qtype: u.qtype, kind: u.kind || "ground", clue_text: u.clue_text };
   STARTED = r.started !== false;
   STARTS_AT = r.starts_at;
   STRIKES = r.strikes || 0; STRIKE_LIMIT = r.strike_limit ?? null;
@@ -205,8 +252,41 @@ function applyState(r) {
   if (r.intro !== undefined && r.intro !== null) INTRO = r.intro;
   if (r.n_clues) NCLUES = r.n_clues;
 }
+// fingerprint: lets sync() skip a pointless DOM rebuild, which is what used to
+// slam the keyboard shut and restart the typewriter every 30 seconds
+function fingerprint() {
+  return [STARTED, STRIKES, STRIKE_LIMIT, ELIGIBLE, NCLUES,
+          Object.keys(SOLVED).sort().join(","),
+          Object.values(SOLVED).map((s) => s.answer).join("|"),
+          Object.keys(UNLOCKED).sort().join(",")].join("~");
+}
+let lastPrint = null;
+
+/* ---- typewriter: first view of a clue only, tap to skip ---- */
+function seenSet() { return new Set(LS.get("seen." + HUNT, [])); }
+function markSeen(idx) {
+  const s = seenSet(); s.add(idx); LS.set("seen." + HUNT, [...s]);
+}
+function typeInto(el, text, idx) {
+  const total = text.length;
+  const step = Math.max(8, Math.min(22, Math.floor(3200 / Math.max(1, total))));
+  let i = 0;
+  el.textContent = "";
+  const finish = () => {
+    clearInterval(typing.get(idx)); typing.delete(idx);
+    el.textContent = text; markSeen(idx);
+  };
+  const id = setInterval(() => {
+    i += 2;
+    if (i >= total) { finish(); return; }
+    el.textContent = text.slice(0, i);
+  }, step);
+  typing.set(idx, id);
+  return finish;
+}
 
 function render() {
+  lastPrint = fingerprint();
   const nDone = Object.keys(SOLVED).length;
   $("progressfill").style.width = NCLUES ? (100 * nDone / NCLUES) + "%" : "0";
   $("progresstext").textContent = `${nDone}/${NCLUES}`;
@@ -229,36 +309,59 @@ function render() {
   if (INTRO) {
     const w = document.createElement("div");
     w.className = "part intro";
-    w.innerHTML = `<div class="phead"><span class="no">The brief</span></div>
-      <div class="ptext">${escapeHtml(INTRO)}</div>`;
+    w.innerHTML = `<div class="phead"><span class="no">Your brief</span></div>
+      <div class="ptext">${escapeHtml(INTRO)}</div>
+      <div class="kindkey">
+        <div><span class="pill wits">WITS</span> &nbsp;think — no phone, no walking</div>
+        <div><span class="pill dig">THE DIG</span> &nbsp;it's in the record — go and look it up</div>
+        <div><span class="pill ground">GROUND TRUTH</span> &nbsp;only the city knows — be there</div>
+      </div>`;
     j.appendChild(w);
   }
   for (let i = 1; i <= NCLUES; i++) {
     const div = document.createElement("div");
     div.dataset.idx = i;
-    if (SOLVED[i]) {
-      div.className = "part done";
+    const sv = SOLVED[i];
+    if (sv) {
+      div.className = "part " + (sv.skipped ? "skipped" : "done");
       div.innerHTML = `<div class="phead"><span class="no">Part ${i}</span>
-        <span class="state">✓</span></div>
-        <div class="answer">${escapeHtml(SOLVED[i].answer)}</div>`;
+        <span class="state">${sv.skipped ? "skipped" : "✓"}</span></div>
+        <div class="answer">${escapeHtml(sv.answer || "")}</div>`;
     } else if (UNLOCKED[i]) {
       const u = UNLOCKED[i];
+      const kind = KIND_LABEL[u.kind] ? u.kind : "ground";
       div.className = "part open";
-      const inputAttrs = u.qtype === "number"
-        ? 'inputmode="numeric" pattern="[0-9]*" placeholder="a whole number"'
-        : 'autocapitalize="characters" placeholder="your answer"';
-      div.innerHTML = `<div class="phead"><span class="no">Part ${i}</span></div>
-        <div class="ptext">${escapeHtml(u.clue_text)}</div>
-        <div class="pans">
-          <input type="text" maxlength="40" ${inputAttrs} aria-label="Answer to part ${i}">
-          <button class="btn primary">Submit</button>
-        </div>`;
+      const attrs = u.qtype === "number"
+        ? 'inputmode="numeric" pattern="[0-9]*" placeholder="a whole number" ' +
+          'autocorrect="off" autocapitalize="off" spellcheck="false" autocomplete="off"'
+        : 'placeholder="your answer" autocapitalize="characters" autocorrect="off" ' +
+          'spellcheck="false" autocomplete="off"';
+      div.innerHTML =
+        `<div class="phead"><span class="no">Part ${i}</span>
+           <span class="pill ${kind}">${KIND_LABEL[kind].toUpperCase()}</span></div>
+         <div class="ptext"></div>
+         <div class="pans">
+           <input type="text" maxlength="40" ${attrs} enterkeyhint="send"
+                  aria-label="Answer to part ${i}">
+           <button class="btn primary">Submit</button>
+         </div>
+         <div class="prow2"><button class="skipbtn">Can't get this one →</button></div>`;
+      const textEl = div.querySelector(".ptext");
       const inp = div.querySelector("input");
-      const btn = div.querySelector("button");
+      const btn = div.querySelector(".btn");
+      if (REDUCED || seenSet().has(i)) {
+        textEl.textContent = u.clue_text;
+      } else {
+        const finish = typeInto(textEl, u.clue_text, i);
+        div.addEventListener("click", (ev) => {
+          if (typing.has(i) && ev.target !== inp) finish();
+        }, { once: false });
+      }
       btn.onclick = () => submit(i, inp, btn, div);
       inp.addEventListener("keydown", (ev) => {
-        if (ev.key === "Enter") { submit(i, inp, btn, div); ev.preventDefault(); }
+        if (ev.key === "Enter") { ev.preventDefault(); submit(i, inp, btn, div); }
       });
+      div.querySelector(".skipbtn").onclick = () => confirmSkip(i);
     } else {
       div.className = "part sealed";
       div.innerHTML = `<div class="phead"><span class="no">Part ${i}</span>
@@ -273,81 +376,106 @@ function render() {
 async function submit(idx, inp, btn, div) {
   const raw = inp.value.trim();
   if (!raw) { toast("Type an answer first"); return; }
-  btn.disabled = true;
-  submitting = true;
+  if (btn.disabled) return;                 // double-tap / Enter+tap guard
+  btn.disabled = true; inflight++;
   try {
     const r = await rpc("fedora_submit", { p_code: CODE, p_idx: idx, p_guess: raw });
     if (r.status === "correct") {
-      SOLVED[idx] = { answer: r.answer, at: Date.now() };
+      SOLVED[idx] = { answer: r.answer, at: Date.now(), skipped: false };
       delete UNLOCKED[idx];
       for (const u of r.newly_unlocked || [])
-        UNLOCKED[u.idx] = { qtype: u.qtype, clue_text: u.clue_text };
+        UNLOCKED[u.idx] = { qtype: u.qtype, kind: u.kind || "ground", clue_text: u.clue_text };
       render();
-      const nDone = Object.keys(SOLVED).length;
-      if (nDone === NCLUES) showWin();
+      if (Object.keys(SOLVED).length === NCLUES) showWin();
       else {
         toast(`✓ Part ${idx} down`);
         const next = document.querySelector(".part.open");
-        if (next) next.scrollIntoView({ behavior: "smooth", block: "center" });
+        if (next) next.scrollIntoView({ behavior: REDUCED ? "auto" : "smooth", block: "center" });
       }
     } else if (r.status === "wrong") {
       const wasEligible = ELIGIBLE;
       if (r.strike_limit != null) {
         STRIKES = r.strikes; STRIKE_LIMIT = r.strike_limit; ELIGIBLE = r.eligible;
       }
-      div.classList.remove("shake"); void div.offsetWidth; div.classList.add("shake");
       render();
-      const again = document.querySelector(`.part[data-idx="${idx}"] input`);
-      if (again) { again.value = raw; }
+      const card = document.querySelector(`.part[data-idx="${idx}"]`);
+      if (card) {
+        const again = card.querySelector("input");
+        if (again) again.value = raw;
+        void card.offsetWidth; card.classList.add("shake");
+      }
       toast(wasEligible && !ELIGIBLE
         ? "Wrong — and that was one too many. You're out of the running."
         : "The square disagrees. Look again.");
+    } else if (r.status === "ambiguous") {
+      toast("Two numbers in there — give one whole number.");
     } else if (r.status === "cooldown") {
       toast(`Steady on — try again in ${r.retry_in}s`);
     } else if (r.status === "empty") {
-      toast(UNLOCKED[idx] && UNLOCKED[idx].qtype === "number"
-        ? "Numbers only for this one" : "Type an answer first");
+      toast("Numbers only for this one");
     } else if (r.status === "already_solved") {
-      submitting = false;   // sync() is gated on this flag
-      await sync();
+      await refresh();
     } else if (r.status === "not_started") {
       toast("The hunt hasn't started yet");
     } else {
       toast("Hmm: " + r.status);
     }
-  } catch {
-    toast("No signal — try again");
+  } catch (err) {
+    toast(netMsg(err));
+    // the answer may have landed: reconcile rather than leave a phantom
+    setTimeout(refresh, 1200);
   } finally {
-    submitting = false;
-    btn.disabled = false;
+    inflight--; btn.disabled = false;
   }
 }
 
-async function sync() {
-  if (submitting || !CODE) return;
+function confirmSkip(idx) {
+  $("modalcard").innerHTML = `<h2>Leave this one behind?</h2>
+    <div class="sub">It stays unanswered and you can't win on it — but the rest of
+    the hunt unlocks, so a wall or a locked gate can't end your day. We log which
+    question beat you, which is genuinely useful to us.</div>
+    <div class="btnrow">
+      <button class="btn ghost" id="skno">Keep trying</button>
+      <button class="btn primary" id="skyes">Move on</button>
+    </div>`;
+  $("modal").classList.add("show");
+  $("skno").onclick = () => $("modal").classList.remove("show");
+  $("skyes").onclick = async () => {
+    $("modal").classList.remove("show");
+    inflight++;
+    try {
+      const r = await rpc("fedora_skip", { p_code: CODE, p_idx: idx, p_note: "SKIPPED" });
+      if (r.status === "skipped") {
+        SOLVED[idx] = { answer: "— skipped —", at: Date.now(), skipped: true };
+        delete UNLOCKED[idx];
+        for (const u of r.newly_unlocked || [])
+          UNLOCKED[u.idx] = { qtype: u.qtype, kind: u.kind || "ground", clue_text: u.clue_text };
+        render();
+        toast("Moved on. The next part is open.");
+      } else { toast("Hmm: " + r.status); }
+    } catch (err) { toast(netMsg(err)); }
+    finally { inflight--; }
+  };
+}
+
+async function refresh(force) {
+  if (!CODE) return;
+  if (inflight > 0 && !force) return;
+  const gen = ++stateGen;
   try {
     const r = await rpc("fedora_join", { p_code: CODE });
-    if (r.status !== "ok" || submitting) return;
-    // a re-render must never eat an answer someone is mid-typing
-    const typed = {};
-    document.querySelectorAll(".part.open").forEach((p) => {
-      const inp = p.querySelector("input");
-      if (inp && inp.value) typed[p.dataset.idx] = inp.value;
-    });
+    // a slow response must never overwrite newer local truth
+    if (gen !== stateGen || inflight > 0 || r.status !== "ok") return;
     applyState(r);
-    render();
-    for (const [idx, val] of Object.entries(typed)) {
-      const inp = document.querySelector(`.part.open[data-idx="${idx}"] input`);
-      if (inp) inp.value = val;
-    }
-    if (Object.keys(SOLVED).length === NCLUES && NCLUES > 0) showWin();
+    if (fingerprint() !== lastPrint) render();
+    if (NCLUES && Object.keys(SOLVED).length === NCLUES) showWin();
   } catch {}
 }
 
 async function join(code) {
   const r = await rpc("fedora_join", { p_code: code });
   if (r.status !== "ok") {
-    if (r.status === "bad_code") LS.del("code");   // stale saved codes must not loop
+    if (r.status === "bad_code") LS.del("code");
     $("joinerr").textContent = r.status === "bad_code"
       ? "That code opens no doors. Check it with your quartermaster."
       : "Hunt unavailable: " + r.status;
@@ -367,7 +495,7 @@ async function join(code) {
   $("s-quest").classList.add("on");
   render();
   clearInterval(pollInt);
-  pollInt = setInterval(sync, 30000);
+  pollInt = setInterval(refresh, 30000);
   if (NCLUES && Object.keys(SOLVED).length === NCLUES) showWin();
   return true;
 }
@@ -375,13 +503,14 @@ async function join(code) {
 async function showBoard() {
   let rows = [];
   try { rows = await rpc("fedora_leaderboard", { p_hunt: HUNT }); }
-  catch { toast("No signal — try again"); return; }
+  catch (err) { toast(netMsg(err)); return; }
   const lb = rows.map((t, i) =>
     `<div class="lbrow${t.team_name === TEAM ? " me" : ""}"` +
     `${t.eligible === false ? ' style="opacity:.55"' : ""}>` +
     `<span class="n">${i + 1}.</span><span>${escapeHtml(t.team_name)}` +
     `${t.eligible === false ? " ✕" : ""}</span>` +
-    `<span class="s">${t.solved}/${NCLUES}</span></div>`).join("");
+    `<span class="s">${t.solved}/${NCLUES}${t.skipped ? ` (${t.skipped} skipped)` : ""}</span></div>`
+  ).join("");
   $("modalcard").innerHTML = `<h2>Standings</h2>
     <div class="sub">Parts cracked per team. ✕ = out of the running.</div>
     <div class="lb">${lb || "No teams yet."}</div>
@@ -389,11 +518,16 @@ async function showBoard() {
   $("modal").classList.add("show");
   $("mclose").onclick = () => $("modal").classList.remove("show");
 }
+let winShown = false;
 function showWin() {
+  if (winShown) return;
+  winShown = true;
   clearInterval(pollInt);
+  const skipped = Object.values(SOLVED).filter((s) => s.skipped).length;
   $("modalcard").innerHTML = `<h2>The square has given up its numbers.</h2>
-    <div class="sub">Every part is logged. Compare notes with the other teams —
-    if your counts agree, the city has spoken.</div>
+    <div class="sub">Every part logged${skipped ? `, ${skipped} left behind` : ""}.
+    Compare notes with the other agents — where your counts agree, the city has
+    spoken. Where they don't, we have found a question that needs rewriting.</div>
     <div class="btnrow">
       <button class="btn ghost" id="mboard">Standings</button>
       <button class="btn primary" id="mclose2">Done</button>
@@ -404,23 +538,31 @@ function showWin() {
 }
 
 $("lbbtn").onclick = showBoard;
-$("refreshbtn").onclick = () => { sync(); toast("Synced"); };
+$("refreshbtn").onclick = async () => {
+  await refresh(true);
+  toast("Synced");
+};
 $("codein").oninput = () => { $("joinbtn").disabled = !$("codein").value.trim(); };
+$("codein").addEventListener("keydown", (ev) => {
+  if (ev.key === "Enter" && $("codein").value.trim()) { ev.preventDefault(); $("joinbtn").click(); }
+});
 $("joinbtn").onclick = async () => {
   $("joinbtn").disabled = true;
   $("joinerr").textContent = "";
   try { if (!(await join($("codein").value.trim().toUpperCase()))) $("joinbtn").disabled = false; }
-  catch { $("joinerr").textContent = "Can't reach the server — check your signal.";
-          $("joinbtn").disabled = false; }
+  catch (err) { $("joinerr").textContent = netMsg(err); $("joinbtn").disabled = false; }
 };
 document.addEventListener("visibilitychange", () => {
-  if (!document.hidden && CODE) sync();
+  if (!document.hidden && CODE) refresh();
 });
 
 (async () => {
   if (!ONLINE) { $("offline-banner").style.display = "block"; return; }
   const saved = LS.get("code", null);
-  if (saved) { try { await join(saved); } catch {} }
+  if (saved) {
+    try { await join(saved); }
+    catch (err) { $("joinerr").textContent = netMsg(err); }
+  }
 })();
 </script>
 </body>
