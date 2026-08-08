@@ -29,7 +29,12 @@ HUNT = json.loads(Path(sys.argv[2] if len(sys.argv) > 2
 COOLDOWN = float(os.environ.get("MOCK_COOLDOWN_S", "15"))   # SQL stays at 15s
 TEAMS = {t["code"].upper(): t["name"] for t in HUNT["teams"]}
 CLUES = {c["idx"]: c for c in HUNT["clues"]}
-SUBS = []   # {team, clue_idx, guess, correct, t}
+SUBS = []   # {team, clue_idx, guess, correct, skipped, t}
+HINTS = []  # {team, clue_idx, t}
+# mirrors hunts.hint_wait_s (env overrides it, so tests need not wait 5 minutes);
+# the client counts down using the value we report, so the two cannot drift
+HINT_WAIT = float(os.environ.get("MOCK_HINT_WAIT_S")
+                  or HUNT.get("hint_wait_s") or 300)
 LOCK = threading.Lock()
 
 
@@ -48,6 +53,8 @@ def iso(ts):
     return datetime.fromtimestamp(ts, tz=timezone.utc).isoformat()
 
 
+START_T = time.time()
+TEAM_BORN = {}
 STARTS_AT = iso_to_epoch(HUNT.get("starts_at"))
 ACTIVE = HUNT.get("active", True)
 STRIKE_LIMIT = HUNT.get("strike_limit")
@@ -125,6 +132,19 @@ def latest_accepted_guess(team, idx):
     return hits[-1]["guess"] if hits else None
 
 
+def available_since(team, c):
+    need = c.get("unlocked_by", [])
+    if not need:
+        return TEAM_BORN.get(team, START_T)
+    ts = [s["t"] for s in SUBS if s["team"] == team and s["clue_idx"] in need
+          and (s["correct"] or s.get("skipped"))]
+    return max(ts) if ts else START_T
+
+
+def hint_taken(team, idx):
+    return any(x["team"] == team and x["clue_idx"] == idx for x in HINTS)
+
+
 def state(team):
     done = solved_at(team)
     return {
@@ -133,7 +153,10 @@ def state(team):
                     "solved_at": iso(done[i])} for i in sorted(done)],
         "unlocked": [{"idx": i, "qtype": qtype_of(CLUES[i]),
                       "kind": CLUES[i].get("kind", "ground"),
-                      "clue_text": CLUES[i]["clue_text"]}
+                      "clue_text": CLUES[i]["clue_text"],
+                      "has_hint": bool(CLUES[i].get("hint")),
+                      "since": iso(available_since(team, CLUES[i])),
+                      "hint_taken": hint_taken(team, i)}
                      for i in sorted(CLUES)
                      if i not in done and is_unlocked(team, CLUES[i])],
     }
@@ -148,7 +171,8 @@ def rpc_join(body):
     code = norm_code(body["p_code"])
     base = {"status": "ok", "team_name": team, "hunt_id": HUNT["hunt_id"],
             "title": HUNT["title"], "starts_at": HUNT.get("starts_at"),
-            "n_clues": len(CLUES), "strike_limit": STRIKE_LIMIT}
+            "n_clues": len(CLUES), "strike_limit": STRIKE_LIMIT,
+            "hint_wait_s": int(HINT_WAIT)}
     if not started():
         # pre-start, the read path reveals nothing (mirrors fedora_join)
         return {**base, "intro": None, "started": False, "strikes": 0,
@@ -206,11 +230,34 @@ def rpc_submit(body):
                 "strike_limit": STRIKE_LIMIT, "eligible": eligible(code)}
     newly = [{"idx": i, "qtype": qtype_of(CLUES[i]),
               "kind": CLUES[i].get("kind", "ground"),
-              "clue_text": CLUES[i]["clue_text"]}
+              "clue_text": CLUES[i]["clue_text"],
+              "has_hint": bool(CLUES[i].get("hint")),
+              "since": iso(available_since(code, CLUES[i])),
+              "hint_taken": hint_taken(code, i)}
              for i in sorted(CLUES)
              if i != idx and i not in before and is_unlocked(code, CLUES[i])]
     return {"status": "correct", "idx": idx, "answer": guess,
             "newly_unlocked": newly}
+
+
+def rpc_hint(body):
+    code = norm_code(body.get("p_code"))
+    if code not in TEAMS:
+        return {"status": "bad_code"}
+    idx = body.get("p_idx")
+    c = CLUES.get(idx)
+    if not c:
+        return {"status": "no_such_clue"}
+    if not is_unlocked(code, c):
+        return {"status": "locked"}
+    if not c.get("hint"):
+        return {"status": "no_hint"}
+    waited = time.time() - available_since(code, c)
+    if waited < HINT_WAIT:
+        return {"status": "too_soon", "wait_s": int(HINT_WAIT - waited) + 1}
+    if not hint_taken(code, idx):
+        HINTS.append({"team": code, "clue_idx": idx, "t": time.time()})
+    return {"status": "ok", "idx": idx, "hint": c["hint"]}
 
 
 def rpc_skip(body):
@@ -244,6 +291,7 @@ def rpc_leaderboard(body):
         nskip = sum(1 for i in done if was_skipped(code, i))
         rows.append({"team_name": name, "solved": len(done) - nskip,
                      "skipped": nskip, "guesses": len(mine),
+                     "hints": sum(1 for x in HINTS if x["team"] == code),
                      "eligible": eligible(code),
                      "last_solve": iso(max(done.values())) if done else None})
     rows.sort(key=lambda r: (-r["eligible"], -r["solved"],
@@ -300,6 +348,10 @@ class Handler(SimpleHTTPRequestHandler):
             time.sleep(int(os.environ.get("SLOW_POST_MS", "0")) / 1000)
             with LOCK:
                 self._json(200, rpc_submit(body))
+            return
+        if route == "/rest/v1/rpc/fedora_hint":
+            with LOCK:
+                self._json(200, rpc_hint(body))
             return
         if route == "/rest/v1/rpc/fedora_skip":
             with LOCK:

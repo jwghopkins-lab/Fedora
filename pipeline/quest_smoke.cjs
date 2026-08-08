@@ -1,7 +1,8 @@
 /* End-to-end smoke test of the QUEST app (quest.html) against the mock backend.
-   Covers: join, kind pills, typewriter reveal (first view only), collect-mode
-   number, the two-numbers ambiguity guard, compete-mode strike, text variants,
-   the skip escape hatch, leaderboard, and resume.
+   Covers: join, kind pills, typewriter reveal (first view only), the hint
+   countdown and its recovery after a reload, collect-mode number, the
+   two-numbers ambiguity guard, compete-mode strike, text variants, the skip
+   escape hatch, leaderboard, and resume.
    Run: NODE_PATH=/opt/node22/lib/node_modules node pipeline/quest_smoke.cjs
 */
 const { chromium } = require("playwright");
@@ -15,7 +16,7 @@ const BASE = `http://localhost:${PORT}`;
   const server = spawn("python3",
     [path.join(__dirname, "mock_backend.py"), String(PORT),
      path.join(__dirname, "..", "hunt", "example_quest.json")],
-    { env: { ...process.env, MOCK_COOLDOWN_S: "0.3" } });
+    { env: { ...process.env, MOCK_COOLDOWN_S: "0.3", MOCK_HINT_WAIT_S: "8" } });
   await new Promise((r) => setTimeout(r, 900));
 
   const browser = await chromium.launch({
@@ -57,6 +58,42 @@ const BASE = `http://localhost:${PORT}`;
       document.querySelector('.part[data-idx="1"] .ptext').textContent === f,
       full, { timeout: 6000 });
     console.log("reveal ok: WITS pill, text typed out then completed");
+
+    // hint: gated at first, then available, then shown and logged
+    const hb = page.locator('.part[data-idx="1"] .hintbtn');
+    if (!(await hb.count())) throw new Error("hint button missing on part 1");
+    // the countdown must use the server's hint_wait_s (8s here), not a hard-coded 5 min
+    if (!(await hb.textContent()).includes("Hint in 0:0"))
+      throw new Error("hint countdown should track the server wait, got: " + await hb.textContent());
+    if (!(await hb.isDisabled()))
+      throw new Error("hint button must be disabled while the countdown runs");
+    // (the server's own too_soon refusal is covered in test_backend.py; the UI
+    // cannot reach it because the button stays disabled until the wait is up)
+    await page.waitForFunction(() => {
+      const b = document.querySelector('.part[data-idx="1"] .hintbtn');
+      return b && !b.disabled;
+    }, { timeout: 14000 });
+    await hb.click();
+    await page.waitForFunction(() => {
+      const h = document.querySelector('.part[data-idx="1"] .hinttext');
+      return h && !h.hidden && h.textContent.includes("FIXTURE HINT");
+    }, { timeout: 6000 });
+    console.log("hint ok: countdown disabled -> released after the server wait -> shown");
+
+    // a hint survives a reload: the text is not in the state payload, so the
+    // button must re-fetch the hint the team already paid for
+    await page.reload();
+    await page.waitForSelector("#s-quest.on");
+    const hb2 = page.locator('.part[data-idx="1"] .hintbtn');
+    if (!(await hb2.textContent()).includes("Show the hint you took"))
+      throw new Error("after reload the taken hint should be recoverable, got: "
+                      + await hb2.textContent());
+    await hb2.click();
+    await page.waitForFunction(() => {
+      const h = document.querySelector('.part[data-idx="1"] .hinttext');
+      return h && !h.hidden && h.textContent.includes("FIXTURE HINT");
+    }, { timeout: 6000 });
+    console.log("hint ok: recovered after reload without a second charge");
 
     // ambiguity guard: two numbers must be refused, not concatenated
     await box(1).fill("20-22");
@@ -115,6 +152,7 @@ const BASE = `http://localhost:${PORT}`;
     await page.waitForFunction(() =>
       document.getElementById("modalcard").textContent.includes("Parts cracked"));
     const lb = await page.locator("#modalcard").textContent();
+    if (!lb.includes("hint")) throw new Error("leaderboard should note the hint: " + lb.slice(0,140));
     if (!lb.includes("3/4") || !lb.includes("skipped"))
       throw new Error("leaderboard should read 3/4 with a skip: " + lb.slice(0, 140));
     await page.click("#mclose");

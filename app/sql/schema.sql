@@ -1,11 +1,18 @@
--- Fedora hunt backend v3 — run in the Supabase SQL editor of the dedicated
--- project. v3 generalises answers: each clue has a TYPE (number/text) and an
--- ACCEPTED SET, which enables "collect mode" (accept any whole number, log
--- what players found) and "compete mode" (exact sets) with the same engine.
+-- Fedora hunt backend v4 — run in the Supabase SQL editor of the dedicated
+-- project.
 --
--- Security model unchanged: clients hold NO locked clue text; all access via
--- three RPCs; tables deny-all (RLS on, no policies, zero anon grants);
--- per-(team,clue) advisory lock + 15s cooldown; strike budget for the win.
+-- Each clue has a TYPE (number/text), a KIND (wits/dig/ground, which drives the
+-- UI badge) and an ACCEPTED SET. An empty accepted set means COLLECT MODE for
+-- that clue: any answer is accepted and logged, which is how we harvest field
+-- values we do not yet know. A populated set is COMPETE MODE.
+--
+-- Player-facing API is five functions and nothing else: join, submit, skip
+-- (the escape hatch, so one unanswerable clue cannot end a run), hint (released
+-- 5 minutes after a clue unlocks, logged against the team) and leaderboard.
+--
+-- Security: clients hold no answers and no locked clue text; every table is
+-- deny-all (RLS on, no policies, zero anon grants); per-(team,clue) advisory
+-- lock plus a 15s cooldown; strike budget decides who can still win.
 
 create table public.hunts (
   id           text primary key check (id ~ '^[a-z0-9-]{3,40}$'),
@@ -15,7 +22,11 @@ create table public.hunts (
   active       boolean not null default true,
   -- total wrong guesses a team may make and still WIN; beyond it they keep
   -- playing but are marked out of the running. null = no limit.
-  strike_limit int check (strike_limit > 0)
+  strike_limit int check (strike_limit > 0),
+  -- how long a clue must have been open before its hint is released. Lives here
+  -- rather than in the function so the client can count down to the SAME moment
+  -- the server will honour; a hard-coded UI wait silently drifts from the gate.
+  hint_wait_s  int not null default 300 check (hint_wait_s >= 0)
 );
 
 create table public.clues (
@@ -31,6 +42,8 @@ create table public.clues (
   -- ANY whole number is accepted (collect mode). Empty + 'text' = misconfig.
   answers        text[] not null default '{}',
   clue_text      text not null check (char_length(clue_text) between 10 and 2000),
+  hint           text,          -- released hunts.hint_wait_s after the clue
+                                -- unlocks, and logged against the team
   unlocked_by    int[] not null default '{}',
   unlock_mode    text not null default 'any' check (unlock_mode in ('any', 'all')),
   available_from timestamptz,
@@ -59,12 +72,22 @@ create table public.submissions (
 );
 create index submissions_team_clue on public.submissions (team_id, clue_idx, created_at desc);
 
+-- a taken hint: logged, counted against the team, one per (team, clue)
+create table public.hints (
+  team_id    uuid not null references public.teams(id) on delete cascade,
+  hunt_id    text not null,
+  clue_idx   int  not null,
+  created_at timestamptz not null default now(),
+  primary key (team_id, clue_idx)
+);
+
+alter table public.hints       enable row level security;
 alter table public.hunts       enable row level security;
 alter table public.clues       enable row level security;
 alter table public.teams       enable row level security;
 alter table public.submissions enable row level security;
-revoke all on table public.hunts, public.clues, public.teams, public.submissions
-  from anon, authenticated;
+revoke all on table public.hunts, public.clues, public.teams, public.submissions,
+  public.hints from anon, authenticated;
 
 -- ---------------------------------------------------------------------------
 -- internal helpers (not granted to anon)
@@ -85,6 +108,18 @@ returns boolean language sql stable security definer set search_path = '' as $$
                  where s.team_id = p_team and (s.correct or s.skipped)
                    and s.clue_idx = any (p_clue.unlocked_by))
              end)
+$$;
+
+-- A clue becomes available when its last-satisfied prerequisite was answered
+-- (or, with no prerequisites, when the team was created). The hint timer runs
+-- from that moment, so a player who never guesses still earns a hint.
+create or replace function public.fedora_available_since(p_team uuid, p_clue public.clues)
+returns timestamptz language sql stable security definer set search_path = '' as $$
+  select coalesce(
+    (select max(s.created_at) from public.submissions s
+     where s.team_id = p_team and (s.correct or s.skipped)
+       and s.clue_idx = any (p_clue.unlocked_by)),
+    (select t.created_at from public.teams t where t.id = p_team))
 $$;
 
 create or replace function public.fedora_strikes(p_team uuid)
@@ -116,7 +151,12 @@ returns jsonb language sql stable security definer set search_path = '' as $$
       '[]'::jsonb),
     'unlocked', coalesce((
        select jsonb_agg(jsonb_build_object('idx', c.idx, 'qtype', c.qtype,
-                                           'kind', c.kind, 'clue_text', c.clue_text)
+                          'kind', c.kind, 'clue_text', c.clue_text,
+                          'has_hint', c.hint is not null,
+                          'since', public.fedora_available_since(p_team, c),
+                          'hint_taken', exists (select 1 from public.hints x
+                                                where x.team_id = p_team
+                                                  and x.clue_idx = c.idx))
                         order by c.idx)
        from public.clues c
        where c.hunt_id = p_hunt
@@ -145,6 +185,7 @@ begin
       'hunt_id', h.id, 'title', h.title, 'intro', null, 'n_clues', n,
       'starts_at', h.starts_at, 'started', false,
       'strikes', 0, 'strike_limit', h.strike_limit, 'eligible', true,
+      'hint_wait_s', h.hint_wait_s,
       'solved', '[]'::jsonb, 'unlocked', '[]'::jsonb);
   end if;
   return jsonb_build_object('status', 'ok', 'team_name', t.name,
@@ -154,7 +195,8 @@ begin
                             'strikes', public.fedora_strikes(t.id),
                             'strike_limit', h.strike_limit,
                             'eligible', h.strike_limit is null
-                              or public.fedora_strikes(t.id) <= h.strike_limit)
+                              or public.fedora_strikes(t.id) <= h.strike_limit,
+                            'hint_wait_s', h.hint_wait_s)
          || public.fedora_state(t.id, h.id);
 end $$;
 
@@ -290,6 +332,36 @@ begin
       '[]'::jsonb));
 end $$;
 
+-- Hints: available hunts.hint_wait_s after the clue unlocked. The wait is
+-- enforced here, not in the client, and taking one is permanent and counted.
+create or replace function public.fedora_hint(p_code text, p_idx int)
+returns jsonb language plpgsql security definer set search_path = '' as $$
+declare
+  t public.teams; h public.hunts; c public.clues;
+  since timestamptz; wait interval;
+begin
+  select * into t from public.teams
+    where code = upper(regexp_replace(coalesce(p_code, ''), '\s', '', 'g'));
+  if not found then return jsonb_build_object('status', 'bad_code'); end if;
+  select * into h from public.hunts where id = t.hunt_id;
+  if not h.active then return jsonb_build_object('status', 'inactive'); end if;
+  select * into c from public.clues where hunt_id = h.id and idx = p_idx;
+  if not found then return jsonb_build_object('status', 'no_such_clue'); end if;
+  if not public.fedora_is_unlocked(t.id, c) then
+    return jsonb_build_object('status', 'locked');
+  end if;
+  if c.hint is null then return jsonb_build_object('status', 'no_hint'); end if;
+  wait := make_interval(secs => h.hint_wait_s);
+  since := public.fedora_available_since(t.id, c);
+  if since is not null and now() - since < wait then
+    return jsonb_build_object('status', 'too_soon',
+      'wait_s', ceil(extract(epoch from wait - (now() - since))));
+  end if;
+  insert into public.hints (team_id, hunt_id, clue_idx)
+    values (t.id, h.id, p_idx) on conflict do nothing;
+  return jsonb_build_object('status', 'ok', 'idx', p_idx, 'hint', c.hint);
+end $$;
+
 create or replace function public.fedora_leaderboard(p_hunt text)
 returns jsonb language sql stable security definer set search_path = '' as $$
   select coalesce(jsonb_agg(row order by row->'eligible' desc,
@@ -300,6 +372,7 @@ returns jsonb language sql stable security definer set search_path = '' as $$
              'solved', count(distinct s.clue_idx) filter (where s.correct),
              'skipped', count(distinct s.clue_idx) filter (where s.skipped),
              'guesses', count(s.id),
+             'hints', (select count(*) from public.hints x where x.team_id = t.id),
              'eligible', h.strike_limit is null
                or count(*) filter (where not s.correct) <= h.strike_limit,
              'last_solve', max(s.created_at) filter (where s.correct)) as row
@@ -310,6 +383,7 @@ returns jsonb language sql stable security definer set search_path = '' as $$
     group by t.id, t.name, h.strike_limit) rows
 $$;
 
+revoke execute on function public.fedora_available_since(uuid, public.clues) from public, anon, authenticated;
 revoke execute on function public.fedora_is_unlocked(uuid, public.clues) from public, anon, authenticated;
 revoke execute on function public.fedora_state(uuid, text) from public, anon, authenticated;
 revoke execute on function public.fedora_strikes(uuid) from public, anon, authenticated;
@@ -317,8 +391,10 @@ revoke execute on function public.fedora_strikes(uuid) from public, anon, authen
 revoke execute on function public.fedora_join(text) from public;
 revoke execute on function public.fedora_submit(text, int, text) from public;
 revoke execute on function public.fedora_skip(text, int, text) from public;
+revoke execute on function public.fedora_hint(text, int) from public;
 revoke execute on function public.fedora_leaderboard(text) from public;
 grant execute on function public.fedora_join(text) to anon;
 grant execute on function public.fedora_submit(text, int, text) to anon;
 grant execute on function public.fedora_skip(text, int, text) to anon;
+grant execute on function public.fedora_hint(text, int) to anon;
 grant execute on function public.fedora_leaderboard(text) to anon;

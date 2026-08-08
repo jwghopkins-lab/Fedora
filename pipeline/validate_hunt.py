@@ -92,6 +92,13 @@ def check(hunt):
     sl = hunt.get("strike_limit")
     if sl is not None and (isinstance(sl, bool) or not isinstance(sl, int) or sl < 1):
         fails.append(f"strike_limit must be a positive integer or null, got {sl!r}")
+    hw = hunt.get("hint_wait_s")
+    if hw is not None and (isinstance(hw, bool) or not isinstance(hw, int) or hw < 0):
+        fails.append(f"hint_wait_s must be a non-negative integer or null, got {hw!r}")
+    for c in clues:
+        h = c.get("hint")
+        if h is not None and (not isinstance(h, str) or not h.strip()):
+            fails.append(f"clue {c['idx']}: hint must be a non-empty string or absent")
     for c in clues:
         if not isinstance(c.get("clue_text"), str):
             fails.append(f"clue {c.get('idx', '?')}: missing clue_text")
@@ -144,13 +151,17 @@ def check(hunt):
             if re.search(rf"\b{re.escape(a)}\b", text, re.I):
                 fails.append(f"answer {a} leaks in clue {c['idx']} text")
     if not is_grid:
-        # accepted answers must not appear in ANY clue text
+        # accepted answers must not appear in ANY clue text — or in any hint. A
+        # hint is a nudge that costs you; one containing the answer is a freebie.
         for c in clues:
             for a in c.get("answers", []):
                 for c2 in clues:
                     if re.search(rf"\b{re.escape(a)}\b", c2["clue_text"], re.I):
                         fails.append(f"accepted answer {a!r} (clue {c['idx']}) "
                                      f"appears in clue {c2['idx']} text")
+                    if re.search(rf"\b{re.escape(a)}\b", c2.get("hint") or "", re.I):
+                        fails.append(f"accepted answer {a!r} (clue {c['idx']}) "
+                                     f"appears in clue {c2['idx']} hint")
 
     # crossing-leak analysis (warnings, printed by main): a word crossed by a
     # word that is solvable WITHOUT it can have letters revealed before it is

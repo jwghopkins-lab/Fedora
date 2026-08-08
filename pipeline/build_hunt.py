@@ -40,11 +40,13 @@ def seed_sql(hunt):
         "-- transaction (nothing is applied).",
         "begin;",
         f"delete from public.hunts where id = {q(hid)};",
-        "insert into public.hunts (id, title, intro, starts_at, active, strike_limit) values",
+        "insert into public.hunts (id, title, intro, starts_at, active, "
+        "strike_limit, hint_wait_s) values",
         f"  ({q(hid)}, {q(hunt['title'])}, "
         f"{q(hunt['intro']) if hunt.get('intro') else 'null'}, "
         f"{q(hunt['starts_at']) if hunt.get('starts_at') else 'null'}, true, "
-        f"{int(hunt['strike_limit']) if hunt.get('strike_limit') is not None else 'null'});",
+        f"{int(hunt['strike_limit']) if hunt.get('strike_limit') is not None else 'null'}, "
+        f"{int(hunt['hint_wait_s']) if hunt.get('hint_wait_s') is not None else 300});",
     ]
     for c in hunt["clues"]:
         arr = "'{" + ",".join(str(n) for n in c.get("unlocked_by", [])) + "}'::int[]"
@@ -59,12 +61,14 @@ def seed_sql(hunt):
             norm = [re.sub(r"[^A-Z0-9]", "", a.upper()) for a in acc]
         aarr = ("array[" + ",".join(q(a) for a in norm) + "]::text[]"
                 if norm else "'{}'::text[]")
+        hint = q(c["hint"]) if c.get("hint") else "null"
         out.append(
             "insert into public.clues (hunt_id, idx, qtype, kind, answers, clue_text, "
-            "unlocked_by, unlock_mode, available_from) values\n"
+            "hint, unlocked_by, unlock_mode, available_from) values\n"
             f"  ({q(hid)}, {c['idx']}, {q(c.get('qtype', 'text'))}, "
             f"{q(c.get('kind', 'ground'))}, {aarr}, "
-            f"{q(c['clue_text'])}, {arr}, {q(c.get('unlock_mode', 'any'))}, {avail});")
+            f"{q(c['clue_text'])}, {hint}, {arr}, "
+            f"{q(c.get('unlock_mode', 'any'))}, {avail});")
     for t in hunt.get("teams", []):
         out.append("insert into public.teams (hunt_id, name, code) values\n"
                    f"  ({q(hid)}, {q(t['name'])}, {q(t['code'].upper())});")

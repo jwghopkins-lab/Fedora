@@ -16,7 +16,9 @@ jobs:
           python3 pipeline/validate_hunt.py hunt/example_hunt.json
           python3 pipeline/validate_hunt.py hunt/example_quest.json
       - name: Build fixture artifacts
-        run: python3 pipeline/build_hunt.py hunt/example_hunt.json --seed-out /tmp
+        run: |
+          python3 pipeline/build_hunt.py hunt/example_hunt.json --seed-out /tmp
+          python3 pipeline/build_hunt.py hunt/example_quest.json --seed-out /tmp
       - name: Backend semantics drive (mock)
         run: python3 pipeline/test_backend.py
       - name: Site build (whitelist)

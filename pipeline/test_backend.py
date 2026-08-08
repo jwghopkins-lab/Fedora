@@ -93,7 +93,7 @@ import tempfile
 BASEHUNT = json.loads((MOCK.parent.parent / "hunt" / "example_hunt.json").read_text())
 
 
-def with_variant(mutate, port, checks):
+def with_variant(mutate, port, checks, env=None):
     hunt = copy.deepcopy(BASEHUNT)
     mutate(hunt)
     with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False) as f:
@@ -102,7 +102,7 @@ def with_variant(mutate, port, checks):
     global BASE
     BASE = f"http://localhost:{port}"
     p = subprocess.Popen(["python3", str(MOCK), str(port), path],
-                         env={**os.environ, "MOCK_COOLDOWN_S": "0.3"})
+                         env={**os.environ, "MOCK_COOLDOWN_S": "0.3", **(env or {})})
     time.sleep(0.8)
     try:
         checks()
@@ -155,9 +155,42 @@ def strikes_checks():
            "eligible team sorts above ineligible despite fewer solves")
 
 
+def hint_checks():
+    r = rpc("fedora_join", p_code="TESTTEAM1")
+    expect(r.get("hint_wait_s") == 1,
+           "join reports the hunt's hint_wait_s so the UI counts to the real moment")
+    open1 = [u for u in r["unlocked"] if u["idx"] == 1][0]
+    expect(open1["has_hint"] is True and open1["hint_taken"] is False,
+           "open clue advertises an untaken hint")
+    r = rpc("fedora_hint", p_code="TESTTEAM1", p_idx=1)
+    expect(r["status"] == "too_soon" and r["wait_s"] >= 1,
+           "hint refused before the wait, with seconds remaining")
+    r = rpc("fedora_hint", p_code="TESTTEAM1", p_idx=5)
+    expect(r["status"] == "locked", "hint refused on a locked clue")
+    r = rpc("fedora_hint", p_code="TESTTEAM1", p_idx=2)
+    expect(r["status"] == "no_hint", "clue without a hint says so")
+    r = rpc("fedora_hint", p_code="nope", p_idx=1)
+    expect(r["status"] == "bad_code", "hint refuses an unknown team")
+    time.sleep(1.1)
+    r = rpc("fedora_hint", p_code="TESTTEAM1", p_idx=1)
+    expect(r["status"] == "ok" and r["hint"] == "TEST HINT: it is a shade of red.",
+           "hint released after the wait")
+    r = rpc("fedora_hint", p_code="TESTTEAM1", p_idx=1)
+    expect(r["status"] == "ok", "re-asking is idempotent, not a second charge")
+    board = rpc("fedora_leaderboard", p_hunt="example")
+    us = [t for t in board if t["team_name"] == "Test Team"][0]
+    expect(us["hints"] == 1, "leaderboard counts the hint once")
+    r = rpc("fedora_join", p_code="TESTTEAM1")
+    open1 = [u for u in r["unlocked"] if u["idx"] == 1][0]
+    expect(open1["hint_taken"] is True, "rejoin remembers the hint was taken")
+
+
 with_variant(lambda h: h.update(starts_at="2999-01-01T00:00:00Z"), PORT + 1, pre_start_checks)
 with_variant(lambda h: h.update(active=False), PORT + 2, inactive_checks)
 with_variant(lambda h: h["clues"][0].update(available_from="2999-01-01T00:00:00Z"),
              PORT + 3, timed_clue_checks)
 with_variant(lambda h: h.update(strike_limit=1), PORT + 4, strikes_checks)
+with_variant(lambda h: (h.update(hint_wait_s=1),
+                        h["clues"][0].update(hint="TEST HINT: it is a shade of red.")),
+             PORT + 5, hint_checks, env={"MOCK_HINT_WAIT_S": "1"})
 print("VARIANT DRIVES PASS")

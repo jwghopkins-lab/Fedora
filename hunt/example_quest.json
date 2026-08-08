@@ -15,7 +15,8 @@
    "available_from": null,
    "clue_text": "FIXTURE: Count the imaginary lampposts on Example Street. Any whole number is accepted (collect mode).",
    "field_notes": "n/a \u2014 fixture",
-   "kind": "wits"
+   "kind": "wits",
+   "hint": "FIXTURE HINT: any number will do here."
   },
   {
    "idx": 2,
