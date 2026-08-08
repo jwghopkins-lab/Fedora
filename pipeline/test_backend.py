@@ -55,6 +55,11 @@ try:
     expect(r["status"] == "correct" and r["answer"] == "CRIMSON",
            "guess normalization (case, spaces, punctuation)")
     expect([u["idx"] for u in r["newly_unlocked"]] == [3], "solving 1 unlocks 3")
+    # a newly unlocked clue must arrive fully described: the UI paints its pill
+    # and hint button straight from this payload, and a poll may not re-render
+    expect(set(r["newly_unlocked"][0]) >=
+           {"idx", "qtype", "kind", "clue_text", "has_hint", "since", "hint_taken"},
+           "newly_unlocked describes kind + hint state, not just idx/qtype/text")
     r = rpc("fedora_submit", p_code="TESTTEAM1", p_idx=1, p_guess="CRIMSON")
     expect(r["status"] == "already_solved", "re-submit blocked")
 

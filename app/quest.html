@@ -268,7 +268,13 @@ function fingerprint() {
   return [STARTED, STRIKES, STRIKE_LIMIT, ELIGIBLE, NCLUES,
           Object.keys(SOLVED).sort().join(","),
           Object.values(SOLVED).map((s) => s.answer).join("|"),
-          Object.keys(UNLOCKED).sort().join(",")].join("~");
+          Object.keys(UNLOCKED).sort().join(","),
+          // the fields too, not just the keys: a teammate taking a hint on
+          // another phone changes nothing about WHICH clues are open, and a
+          // keys-only fingerprint would suppress the re-render that shows it
+          Object.keys(UNLOCKED).sort().map((i) =>
+            `${UNLOCKED[i].kind}${UNLOCKED[i].has_hint ? "H" : ""}` +
+            `${UNLOCKED[i].hint_taken ? "T" : ""}`).join("|")].join("~");
 }
 let lastPrint = null;
 

@@ -280,7 +280,10 @@ begin
   return jsonb_build_object('status', 'correct', 'idx', p_idx, 'answer', guess,
     'newly_unlocked', coalesce((
       select jsonb_agg(jsonb_build_object('idx', k.idx, 'qtype', k.qtype,
-                                          'clue_text', k.clue_text)
+                                          'kind', k.kind, 'clue_text', k.clue_text,
+                                          'has_hint', k.hint is not null,
+                                          'since', public.fedora_available_since(t.id, k),
+                                          'hint_taken', false)
                        order by k.idx)
       from public.clues k
       where k.hunt_id = h.id and public.fedora_is_unlocked(t.id, k)
@@ -326,7 +329,10 @@ begin
   return jsonb_build_object('status', 'skipped', 'idx', p_idx,
     'newly_unlocked', coalesce((
       select jsonb_agg(jsonb_build_object('idx', k.idx, 'qtype', k.qtype,
-                                          'kind', k.kind, 'clue_text', k.clue_text)
+                                          'kind', k.kind, 'clue_text', k.clue_text,
+                                          'has_hint', k.hint is not null,
+                                          'since', public.fedora_available_since(t.id, k),
+                                          'hint_taken', false)
                        order by k.idx)
       from public.clues k
       where k.hunt_id = h.id and public.fedora_is_unlocked(t.id, k)
