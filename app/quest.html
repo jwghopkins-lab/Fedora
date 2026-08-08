@@ -592,9 +592,9 @@ function showWin() {
   winShown = true;
   clearInterval(pollInt);
   const skipped = Object.values(SOLVED).filter((s) => s.skipped).length;
-  $("modalcard").innerHTML = `<h2>The square has given up its numbers.</h2>
+  $("modalcard").innerHTML = `<h2>The city has given up its numbers.</h2>
     <div class="sub">Every part logged${skipped ? `, ${skipped} left behind` : ""}.
-    Compare notes with the other agents — where your counts agree, the city has
+    Compare notes with the other teams — where your counts agree, the city has
     spoken. Where they don't, we have found a question that needs rewriting.</div>
     <div class="btnrow">
       <button class="btn ghost" id="mboard">Standings</button>
