@@ -1,5 +1,6 @@
 /* End-to-end smoke test of the QUEST app (quest.html) against the mock backend.
-   Covers: join, kind pills, typewriter reveal (first view only), the hint
+   Covers: join, absence of the brief and type pills, typewriter reveal (first
+   view only), the hint
    countdown and its recovery after a reload, collect-mode number, the
    two-numbers ambiguity guard, compete-mode strike, text variants, the skip
    escape hatch, leaderboard, and resume.
@@ -34,20 +35,23 @@ const BASE = `http://localhost:${PORT}`;
     await page.fill("#codein", "testteam1");
     await page.press("#codein", "Enter");           // Enter on the code field
     await page.waitForSelector("#s-quest.on");
-    if (!(await page.locator(".part.intro").count())) throw new Error("intro card missing");
     if ((await page.locator(".part.sealed").count()) !== 3)
       throw new Error("expected 3 sealed parts, got " + await page.locator(".part.sealed").count());
     if (!(await page.locator("#progresstext").textContent()).includes("0/4"))
       throw new Error("progress not 0/4");
-    // the three-type key is explained up front
+    // The brief and the type pills are deliberately GONE: a player who knows a
+    // question is Ground Truth knows not to search, and deciding that for
+    // themselves is the game. Assert absence so they cannot creep back.
+    if (await page.locator(".part.intro").count())
+      throw new Error("brief card should no longer be rendered");
+    if (await page.locator(".kindkey").count())
+      throw new Error("type key should no longer be rendered");
+    if (await page.locator(".pill").count())
+      throw new Error("type pills should no longer be rendered");
+    const body = await page.locator("#s-quest").textContent();
     for (const k of ["WITS", "THE DIG", "GROUND TRUTH"])
-      if (!(await page.locator(".kindkey").textContent()).includes(k))
-        throw new Error("intro key missing " + k);
-    console.log("join ok: intro + type key, 1 open, 3 sealed, 0/4");
-
-    // pill reflects the clue's kind
-    const pill1 = (await page.locator('.part[data-idx="1"] .pill').textContent()).trim();
-    if (pill1 !== "WITS") throw new Error("part 1 pill should be WITS, got " + pill1);
+      if (body.includes(k)) throw new Error("clue type leaked into the UI: " + k);
+    console.log("join ok: no brief, no pills, 1 open, 3 sealed, 0/4");
 
     // typewriter: text starts partial on first view, then completes
     const full = "FIXTURE: Count the imaginary lampposts on Example Street. Any whole number is accepted (collect mode).";
@@ -57,7 +61,7 @@ const BASE = `http://localhost:${PORT}`;
     await page.waitForFunction((f) =>
       document.querySelector('.part[data-idx="1"] .ptext').textContent === f,
       full, { timeout: 6000 });
-    console.log("reveal ok: WITS pill, text typed out then completed");
+    console.log("reveal ok: clue text typed out, then completed");
 
     // hint: gated at first, then available, then shown and logged
     const hb = page.locator('.part[data-idx="1"] .hintbtn');
@@ -108,9 +112,9 @@ const BASE = `http://localhost:${PORT}`;
     const a1 = (await page.locator('.part.done[data-idx="1"] .answer').textContent()).trim();
     if (a1 !== "17") throw new Error("collect answer not normalized to 17: " + a1);
     await page.waitForSelector('.part.open[data-idx="2"]');
-    const pill2 = (await page.locator('.part[data-idx="2"] .pill').textContent()).trim();
-    if (pill2 !== "THE DIG") throw new Error("part 2 pill should be THE DIG, got " + pill2);
-    console.log("ok: '20-22' refused as ambiguous, '17 lampposts' -> 17, DIG pill next");
+    if (await page.locator('.part[data-idx="2"] .pill').count())
+      throw new Error("newly opened part must not carry a type pill either");
+    console.log("ok: '20-22' refused as ambiguous, '17 lampposts' -> 17, no pill on part 2");
 
     // compete-mode number: wrong costs a strike, right advances
     await box(2).fill("41");

@@ -80,11 +80,6 @@
            text-transform: uppercase; color: var(--ink-soft); margin-bottom: 8px; }
   .phead .no { color: var(--accent); }
   .phead .state { margin-left: auto; }
-  .pill { font-size: .62rem; font-weight: 800; letter-spacing: .1em; padding: 3px 8px;
-          border-radius: 999px; white-space: nowrap; }
-  .pill.wits   { background: var(--k-wits-soft);   color: var(--k-wits); }
-  .pill.dig    { background: var(--k-dig-soft);    color: var(--k-dig); }
-  .pill.ground { background: var(--k-ground);      color: var(--accent-ink); }
   .ptext { font-family: Georgia, serif; font-size: 1rem; line-height: 1.55;
            white-space: pre-line; }   /* clue text carries real line breaks */
   .ptext .caret { opacity: .55; font-family: system-ui, sans-serif; }
@@ -112,8 +107,6 @@
   @keyframes shake { 25% { transform: translateX(-6px) } 75% { transform: translateX(6px) } }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 
-  .kindkey { font-size: .78rem; color: var(--ink-soft); line-height: 1.5; margin-top: 10px; }
-  .kindkey div { margin: 6px 0; }
   .toolrow { display: flex; gap: 6px; justify-content: center; padding: 10px 0 2px; }
   .tool { border: 1px solid var(--line); background: var(--panel); color: var(--ink-soft);
           font-size: .76rem; padding: 11px 16px; border-radius: 999px; cursor: pointer;
@@ -200,9 +193,12 @@ const LS = {
   del: (k) => { try { localStorage.removeItem("fedoraq." + k); } catch {} },
 };
 const REDUCED = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-const KIND_LABEL = { wits: "Wits", dig: "The Dig", ground: "Ground Truth" };
 
-let CODE = null, TEAM = null, HUNT = null, INTRO = null, NCLUES = 0;
+let CODE = null, TEAM = null, HUNT = null, NCLUES = 0;
+// NOTE: the server still sends each clue's `kind` (wits / dig / ground) and the
+// hunt's `intro`. Neither is shown: knowing a question is Ground Truth tells the
+// player not to bother searching, which is exactly the decision we want them to
+// have to make for themselves. Kept in the payload for our own analysis.
 let STARTED = true, STARTS_AT = null;
 let STRIKES = 0, STRIKE_LIMIT = null, ELIGIBLE = true;
 let HINT_WAIT_MS = 5 * 60 * 1000;   // replaced by the server's hunts.hint_wait_s
@@ -259,7 +255,6 @@ function applyState(r) {
   STRIKES = r.strikes || 0; STRIKE_LIMIT = r.strike_limit ?? null;
   ELIGIBLE = r.eligible !== false;
   if (Number.isFinite(r.hint_wait_s)) HINT_WAIT_MS = r.hint_wait_s * 1000;
-  if (r.intro !== undefined && r.intro !== null) INTRO = r.intro;
   if (r.n_clues) NCLUES = r.n_clues;
 }
 // fingerprint: lets sync() skip a pointless DOM rebuild, which is what used to
@@ -273,8 +268,8 @@ function fingerprint() {
           // another phone changes nothing about WHICH clues are open, and a
           // keys-only fingerprint would suppress the re-render that shows it
           Object.keys(UNLOCKED).sort().map((i) =>
-            `${UNLOCKED[i].kind}${UNLOCKED[i].has_hint ? "H" : ""}` +
-            `${UNLOCKED[i].hint_taken ? "T" : ""}`).join("|")].join("~");
+            `${UNLOCKED[i].has_hint ? "H" : ""}${UNLOCKED[i].hint_taken ? "T" : ""}`
+          ).join("|")].join("~");
 }
 let lastPrint = null;
 
@@ -322,18 +317,6 @@ function render() {
     j.appendChild(w);
     return;
   }
-  if (INTRO) {
-    const w = document.createElement("div");
-    w.className = "part intro";
-    w.innerHTML = `<div class="phead"><span class="no">Your brief</span></div>
-      <div class="ptext">${escapeHtml(INTRO)}</div>
-      <div class="kindkey">
-        <div><span class="pill wits">WITS</span> &nbsp;think — no phone, no walking</div>
-        <div><span class="pill dig">THE DIG</span> &nbsp;it's in the record — go and look it up</div>
-        <div><span class="pill ground">GROUND TRUTH</span> &nbsp;only the city knows — be there</div>
-      </div>`;
-    j.appendChild(w);
-  }
   for (let i = 1; i <= NCLUES; i++) {
     const div = document.createElement("div");
     div.dataset.idx = i;
@@ -345,7 +328,6 @@ function render() {
         <div class="answer">${escapeHtml(sv.answer || "")}</div>`;
     } else if (UNLOCKED[i]) {
       const u = UNLOCKED[i];
-      const kind = KIND_LABEL[u.kind] ? u.kind : "ground";
       div.className = "part open";
       const attrs = u.qtype === "number"
         ? 'inputmode="numeric" pattern="[0-9]*" placeholder="a whole number" ' +
@@ -353,8 +335,7 @@ function render() {
         : 'placeholder="your answer" autocapitalize="characters" autocorrect="off" ' +
           'spellcheck="false" autocomplete="off"';
       div.innerHTML =
-        `<div class="phead"><span class="no">Part ${i}</span>
-           <span class="pill ${kind}">${KIND_LABEL[kind].toUpperCase()}</span></div>
+        `<div class="phead"><span class="no">Part ${i}</span></div>
          <div class="ptext"></div>
          <div class="pans">
            <input type="text" maxlength="40" ${attrs} enterkeyhint="send"
