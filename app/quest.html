@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<title>FEDORA — quest</title>
+<title>Ground Truth</title>
 <!-- user-scalable removed: players need to pinch-zoom small cast lettering,
      and the inputs are already 16px so iOS never auto-zooms on focus -->
 <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -39,8 +39,8 @@
   .screen.on { display: flex; }
   header { display: flex; align-items: baseline; gap: 10px; padding: 6px 2px; }
   .wordmark { font-family: Georgia, "Times New Roman", serif; font-weight: 700;
-              font-size: 1.45rem; letter-spacing: .1em; }
-  .wordmark span { color: var(--accent); }
+              font-size: 1.2rem; letter-spacing: .08em; white-space: nowrap; }
+  .wordmark span { color: var(--accent); margin-left: .3em; }
   .tagline { font-size: .68rem; color: var(--ink-soft); letter-spacing: .08em; text-transform: uppercase; }
   .spacer { flex: 1; }
   #teamtag { font-size: .78rem; color: var(--ink-soft); text-align: right; max-width: 40%;
@@ -140,7 +140,7 @@
 <body>
 
 <div class="screen on" id="s-join">
-  <header><div><div class="wordmark">FED<span>O</span>RA</div>
+  <header><div><div class="wordmark">GROUND<span>TRUTH</span></div>
     <div class="tagline">the city is the board</div></div></header>
   <div id="offline-banner" class="banner" style="display:none">
     No backend configured — this build can't check answers.</div>
@@ -159,7 +159,7 @@
 
 <div class="screen" id="s-quest">
   <header>
-    <div><div class="wordmark">FED<span>O</span>RA</div>
+    <div><div class="wordmark">GROUND<span>TRUTH</span></div>
       <div class="tagline" id="hunttitle"></div></div>
     <div class="spacer"></div>
     <div id="teamtag"></div>
