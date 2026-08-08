@@ -108,6 +108,17 @@ def check(hunt):
     starts = [c["idx"] for c in clues if not c.get("unlocked_by")]
     if not starts:
         fails.append("no start clue (every clue has prerequisites)")
+    # A QA hunt declaring itself linear must actually be linear: one start, and
+    # each clue gated on exactly its predecessor. Two clues sharing a
+    # prerequisite silently opens both at once, which reads as a bug in play.
+    if not is_grid and hunt.get("linear"):
+        if starts != [min(idxs)]:
+            fails.append(f"linear hunt must have exactly one start clue, got {starts}")
+        for c in clues:
+            need = c.get("unlocked_by", [])
+            if c["idx"] != min(idxs) and need != [c["idx"] - 1]:
+                fails.append(f"linear hunt: clue {c['idx']} should be gated on "
+                             f"[{c['idx'] - 1}], got {need}")
     for c in clues:
         for n in c.get("unlocked_by", []):
             if n not in by_idx:
