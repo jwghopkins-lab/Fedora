@@ -61,13 +61,20 @@ def seed_sql(hunt):
             norm = [re.sub(r"[^A-Z0-9]", "", a.upper()) for a in acc]
         aarr = ("array[" + ",".join(q(a) for a in norm) + "]::text[]"
                 if norm else "'{}'::text[]")
-        hint = q(c["hint"]) if c.get("hint") else "null"
+        hints = c.get("hints", [])
+        harr = ("array[" + ",".join(q(h) for h in hints) + "]::text[]"
+                if hints else "'{}'::text[]")
+        waits = c.get("hint_waits", [])
+        warr = "'{" + ",".join(str(int(w)) for w in waits) + "}'::int[]"
+        after = q(c["after_text"]) if c.get("after_text") else "null"
+        glim = int(c["guess_limit"]) if c.get("guess_limit") is not None else "null"
         out.append(
             "insert into public.clues (hunt_id, idx, qtype, kind, answers, match_mode, "
-            "clue_text, hint, unlocked_by, unlock_mode, available_from) values\n"
+            "clue_text, hints, hint_waits, after_text, guess_limit, unlocked_by, "
+            "unlock_mode, available_from) values\n"
             f"  ({q(hid)}, {c['idx']}, {q(c.get('qtype', 'text'))}, "
             f"{q(c.get('kind', 'ground'))}, {aarr}, {q(c.get('match_mode', 'exact'))}, "
-            f"{q(c['clue_text'])}, {hint}, {arr}, "
+            f"{q(c['clue_text'])}, {harr}, {warr}, {after}, {glim}, {arr}, "
             f"{q(c.get('unlock_mode', 'any'))}, {avail});")
     for t in hunt.get("teams", []):
         out.append("insert into public.teams (hunt_id, name, code) values\n"

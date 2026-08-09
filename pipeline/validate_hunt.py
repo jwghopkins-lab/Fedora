@@ -96,9 +96,40 @@ def check(hunt):
     if hw is not None and (isinstance(hw, bool) or not isinstance(hw, int) or hw < 0):
         fails.append(f"hint_wait_s must be a non-negative integer or null, got {hw!r}")
     for c in clues:
-        h = c.get("hint")
-        if h is not None and (not isinstance(h, str) or not h.strip()):
-            fails.append(f"clue {c['idx']}: hint must be a non-empty string or absent")
+        # v4: hints are a SEQUENCE. hints[i] is released hint_waits[i] seconds
+        # after the clue opened, one at a time, so the waits must climb — a flat
+        # or falling series would hand out two hints on the same tick.
+        hints = c.get("hints", [])
+        waits = c.get("hint_waits", [])
+        if not isinstance(hints, list) or not isinstance(waits, list):
+            fails.append(f"clue {c['idx']}: hints and hint_waits must be lists")
+            continue
+        if any(not isinstance(h, str) or not h.strip() for h in hints):
+            fails.append(f"clue {c['idx']}: every hint must be a non-empty string")
+        # an empty hint_waits means "use the hunt default for every hint"
+        # (fedora_hint coalesces); anything else must pair up one for one
+        if waits and len(waits) != len(hints):
+            fails.append(f"clue {c['idx']}: {len(hints)} hints but "
+                         f"{len(waits)} hint_waits — they must pair up")
+        if any(isinstance(w, bool) or not isinstance(w, int) or w < 0 for w in waits):
+            fails.append(f"clue {c['idx']}: hint_waits must be non-negative integers")
+        elif any(b <= a for a, b in zip(waits, waits[1:])):
+            fails.append(f"clue {c['idx']}: hint_waits must strictly ascend, "
+                         f"got {waits}")
+        at = c.get("after_text")
+        if at is not None and (not isinstance(at, str) or not at.strip()):
+            fails.append(f"clue {c['idx']}: after_text must be a non-empty string "
+                         f"or absent")
+        gl = c.get("guess_limit")
+        if gl is not None and (isinstance(gl, bool) or not isinstance(gl, int) or gl < 1):
+            fails.append(f"clue {c['idx']}: guess_limit must be a positive integer "
+                         f"or absent, got {gl!r}")
+        mm = c.get("match_mode", "exact")
+        if mm not in ("exact", "contains"):
+            fails.append(f"clue {c['idx']}: bad match_mode {mm!r}")
+        if mm == "contains" and not c.get("answers"):
+            fails.append(f"clue {c['idx']}: match_mode 'contains' is meaningless "
+                         f"in collect mode (no accepted answers)")
     for c in clues:
         if not isinstance(c.get("clue_text"), str):
             fails.append(f"clue {c.get('idx', '?')}: missing clue_text")
@@ -179,9 +210,30 @@ def check(hunt):
                     if re.search(rf"\b{re.escape(a)}\b", c2["clue_text"], re.I):
                         fails.append(f"accepted answer {a!r} (clue {c['idx']}) "
                                      f"appears in clue {c2['idx']} text")
-                    if re.search(rf"\b{re.escape(a)}\b", c2.get("hint") or "", re.I):
+                    hs = c2.get("hints", [])
+                    for i, h in enumerate(hs, 1):
+                        # The LAST hint on a clue is allowed to hand over that
+                        # clue's own answer: with no skip button, the end of the
+                        # hint ladder is the only way past a wall, and it is
+                        # already paid for in waiting and on the record. Every
+                        # earlier hint, and every hint on any OTHER clue, must
+                        # still keep its mouth shut.
+                        if c2["idx"] == c["idx"] and i == len(hs):
+                            continue
+                        if re.search(rf"\b{re.escape(a)}\b", h, re.I):
+                            fails.append(f"accepted answer {a!r} (clue {c['idx']}) "
+                                         f"appears in clue {c2['idx']} hint {i}"
+                                         + (" (only the LAST hint may give it away)"
+                                            if c2["idx"] == c["idx"] else ""))
+                for c2 in clues:
+                    # after_text is read once its own clue is solved, so it sits a
+                    # step later than that clue's text: naming answer N is fine
+                    # from clue N onwards, a leak anywhere before it.
+                    if linear and c2["idx"] >= c["idx"]:
+                        continue
+                    if re.search(rf"\b{re.escape(a)}\b", c2.get("after_text") or "", re.I):
                         fails.append(f"accepted answer {a!r} (clue {c['idx']}) "
-                                     f"appears in clue {c2['idx']} hint")
+                                     f"appears in clue {c2['idx']} after_text")
 
     # crossing-leak analysis (warnings, printed by main): a word crossed by a
     # word that is solvable WITHOUT it can have letters revealed before it is

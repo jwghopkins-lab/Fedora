@@ -89,19 +89,26 @@
                 min-height: 44px; }
   .pans input:focus-visible { outline: 2px solid var(--accent); }
   .pans .btn { width: 108px; flex: none; padding: 11px 0; }
-  .prow2 { margin-top: 8px; display: flex; justify-content: space-between; gap: 8px; }
+  .prow2 { margin-top: 8px; display: flex; justify-content: space-between; gap: 8px;
+           align-items: center; }
   .hintbtn { border: 1px solid var(--line); background: transparent; color: var(--ink-soft);
              font-size: .72rem; padding: 8px 12px; border-radius: 999px; cursor: pointer;
              min-height: 36px; font-variant-numeric: tabular-nums; }
   .hintbtn:disabled { opacity: .55; cursor: default; }
-  .hinttext { margin-top: 10px; padding: 10px 12px; border-radius: 10px;
-              background: var(--accent-soft); color: var(--ink); font-size: .86rem;
-              line-height: 1.45; }
-  .skipbtn { border: 1px solid var(--line); background: transparent; color: var(--ink-soft);
-             font-size: .72rem; padding: 8px 12px; border-radius: 999px; cursor: pointer;
-             min-height: 36px; }
+  .hinttext { margin-top: 10px; display: flex; flex-direction: column; gap: 6px; }
+  .hintone { padding: 10px 12px; border-radius: 10px;
+             background: var(--accent-soft); color: var(--ink); font-size: .86rem;
+             line-height: 1.45; }
+  .hintone b { font-weight: 700; }
+  /* the guess budget, stated before it is spent rather than after */
+  .glimit { font-size: .72rem; color: var(--ink-soft); font-variant-numeric: tabular-nums;
+            margin-left: auto; text-align: right; }
+  .glimit.low { color: var(--wrong); font-weight: 700; }
   .done .answer { font-family: ui-monospace, Menlo, monospace; font-size: 1.05rem;
                   letter-spacing: .08em; color: var(--good); font-weight: 700; margin-top: 8px; }
+  /* the pay-off: what the answer meant, and where to walk next */
+  .aftertext { margin-top: 10px; font-family: Georgia, serif; font-size: .92rem;
+               line-height: 1.55; white-space: pre-line; color: var(--ink); }
   .skipped .answer { color: var(--ink-soft); }
   .part.shake { animation: shake .35s; }
   @keyframes shake { 25% { transform: translateX(-6px) } 75% { transform: translateX(6px) } }
@@ -111,7 +118,7 @@
   .tool { border: 1px solid var(--line); background: var(--panel); color: var(--ink-soft);
           font-size: .76rem; padding: 11px 16px; border-radius: 999px; cursor: pointer;
           min-height: 44px; }
-  .tool:focus-visible, .btn:focus-visible, .skipbtn:focus-visible {
+  .tool:focus-visible, .btn:focus-visible, .hintbtn:focus-visible {
     outline: 2px solid var(--accent); outline-offset: 1px; }
   #modal { position: fixed; inset: 0; background: rgba(14,12,10,.55); display: none;
            align-items: center; justify-content: center; padding: 18px; z-index: 20; }
@@ -178,6 +185,8 @@
     <p style="color:var(--ink)">1 &nbsp; British imperial units of measurement<br>
        2 &nbsp; Statues of famous women<br>
        3 &nbsp; Famous admirals of the Royal Navy</p>
+    <p>And one warning. There are anagrams in this puzzle. When a line reads like
+       nonsense, it probably is not.</p>
     <p>One code per team — any number of phones can share it, and progress is
        shared live.</p>
     <input type="text" id="codein" maxlength="40" placeholder="TEAM CODE"
@@ -273,14 +282,30 @@ function netMsg(err) {
   return "No signal — try again.";
 }
 
+// One shape for an open clue, built the same way whether it arrived from join,
+// from a poll, or in a submit's newly_unlocked. They used to be built at four
+// call sites and drifted: a field added to one of them was silently missing
+// from the others.
+function openCard(u) {
+  return { qtype: u.qtype, kind: u.kind || "ground", clue_text: u.clue_text,
+           since: u.since,
+           n_hints: u.n_hints || 0,
+           hints_taken: u.hints_taken || 0,
+           // hints the team has already paid for come back with the state, so a
+           // reload restores them without spending the next one
+           hints_shown: u.hints_shown || [],
+           next_hint_wait: Number.isFinite(u.next_hint_wait) ? u.next_hint_wait : null,
+           guess_limit: Number.isFinite(u.guess_limit) ? u.guess_limit : null,
+           guesses_used: u.guesses_used || 0 };
+}
+
 function applyState(r) {
   SOLVED = {};
   for (const s of r.solved || [])
-    SOLVED[s.idx] = { answer: s.answer, at: s.solved_at, skipped: !!s.skipped };
+    SOLVED[s.idx] = { answer: s.answer, at: s.solved_at, skipped: !!s.skipped,
+                      after: s.after_text || null };
   UNLOCKED = {};
-  for (const u of r.unlocked || [])
-    UNLOCKED[u.idx] = { qtype: u.qtype, kind: u.kind || "ground", clue_text: u.clue_text,
-                        has_hint: !!u.has_hint, since: u.since, hint_taken: !!u.hint_taken };
+  for (const u of r.unlocked || []) UNLOCKED[u.idx] = openCard(u);
   STARTED = r.started !== false;
   STARTS_AT = r.starts_at;
   STRIKES = r.strikes || 0; STRIKE_LIMIT = r.strike_limit ?? null;
@@ -295,11 +320,11 @@ function fingerprint() {
           Object.keys(SOLVED).sort().join(","),
           Object.values(SOLVED).map((s) => s.answer).join("|"),
           Object.keys(UNLOCKED).sort().join(","),
-          // the fields too, not just the keys: a teammate taking a hint on
-          // another phone changes nothing about WHICH clues are open, and a
-          // keys-only fingerprint would suppress the re-render that shows it
+          // the fields too, not just the keys: a teammate taking a hint or
+          // spending a guess on another phone changes nothing about WHICH clues
+          // are open, and a keys-only fingerprint would suppress the re-render
           Object.keys(UNLOCKED).sort().map((i) =>
-            `${UNLOCKED[i].has_hint ? "H" : ""}${UNLOCKED[i].hint_taken ? "T" : ""}`
+            `${UNLOCKED[i].hints_taken}/${UNLOCKED[i].n_hints}:${UNLOCKED[i].guesses_used}`
           ).join("|")].join("~");
 }
 let lastPrint = null;
@@ -309,11 +334,11 @@ function seenSet() { return new Set(LS.get("seen." + HUNT, [])); }
 function markSeen(idx) {
   const s = seenSet(); s.add(idx); LS.set("seen." + HUNT, [...s]);
 }
-// A THIRD of the old speed, with a beat at every full stop. The pace is not
-// decoration: it buys thinking time, it makes the reveal feel like something is
-// being told to you, and it makes the clue meaningfully slower to copy out and
-// paste into a machine than it is to simply read and think about.
-const TYPE_SLOWDOWN = 3;
+// Roughly a quarter of the old speed, with a beat at every full stop. The pace
+// is not decoration: it buys thinking time, it makes the reveal feel like
+// something is being told to you, and it makes the clue meaningfully slower to
+// copy out and paste into a machine than it is to simply read and think about.
+const TYPE_SLOWDOWN = 3.9;
 const SENTENCE_PAUSE_MS = 700;
 function typeInto(el, text, idx) {
   const total = text.length;
@@ -369,15 +394,31 @@ function render() {
       div.className = "part " + (sv.skipped ? "skipped" : "done");
       div.innerHTML = `<div class="phead"><span class="no">Part ${i}</span>
         <span class="state">${sv.skipped ? "skipped" : "✓"}</span></div>
-        <div class="answer">${escapeHtml(sv.answer || "")}</div>`;
+        <div class="answer">${escapeHtml(sv.answer || "")}</div>` +
+        (sv.after ? `<div class="aftertext"></div>` : "");
+      // the pay-off is typed out like the clue was, once, the first time it is
+      // earned — thereafter it is just there to re-read
+      if (sv.after) {
+        const aEl = div.querySelector(".aftertext");
+        const key = "a" + i;
+        if (REDUCED || seenSet().has(key)) aEl.textContent = sv.after;
+        else {
+          const done = typeInto(aEl, sv.after, key);
+          div.addEventListener("click", () => { if (typing.has(key)) done(); });
+        }
+      }
     } else if (UNLOCKED[i]) {
       const u = UNLOCKED[i];
       div.className = "part open";
+      // Answers are typed in NORMAL CASE. Forcing capitals made every reply look
+      // like shouting and made "St Martin's" awkward to type; the server
+      // normalizes case anyway, so the keyboard has no reason to interfere.
       const attrs = u.qtype === "number"
         ? 'inputmode="numeric" pattern="[0-9]*" placeholder="a whole number" ' +
           'autocorrect="off" autocapitalize="off" spellcheck="false" autocomplete="off"'
-        : 'placeholder="your answer" autocapitalize="characters" autocorrect="off" ' +
+        : 'placeholder="your answer" autocorrect="off" ' +
           'spellcheck="false" autocomplete="off"';
+      const left = u.guess_limit == null ? null : u.guess_limit - u.guesses_used;
       div.innerHTML =
         `<div class="phead"><span class="no">Part ${i}</span></div>
          <div class="ptext"></div>
@@ -388,7 +429,8 @@ function render() {
          </div>
          <div class="prow2">
            <button class="hintbtn" hidden></button>
-           <button class="skipbtn">Can't get this one →</button>
+           ${left == null ? "" : `<span class="glimit${left <= 1 ? " low" : ""}">${
+             left > 0 ? `${left} guess${left === 1 ? "" : "es"} left` : "no guesses left"}</span>`}
          </div>
          <div class="hinttext" hidden></div>`;
       const textEl = div.querySelector(".ptext");
@@ -406,7 +448,6 @@ function render() {
       inp.addEventListener("keydown", (ev) => {
         if (ev.key === "Enter") { ev.preventDefault(); submit(i, inp, btn, div); }
       });
-      div.querySelector(".skipbtn").onclick = () => confirmSkip(i);
       wireHint(div, i, u);
     } else {
       div.className = "part sealed";
@@ -419,81 +460,128 @@ function render() {
   }
 }
 
-// Hints unlock hint_wait_s after the clue does. The server is the authority;
-// this only decides what the button says, and ticks so the wait is visible.
-const hintShown = new Map();     // idx -> hint text, once taken this session
+// Hints are a SEQUENCE: each one has its own delay measured from the moment the
+// clue opened, and they are handed out one at a time. A single blob used to
+// arrive all at once, which turned "give me a nudge" into "give me the answer".
+// The server is the authority on both the order and the wait; this only decides
+// what the button says, and ticks so the wait is visible.
+function mmss(ms) {
+  const s = Math.max(0, Math.ceil(ms / 1000));
+  return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
+}
+function paintHints(out, u) {
+  out.innerHTML = "";
+  out.hidden = !u.hints_shown.length;
+  u.hints_shown.forEach((h, k) => {
+    const d = document.createElement("div");
+    d.className = "hintone";
+    d.innerHTML = `<b>Hint ${k + 1}.</b> ${escapeHtml(h)}`;
+    out.appendChild(d);
+  });
+}
 function wireHint(div, idx, u) {
   const btn = div.querySelector(".hintbtn");
   const out = div.querySelector(".hinttext");
-  if (!btn || !u.has_hint) return;
+  if (!btn) return;
+  paintHints(out, u);
+  if (!u.n_hints || u.hints_taken >= u.n_hints) { btn.hidden = true; return; }
   btn.hidden = false;
-  const already = hintShown.get(idx);
-  if (already) {
-    btn.hidden = true;
-    out.hidden = false; out.textContent = "Hint: " + already;
-    return;
-  }
-  if (u.hint_taken) {
-    // the hint text is deliberately absent from the state payload, so after a
-    // reload we have to ask for it again — fedora_hint is idempotent, so this
-    // re-reads the hint the team already paid for without charging twice
-    btn.textContent = "Show the hint you took";
-    btn.disabled = false;
-    btn.onclick = () => takeHint(idx, btn, out, true);
-    return;
-  }
+  const next = u.hints_taken + 1;
+  const label = u.n_hints > 1 ? `hint ${next} of ${u.n_hints}` : "a hint";
   // `first` matters: wireHint runs while the card is still detached (render()
   // appends it afterwards), so a containment check on tick 1 would kill the
   // countdown before it started and leave the button blank forever.
   const tick = (first) => {
     if (!first && !btn.isConnected) return;
     const since = u.since ? new Date(u.since).getTime() : Date.now();
-    const left = HINT_WAIT_MS - (Date.now() - since);
+    const waitMs = (u.next_hint_wait != null ? u.next_hint_wait * 1000 : HINT_WAIT_MS);
+    const left = waitMs - (Date.now() - since);
     if (left > 0) {
       btn.disabled = true;
-      const m = Math.floor(left / 60000), sec = Math.floor((left % 60000) / 1000);
-      btn.textContent = `Hint in ${m}:${String(sec).padStart(2, "0")}`;
+      btn.textContent = `${label[0].toUpperCase()}${label.slice(1)} in ${mmss(left)}`;
       setTimeout(() => tick(false), Math.min(1000, left));
     } else {
       btn.disabled = false;
-      btn.textContent = "Take a hint (counts against you)";
+      btn.textContent = `Take ${label} (counts against you)`;
     }
   };
   tick(true);
-  btn.onclick = () => takeHint(idx, btn, out, false);
+  btn.onclick = () => takeHint(div, idx, btn, out);
 }
 
-async function takeHint(idx, btn, out, again) {
+async function takeHint(div, idx, btn, out) {
   btn.disabled = true;
+  const u = UNLOCKED[idx];
   try {
     const r = await rpc("fedora_hint", { p_code: CODE, p_idx: idx });
-    if (r.status === "ok") {
-      hintShown.set(idx, r.hint);
-      btn.hidden = true;
-      out.hidden = false; out.textContent = "Hint: " + r.hint;
-      if (UNLOCKED[idx]) UNLOCKED[idx].hint_taken = true;
-      if (!again) toast("Hint taken — it's on your record.");
+    if (r.status === "ok" || r.status === "exhausted") {
+      if (u) {
+        const was = u.hints_taken;
+        u.hints_shown = r.hints || u.hints_shown;
+        u.hints_taken = r.n_taken || u.hints_shown.length;
+        if (Number.isFinite(r.n_hints)) u.n_hints = r.n_hints;
+        u.next_hint_wait = Number.isFinite(r.next_hint_wait) ? r.next_hint_wait : null;
+        // a hint buys a guess back on a budgeted clue (the server does the same
+        // sum; this keeps the counter honest until the next poll confirms it)
+        const gained = u.guess_limit != null && u.hints_taken > was;
+        if (gained) u.guess_limit += u.hints_taken - was;
+        // the countdown for the NEXT hint runs from the same origin as this
+        // one did (the clue opening), so `since` is deliberately untouched
+        lastPrint = fingerprint();
+        if (gained) render(); else wireHint(div, idx, u);
+      }
+      if (r.status === "ok") toast("Hint taken — it's on your record.");
     } else if (r.status === "too_soon") {
-      const m = Math.floor(r.wait_s / 60), sec = r.wait_s % 60;
-      toast(`Not yet — ${m}:${String(sec).padStart(2, "0")} to go.`);
+      toast(`Not yet — ${mmss(r.wait_s * 1000)} to go.`);
       btn.disabled = false;
     } else { toast("Hmm: " + r.status); btn.disabled = false; }
   } catch (err) { toast(netMsg(err)); btn.disabled = false; }
+}
+
+// A limited clue asks once before it spends a guess. This exists because a
+// machine answers instantly and confidently, and the moment of "are you sure?"
+// is the only place a team gets to notice that it has not actually looked.
+function confirmGuess(idx, raw, left, total, hintsLeft) {
+  return new Promise((resolve) => {
+    $("modalcard").innerHTML = `<h2>Sure about that?</h2>
+      <div class="sub">This part allows <b>${total}</b> guess${total === 1 ? "" : "es"},
+      and you have <b>${left}</b> left. Submitting
+      "${escapeHtml(raw)}" spends one${left === 1 ? ", your last" : ""}.
+      ${hintsLeft > 0 ? "Every hint you take here buys you one more." : ""}</div>
+      <div class="btnrow">
+        <button class="btn ghost" id="gno">Think again</button>
+        <button class="btn primary" id="gyes">Submit it</button>
+      </div>`;
+    $("modal").classList.add("show");
+    const close = (v) => { $("modal").classList.remove("show"); resolve(v); };
+    $("gno").onclick = () => close(false);
+    $("gyes").onclick = () => close(true);
+  });
 }
 
 async function submit(idx, inp, btn, div) {
   const raw = inp.value.trim();
   if (!raw) { toast("Type an answer first"); return; }
   if (btn.disabled) return;                 // double-tap / Enter+tap guard
+  const u0 = UNLOCKED[idx];
+  if (u0 && u0.guess_limit != null) {
+    const left = u0.guess_limit - u0.guesses_used;
+    const hintsLeft = (u0.n_hints || 0) - (u0.hints_taken || 0);
+    if (left <= 0) {
+      toast(hintsLeft > 0 ? "No guesses left — take a hint to earn another."
+                          : "No guesses left on this one.");
+      return;
+    }
+    if (!(await confirmGuess(idx, raw, left, u0.guess_limit, hintsLeft))) return;
+  }
   btn.disabled = true; inflight++;
   try {
     const r = await rpc("fedora_submit", { p_code: CODE, p_idx: idx, p_guess: raw });
     if (r.status === "correct") {
-      SOLVED[idx] = { answer: r.answer, at: Date.now(), skipped: false };
+      SOLVED[idx] = { answer: r.answer, at: Date.now(), skipped: false,
+                      after: r.after_text || null };
       delete UNLOCKED[idx];
-      for (const u of r.newly_unlocked || [])
-        UNLOCKED[u.idx] = { qtype: u.qtype, kind: u.kind || "ground", clue_text: u.clue_text,
-                            has_hint: !!u.has_hint, since: u.since, hint_taken: !!u.hint_taken };
+      for (const u of r.newly_unlocked || []) UNLOCKED[u.idx] = openCard(u);
       render();
       if (Object.keys(SOLVED).length === NCLUES) showWin();
       else {
@@ -506,6 +594,7 @@ async function submit(idx, inp, btn, div) {
       if (r.strike_limit != null) {
         STRIKES = r.strikes; STRIKE_LIMIT = r.strike_limit; ELIGIBLE = r.eligible;
       }
+      if (u0 && Number.isFinite(r.guesses_used)) u0.guesses_used = r.guesses_used;
       render();
       const card = document.querySelector(`.part[data-idx="${idx}"]`);
       if (card) {
@@ -513,9 +602,17 @@ async function submit(idx, inp, btn, div) {
         if (again) again.value = raw;
         void card.offsetWidth; card.classList.add("shake");
       }
+      const left = u0 && u0.guess_limit != null ? u0.guess_limit - u0.guesses_used : null;
       toast(wasEligible && !ELIGIBLE
         ? "Wrong — and that was one too many. You're out of the running."
+        : left === 0 ? "Wrong, and that was your last guess on this one."
+        : left != null ? `Wrong. ${left} guess${left === 1 ? "" : "es"} left here.`
         : "The square disagrees. Look again.");
+    } else if (r.status === "no_guesses_left") {
+      if (u0) { u0.guess_limit = r.guess_limit; u0.guesses_used = r.guess_limit; }
+      render();
+      toast(r.hints_left > 0 ? "No guesses left — take a hint to earn another."
+                             : "No guesses left on this one.");
     } else if (r.status === "ambiguous") {
       toast("Two numbers in there — give one whole number.");
     } else if (r.status === "cooldown") {
@@ -538,35 +635,10 @@ async function submit(idx, inp, btn, div) {
   }
 }
 
-function confirmSkip(idx) {
-  $("modalcard").innerHTML = `<h2>Leave this one behind?</h2>
-    <div class="sub">It stays unanswered and you can't win on it — but the rest of
-    the hunt unlocks, so a wall or a locked gate can't end your day. We log which
-    question beat you, which is genuinely useful to us.</div>
-    <div class="btnrow">
-      <button class="btn ghost" id="skno">Keep trying</button>
-      <button class="btn primary" id="skyes">Move on</button>
-    </div>`;
-  $("modal").classList.add("show");
-  $("skno").onclick = () => $("modal").classList.remove("show");
-  $("skyes").onclick = async () => {
-    $("modal").classList.remove("show");
-    inflight++;
-    try {
-      const r = await rpc("fedora_skip", { p_code: CODE, p_idx: idx, p_note: "SKIPPED" });
-      if (r.status === "skipped") {
-        SOLVED[idx] = { answer: "— skipped —", at: Date.now(), skipped: true };
-        delete UNLOCKED[idx];
-        for (const u of r.newly_unlocked || [])
-          UNLOCKED[u.idx] = { qtype: u.qtype, kind: u.kind || "ground", clue_text: u.clue_text,
-                              has_hint: !!u.has_hint, since: u.since, hint_taken: !!u.hint_taken };
-        render();
-        toast("Moved on. The next part is open.");
-      } else { toast("Hmm: " + r.status); }
-    } catch (err) { toast(netMsg(err)); }
-    finally { inflight--; }
-  };
-}
+// There is deliberately no skip. A part you can walk away from is a part you
+// never really tried, and the graded hint sequence is the way out of a wall now:
+// wait long enough and it will tell you enough. (fedora_skip still exists server
+// side so that legacy runs already carrying a skip still render.)
 
 async function refresh(force) {
   if (!CODE) return;

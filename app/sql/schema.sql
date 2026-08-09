@@ -1,16 +1,19 @@
--- Fedora hunt backend v6 — run in the Supabase SQL editor of the dedicated
+-- Fedora hunt backend v7 — run in the Supabase SQL editor of the dedicated
 -- project. It CREATES objects rather than replacing them, so over an existing
--- install run app/sql/reset.sql first (destructive — read its header).
+-- install run app/sql/reset.sql first (destructive — read its header). To move
+-- a LIVE database up a version without losing play, generate a migration
+-- instead: it alters in place and keeps every team and submission.
 --
--- Each clue has a TYPE (number/text), a KIND (wits/dig/ground, which drives the
--- UI badge) and an ACCEPTED SET. An empty accepted set means COLLECT MODE for
--- that clue: any answer is accepted and logged, which is how we harvest field
--- values we do not yet know. A populated set is COMPETE MODE.
+-- Each clue has a TYPE (number/text), a KIND (wits/dig/ground, kept for our own
+-- analysis and never shown) and an ACCEPTED SET. An empty accepted set means
+-- COLLECT MODE for that clue: any answer is accepted and logged, which is how we
+-- harvest field values we do not yet know. A populated set is COMPETE MODE.
 --
--- Player-facing API is five functions and nothing else: join, submit, skip
--- (the escape hatch, so one unanswerable clue cannot end a run), hint (released
--- hunts.hint_wait_s after a clue unlocks, logged against the team) and
--- leaderboard.
+-- Player-facing API is six functions and nothing else: join, submit, hint
+-- (a SEQUENCE, released one at a time on per-hint delays and logged against the
+-- team), skip, signup and leaderboard. The client no longer offers skip — the
+-- hint ladder is the way past a wall — but the function stays so that runs which
+-- already recorded one still render.
 --
 -- Security: clients hold no answers and no locked clue text; every table is
 -- deny-all (RLS on, no policies, zero anon grants); per-(team,clue) advisory
@@ -49,8 +52,22 @@ create table public.clues (
   --              that they know the word, not that they typed it alone.
   match_mode     text not null default 'exact' check (match_mode in ('exact', 'contains')),
   clue_text      text not null check (char_length(clue_text) between 10 and 2000),
-  hint           text,          -- released hunts.hint_wait_s after the clue
-                                -- unlocks, and logged against the team
+  -- Hints are an ordered list, each with its own delay in seconds measured from
+  -- the moment the clue opened. They are handed out ONE AT A TIME and in order:
+  -- hint 2 cannot be taken before hint 1, however long you wait. A single text
+  -- column used to hold all of them at once, which meant asking for a nudge
+  -- dumped the entire solution in your lap.
+  hints          text[] not null default '{}',
+  hint_waits     int[]  not null default '{}',
+  -- shown once the clue is answered: the congratulation, the walk to the next
+  -- place, and the history the clue was hanging on. A team that got here by
+  -- machine still learns why the answer is the answer.
+  after_text     text,
+  -- null = unlimited. Set on clues where a confident wrong guess from a machine
+  -- should cost something; the client warns before spending one. Each hint the
+  -- team takes on that clue adds one guess back, so the ladder of hints is
+  -- always a way out: with no skip button, a bare limit would be a dead end.
+  guess_limit    int check (guess_limit is null or guess_limit > 0),
   unlocked_by    int[] not null default '{}',
   unlock_mode    text not null default 'any' check (unlock_mode in ('any', 'all')),
   available_from timestamptz,
@@ -86,13 +103,16 @@ create table public.signups (
   created_at timestamptz not null default now()
 );
 
--- a taken hint: logged, counted against the team, one per (team, clue)
+-- a taken hint: logged and counted against the team, one row per hint. The key
+-- carries hint_no because a clue hands out several, in order, and the count of
+-- rows here is what tells fedora_hint which one comes next.
 create table public.hints (
   team_id    uuid not null references public.teams(id) on delete cascade,
   hunt_id    text not null,
   clue_idx   int  not null,
+  hint_no    int  not null check (hint_no >= 1),
   created_at timestamptz not null default now(),
-  primary key (team_id, clue_idx)
+  primary key (team_id, clue_idx, hint_no)
 );
 
 alter table public.hints       enable row level security;
@@ -153,6 +173,10 @@ returns jsonb language sql stable security definer set search_path = '' as $$
     'solved', coalesce((
        select jsonb_agg(jsonb_build_object('idx', fs.clue_idx, 'answer', fs.ans,
                                            'skipped', fs.was_skipped,
+                                           -- the explainer comes back with every
+                                           -- reload and on every teammate's phone,
+                                           -- not just in the reply that earned it
+                                           'after_text', c.after_text,
                                            'solved_at', fs.first_at)
                         order by fs.clue_idx)
        from (select s.clue_idx, min(s.created_at) as first_at,
@@ -161,19 +185,36 @@ returns jsonb language sql stable security definer set search_path = '' as $$
              from public.submissions s
              where s.team_id = p_team and (s.correct or s.skipped)
              group by s.clue_idx) fs
-       where exists (select 1 from public.clues c
-                     where c.hunt_id = p_hunt and c.idx = fs.clue_idx)),
+       join public.clues c on c.hunt_id = p_hunt and c.idx = fs.clue_idx),
       '[]'::jsonb),
     'unlocked', coalesce((
        select jsonb_agg(jsonb_build_object('idx', c.idx, 'qtype', c.qtype,
                           'kind', c.kind, 'clue_text', c.clue_text,
-                          'has_hint', c.hint is not null,
-                          'since', public.fedora_available_since(p_team, c),
-                          'hint_taken', exists (select 1 from public.hints x
-                                                where x.team_id = p_team
-                                                  and x.clue_idx = c.idx))
+                          'n_hints', cardinality(c.hints),
+                          'hints_taken', k.taken,
+                          -- the hints already paid for come back with the state,
+                          -- so a reload restores them without another call (and
+                          -- without fedora_hint's counter advancing a step)
+                          'hints_shown', to_jsonb(c.hints[1:k.taken]),
+                          -- null once every hint is spent; otherwise the delay
+                          -- fedora_hint will actually enforce, so the client
+                          -- counts down to the same instant the gate opens
+                          'next_hint_wait', case when k.taken >= cardinality(c.hints)
+                            then null
+                            else coalesce(c.hint_waits[k.taken + 1],
+                                          (select hu.hint_wait_s from public.hunts hu
+                                           where hu.id = p_hunt)) end,
+                          'guess_limit', case when c.guess_limit is null
+                            then null else c.guess_limit + k.taken end,
+                          'guesses_used', k.used,
+                          'since', public.fedora_available_since(p_team, c))
                         order by c.idx)
        from public.clues c
+       cross join lateral (select
+         (select count(*)::int from public.hints x
+          where x.team_id = p_team and x.clue_idx = c.idx) as taken,
+         (select count(*)::int from public.submissions s
+          where s.team_id = p_team and s.clue_idx = c.idx) as used) k
        where c.hunt_id = p_hunt
          and public.fedora_is_unlocked(p_team, c)
          and not exists (select 1 from public.submissions s
@@ -220,7 +261,7 @@ returns jsonb language plpgsql security definer set search_path = '' as $$
 declare
   t public.teams; h public.hunts; c public.clues;
   guess text; last_try timestamptz; cooldown constant interval := interval '15 seconds';
-  before_unlocked int[]; is_right boolean;
+  before_unlocked int[]; is_right boolean; used int; budget int;
 begin
   select * into t from public.teams
     where code = upper(regexp_replace(coalesce(p_code, ''), '\s', '', 'g'));
@@ -245,6 +286,20 @@ begin
   end if;
   if not public.fedora_is_unlocked(t.id, c) then
     return jsonb_build_object('status', 'locked');
+  end if;
+  -- a per-clue guess budget, enforced here and not merely warned about in the
+  -- UI. Every hint taken on this clue is worth one more guess, so a team that
+  -- runs out can always earn its way forward instead of hitting a wall.
+  if c.guess_limit is not null then
+    select count(*) into used from public.submissions s
+      where s.team_id = t.id and s.clue_idx = p_idx;
+    select c.guess_limit + count(*) into budget from public.hints x
+      where x.team_id = t.id and x.clue_idx = p_idx;
+    if used >= budget then
+      return jsonb_build_object('status', 'no_guesses_left', 'guess_limit', budget,
+        'hints_left', cardinality(c.hints) - (select count(*) from public.hints x
+                                              where x.team_id = t.id and x.clue_idx = p_idx));
+    end if;
   end if;
   select max(created_at) into last_try from public.submissions s
     where s.team_id = t.id and s.clue_idx = p_idx;
@@ -293,16 +348,25 @@ begin
   if not is_right then
     return jsonb_build_object('status', 'wrong',
       'strikes', public.fedora_strikes(t.id), 'strike_limit', h.strike_limit,
+      'guess_limit', budget,
+      'guesses_used', (select count(*) from public.submissions s
+                       where s.team_id = t.id and s.clue_idx = p_idx),
       'eligible', h.strike_limit is null
         or public.fedora_strikes(t.id) <= h.strike_limit);
   end if;
   return jsonb_build_object('status', 'correct', 'idx', p_idx, 'answer', guess,
+    'after_text', c.after_text,
     'newly_unlocked', coalesce((
       select jsonb_agg(jsonb_build_object('idx', k.idx, 'qtype', k.qtype,
                                           'kind', k.kind, 'clue_text', k.clue_text,
-                                          'has_hint', k.hint is not null,
-                                          'since', public.fedora_available_since(t.id, k),
-                                          'hint_taken', false)
+                                          'n_hints', cardinality(k.hints),
+                                          'hints_taken', 0,
+                                          'hints_shown', '[]'::jsonb,
+                                          'next_hint_wait', case when cardinality(k.hints) = 0 then null
+                                             else coalesce(k.hint_waits[1], h.hint_wait_s) end,
+                                          'guess_limit', k.guess_limit,
+                                          'guesses_used', 0,
+                                          'since', public.fedora_available_since(t.id, k))
                        order by k.idx)
       from public.clues k
       where k.hunt_id = h.id and public.fedora_is_unlocked(t.id, k)
@@ -349,9 +413,14 @@ begin
     'newly_unlocked', coalesce((
       select jsonb_agg(jsonb_build_object('idx', k.idx, 'qtype', k.qtype,
                                           'kind', k.kind, 'clue_text', k.clue_text,
-                                          'has_hint', k.hint is not null,
-                                          'since', public.fedora_available_since(t.id, k),
-                                          'hint_taken', false)
+                                          'n_hints', cardinality(k.hints),
+                                          'hints_taken', 0,
+                                          'hints_shown', '[]'::jsonb,
+                                          'next_hint_wait', case when cardinality(k.hints) = 0 then null
+                                             else coalesce(k.hint_waits[1], h.hint_wait_s) end,
+                                          'guess_limit', k.guess_limit,
+                                          'guesses_used', 0,
+                                          'since', public.fedora_available_since(t.id, k))
                        order by k.idx)
       from public.clues k
       where k.hunt_id = h.id and public.fedora_is_unlocked(t.id, k)
@@ -365,7 +434,7 @@ create or replace function public.fedora_hint(p_code text, p_idx int)
 returns jsonb language plpgsql security definer set search_path = '' as $$
 declare
   t public.teams; h public.hunts; c public.clues;
-  since timestamptz; wait interval;
+  since timestamptz; wait interval; n int;
 begin
   select * into t from public.teams
     where code = upper(regexp_replace(coalesce(p_code, ''), '\s', '', 'g'));
@@ -377,16 +446,31 @@ begin
   if not public.fedora_is_unlocked(t.id, c) then
     return jsonb_build_object('status', 'locked');
   end if;
-  if c.hint is null then return jsonb_build_object('status', 'no_hint'); end if;
-  wait := make_interval(secs => h.hint_wait_s);
+  if cardinality(c.hints) = 0 then return jsonb_build_object('status', 'no_hint'); end if;
+  -- the next one in sequence, never a later one first
+  select count(*) + 1 into n from public.hints x
+    where x.team_id = t.id and x.clue_idx = p_idx;
+  if n > cardinality(c.hints) then
+    return jsonb_build_object('status', 'exhausted',
+      'hints', to_jsonb(c.hints[1:cardinality(c.hints)]));
+  end if;
+  wait := make_interval(secs => coalesce(c.hint_waits[n], h.hint_wait_s));
   since := public.fedora_available_since(t.id, c);
   if since is not null and now() - since < wait then
     return jsonb_build_object('status', 'too_soon',
       'wait_s', ceil(extract(epoch from wait - (now() - since))));
   end if;
-  insert into public.hints (team_id, hunt_id, clue_idx)
-    values (t.id, h.id, p_idx) on conflict do nothing;
-  return jsonb_build_object('status', 'ok', 'idx', p_idx, 'hint', c.hint);
+  insert into public.hints (team_id, hunt_id, clue_idx, hint_no)
+    values (t.id, h.id, p_idx, n) on conflict do nothing;
+  -- return every hint taken so far, so a reload never loses one
+  return jsonb_build_object('status', 'ok', 'idx', p_idx,
+    'hints', to_jsonb(c.hints[1:n]), 'n_taken', n,
+    'n_hints', cardinality(c.hints),
+    -- the wait on the NEXT one, so the client can restart its countdown without
+    -- a second round trip
+    'next_hint_wait', case when n < cardinality(c.hints)
+                      then coalesce(c.hint_waits[n + 1], h.hint_wait_s) else null end,
+    'more', n < cardinality(c.hints));
 end $$;
 
 -- Write-only: an address goes in, nothing comes back out. Anon can register

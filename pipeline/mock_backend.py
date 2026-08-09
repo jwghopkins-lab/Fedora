@@ -30,7 +30,7 @@ COOLDOWN = float(os.environ.get("MOCK_COOLDOWN_S", "15"))   # SQL stays at 15s
 TEAMS = {t["code"].upper(): t["name"] for t in HUNT["teams"]}
 CLUES = {c["idx"]: c for c in HUNT["clues"]}
 SUBS = []   # {team, clue_idx, guess, correct, skipped, t}
-HINTS = []  # {team, clue_idx, t}
+HINTS = []  # {team, clue_idx, hint_no, t}
 SIGNUPS = []  # landing-page email registrations
 # mirrors hunts.hint_wait_s (env overrides it, so tests need not wait 5 minutes);
 # the client counts down using the value we report, so the two cannot drift
@@ -142,8 +142,47 @@ def available_since(team, c):
     return max(ts) if ts else START_T
 
 
-def hint_taken(team, idx):
-    return any(x["team"] == team and x["clue_idx"] == idx for x in HINTS)
+def hints_taken(team, idx):
+    return sum(1 for x in HINTS if x["team"] == team and x["clue_idx"] == idx)
+
+
+def hint_wait_for(c, n):
+    """Wait in seconds before hint n (1-based) is released, mirroring
+    coalesce(c.hint_waits[n], h.hint_wait_s) in the SQL."""
+    waits = c.get("hint_waits") or []
+    return float(waits[n - 1]) if n <= len(waits) else HINT_WAIT
+
+
+def guesses_used(team, idx):
+    return sum(1 for s in SUBS if s["team"] == team and s["clue_idx"] == idx)
+
+
+def budget_for(team, c, idx):
+    """The effective guess budget: the clue's base allowance plus one for every
+    hint taken on it, so the hint ladder is always a way out of a spent budget."""
+    return None if c.get("guess_limit") is None \
+        else c["guess_limit"] + hints_taken(team, idx)
+
+
+def open_card(team, i, fresh=False):
+    """The payload for a clue the team can currently see. `fresh` is for a clue
+    that has only just unlocked, where no hint or guess can exist yet."""
+    c = CLUES[i]
+    hints = c.get("hints") or []
+    taken = 0 if fresh else hints_taken(team, i)
+    n_hints = len(hints)
+    return {"idx": i, "qtype": qtype_of(c), "kind": c.get("kind", "ground"),
+            "clue_text": c["clue_text"],
+            "n_hints": n_hints,
+            "hints_taken": taken,
+            # already paid for, so a reload restores them without a second call
+            "hints_shown": hints[:taken],
+            "next_hint_wait": (hint_wait_for(c, taken + 1)
+                               if taken < n_hints else None),
+            # a fresh clue has no hints taken, so its budget is the base one
+            "guess_limit": c.get("guess_limit") if fresh else budget_for(team, c, i),
+            "guesses_used": 0 if fresh else guesses_used(team, i),
+            "since": iso(available_since(team, c))}
 
 
 def state(team):
@@ -151,14 +190,10 @@ def state(team):
     return {
         "solved": [{"idx": i, "answer": latest_accepted_guess(team, i),
                     "skipped": was_skipped(team, i),
-                    "solved_at": iso(done[i])} for i in sorted(done)],
-        "unlocked": [{"idx": i, "qtype": qtype_of(CLUES[i]),
-                      "kind": CLUES[i].get("kind", "ground"),
-                      "clue_text": CLUES[i]["clue_text"],
-                      "has_hint": bool(CLUES[i].get("hint")),
-                      "since": iso(available_since(team, CLUES[i])),
-                      "hint_taken": hint_taken(team, i)}
-                     for i in sorted(CLUES)
+                    "after_text": CLUES[i].get("after_text"),
+                    "solved_at": iso(done[i])}
+                   for i in sorted(done) if i in CLUES],
+        "unlocked": [open_card(team, i) for i in sorted(CLUES)
                      if i not in done and is_unlocked(team, CLUES[i])],
     }
 
@@ -198,6 +233,10 @@ def rpc_submit(body):
         return {"status": "already_solved"}
     if not is_unlocked(code, c):
         return {"status": "locked"}
+    lim = budget_for(code, c, idx)
+    if lim is not None and guesses_used(code, idx) >= lim:
+        return {"status": "no_guesses_left", "guess_limit": lim,
+                "hints_left": len(c.get("hints") or []) - hints_taken(code, idx)}
     last = max((s["t"] for s in SUBS if s["team"] == code and s["clue_idx"] == idx),
                default=None)
     if last is not None and time.time() - last < COOLDOWN:
@@ -233,17 +272,13 @@ def rpc_submit(body):
                  "correct": correct, "skipped": False, "t": time.time()})
     if not correct:
         return {"status": "wrong", "strikes": strikes(code),
-                "strike_limit": STRIKE_LIMIT, "eligible": eligible(code)}
-    newly = [{"idx": i, "qtype": qtype_of(CLUES[i]),
-              "kind": CLUES[i].get("kind", "ground"),
-              "clue_text": CLUES[i]["clue_text"],
-              "has_hint": bool(CLUES[i].get("hint")),
-              "since": iso(available_since(code, CLUES[i])),
-              "hint_taken": hint_taken(code, i)}
-             for i in sorted(CLUES)
+                "strike_limit": STRIKE_LIMIT, "guess_limit": lim,
+                "guesses_used": guesses_used(code, idx),
+                "eligible": eligible(code)}   # lim already includes earned guesses
+    newly = [open_card(code, i, fresh=True) for i in sorted(CLUES)
              if i != idx and i not in before and is_unlocked(code, CLUES[i])]
     return {"status": "correct", "idx": idx, "answer": guess,
-            "newly_unlocked": newly}
+            "after_text": c.get("after_text"), "newly_unlocked": newly}
 
 
 def rpc_signup(body):
@@ -265,14 +300,23 @@ def rpc_hint(body):
         return {"status": "no_such_clue"}
     if not is_unlocked(code, c):
         return {"status": "locked"}
-    if not c.get("hint"):
+    hints = c.get("hints") or []
+    if not hints:
         return {"status": "no_hint"}
+    # the next one in sequence, never a later one first
+    n = hints_taken(code, idx) + 1
+    if n > len(hints):
+        return {"status": "exhausted", "hints": hints}
     waited = time.time() - available_since(code, c)
-    if waited < HINT_WAIT:
-        return {"status": "too_soon", "wait_s": int(HINT_WAIT - waited) + 1}
-    if not hint_taken(code, idx):
-        HINTS.append({"team": code, "clue_idx": idx, "t": time.time()})
-    return {"status": "ok", "idx": idx, "hint": c["hint"]}
+    wait = hint_wait_for(c, n)
+    if waited < wait:
+        return {"status": "too_soon", "wait_s": int(wait - waited) + 1}
+    HINTS.append({"team": code, "clue_idx": idx, "hint_no": n, "t": time.time()})
+    # every hint taken so far comes back, so a reload never loses one
+    return {"status": "ok", "idx": idx, "hints": hints[:n], "n_taken": n,
+            "n_hints": len(hints),
+            "next_hint_wait": hint_wait_for(c, n + 1) if n < len(hints) else None,
+            "more": n < len(hints)}
 
 
 def rpc_skip(body):
@@ -290,10 +334,7 @@ def rpc_skip(body):
     before = {i for i in CLUES if is_unlocked(code, CLUES[i])}
     SUBS.append({"team": code, "clue_idx": idx, "guess": "SKIPPED",
                  "correct": False, "skipped": True, "t": time.time()})
-    newly = [{"idx": i, "qtype": qtype_of(CLUES[i]),
-              "kind": CLUES[i].get("kind", "ground"),
-              "clue_text": CLUES[i]["clue_text"]}
-             for i in sorted(CLUES)
+    newly = [open_card(code, i, fresh=True) for i in sorted(CLUES)
              if i != idx and i not in before and is_unlocked(code, CLUES[i])]
     return {"status": "skipped", "idx": idx, "newly_unlocked": newly}
 

@@ -1,9 +1,10 @@
 /* End-to-end smoke test of the QUEST app (quest.html) against the mock backend.
    Covers: join, absence of the brief and type pills, typewriter reveal (first
-   view only), the hint
-   countdown and its recovery after a reload, collect-mode number, the
-   two-numbers ambiguity guard, compete-mode strike, text variants, the skip
-   escape hatch, leaderboard, and resume.
+   view only), SEQUENTIAL hints (one at a time, each on its own timer) and their
+   survival across a reload, collect-mode number, the two-numbers ambiguity
+   guard, compete-mode strike, the guess budget and its are-you-sure gate, the
+   after-answer explainer, text variants under match_mode 'contains', the
+   ABSENCE of a skip button, leaderboard, and resume.
    Run: NODE_PATH=/opt/node22/lib/node_modules node pipeline/quest_smoke.cjs
 */
 const { chromium } = require("playwright");
@@ -36,6 +37,11 @@ const BASE = `http://localhost:${PORT}`;
     if (!(await page.locator("#landing").isHidden()))
       await page.click("#gotologin");
     await page.waitForSelector("#codein", { state: "visible" });
+    // the login screen has to warn that anagrams are in play — without it the
+    // scrambled lines read as typos and players stall on them
+    const login = await page.locator("#logincard").textContent();
+    if (!/anagram/i.test(login))
+      throw new Error("login screen should flag that there are anagrams");
     await page.fill("#codein", "testteam1");
     await page.press("#codein", "Enter");           // Enter on the code field
     await page.waitForSelector("#s-quest.on");
@@ -55,7 +61,11 @@ const BASE = `http://localhost:${PORT}`;
     const body = await page.locator("#s-quest").textContent();
     for (const k of ["WITS", "THE DIG", "GROUND TRUTH"])
       if (body.includes(k)) throw new Error("clue type leaked into the UI: " + k);
-    console.log("join ok: no brief, no pills, 1 open, 3 sealed, 0/4");
+    console.log("join ok: anagram warning shown, no brief, no pills, 1 open, 3 sealed, 0/4");
+
+    // there is no escape hatch any more: a skip button anywhere is a regression
+    if (await page.locator(".skipbtn").count())
+      throw new Error("the skip button was removed and must not come back");
 
     // typewriter: text starts partial on first view, then completes
     const full = "FIXTURE: Count the imaginary lampposts on Example Street. Any whole number is accepted (collect mode).";
@@ -64,16 +74,17 @@ const BASE = `http://localhost:${PORT}`;
       throw new Error("typewriter did not stagger the first view");
     await page.waitForFunction((f) =>
       document.querySelector('.part[data-idx="1"] .ptext').textContent === f,
-      full, { timeout: 25000 });
+      full, { timeout: 40000 });
     console.log("reveal ok: clue text typed out, then completed");
 
-    // hint: gated at first, then available, then shown and logged
+    // hints are a SEQUENCE: one at a time, each on its own countdown, and the
+    // button has to name which one is coming so nobody expects the lot
     const hb = page.locator('.part[data-idx="1"] .hintbtn');
     if (!(await hb.count())) throw new Error("hint button missing on part 1");
-    // the countdown must use the server's hint_wait_s (25s here), not a hard-coded 5 min
     // must be counting down to the SERVER's wait (25s), not a hard-coded 5 min
-    if (!/^Hint in 0:[0-2]\d$/.test((await hb.textContent()).trim()))
-      throw new Error("hint countdown should track the server wait, got: " + await hb.textContent());
+    if (!/^Hint 1 of 2 in 0:[0-2]\d$/.test((await hb.textContent()).trim()))
+      throw new Error("hint countdown should name hint 1 of 2 and track the "
+                      + "server wait, got: " + await hb.textContent());
     if (!(await hb.isDisabled()))
       throw new Error("hint button must be disabled while the countdown runs");
     // (the server's own too_soon refusal is covered in test_backend.py; the UI
@@ -84,25 +95,40 @@ const BASE = `http://localhost:${PORT}`;
     }, { timeout: 40000 });
     await hb.click();
     await page.waitForFunction(() => {
-      const h = document.querySelector('.part[data-idx="1"] .hinttext');
-      return h && !h.hidden && h.textContent.includes("FIXTURE HINT");
+      const h = document.querySelectorAll('.part[data-idx="1"] .hintone');
+      return h.length === 1 && h[0].textContent.includes("FIXTURE HINT ONE");
     }, { timeout: 20000 });
-    console.log("hint ok: countdown disabled -> released after the server wait -> shown");
+    if (!/hint 2 of 2/i.test(await hb.textContent()))
+      throw new Error("after hint 1 the button must offer hint 2, got: "
+                      + await hb.textContent());
+    if (await page.locator('.part[data-idx="1"] .hintone')
+                  .filter({ hasText: "FIXTURE HINT TWO" }).count())
+      throw new Error("hint 2 must not appear until it is taken");
+    console.log("hint ok: countdown named hint 1 of 2, released, and only hint 1 shown");
 
-    // a hint survives a reload: the text is not in the state payload, so the
-    // button must re-fetch the hint the team already paid for
+    // hint 2 (this clue has no per-hint waits, so it falls back to the same
+    // server wait, which has already elapsed) — sequence, not time, gates it
+    await page.waitForFunction(() => {
+      const b = document.querySelector('.part[data-idx="1"] .hintbtn');
+      return b && !b.disabled;
+    }, { timeout: 40000 });
+    await hb.click();
+    await page.waitForFunction(() =>
+      document.querySelectorAll('.part[data-idx="1"] .hintone').length === 2,
+      { timeout: 20000 });
+    await page.waitForFunction(() => {
+      const b = document.querySelector('.part[data-idx="1"] .hintbtn');
+      return b && b.hidden;
+    }, { timeout: 5000 });
+    console.log("hint ok: hint 2 taken, button retires with nothing left to give");
+
+    // both hints survive a reload, with no second call and no third hint
     await page.reload();
     await page.waitForSelector("#s-quest.on");
-    const hb2 = page.locator('.part[data-idx="1"] .hintbtn');
-    if (!(await hb2.textContent()).includes("Show the hint you took"))
-      throw new Error("after reload the taken hint should be recoverable, got: "
-                      + await hb2.textContent());
-    await hb2.click();
-    await page.waitForFunction(() => {
-      const h = document.querySelector('.part[data-idx="1"] .hinttext');
-      return h && !h.hidden && h.textContent.includes("FIXTURE HINT");
-    }, { timeout: 20000 });
-    console.log("hint ok: recovered after reload without a second charge");
+    await page.waitForFunction(() =>
+      document.querySelectorAll('.part[data-idx="1"] .hintone').length === 2,
+      { timeout: 20000 });
+    console.log("hint ok: both recovered after reload without a second charge");
 
     // ambiguity guard: two numbers must be refused, not concatenated
     await box(1).fill("20-22");
@@ -121,59 +147,87 @@ const BASE = `http://localhost:${PORT}`;
       throw new Error("newly opened part must not carry a type pill either");
     console.log("ok: '20-22' refused as ambiguous, '17 lampposts' -> 17, no pill on part 2");
 
-    // compete-mode number: wrong costs a strike, right advances
+    // the explainer: what the answer meant and where to walk next, typed out on
+    // the solved card. It is the whole reason a machine-solved clue still
+    // teaches you something.
+    await page.waitForFunction(() => {
+      const a = document.querySelector('.part.done[data-idx="1"] .aftertext');
+      return a && a.textContent.includes("walk to the example bakery");
+    }, { timeout: 30000 });
+    console.log("after ok: part 1's explainer shown on the solved card");
+
+    // a budgeted clue asks before it spends a guess, and says how many are left
+    const lim = page.locator('.part[data-idx="2"] .glimit');
+    if ((await lim.textContent()).trim() !== "2 guesses left")
+      throw new Error("part 2 should show its budget, got: " + await lim.textContent());
     await box(2).fill("41");
     await send(2).click();
+    await page.waitForSelector("#modal.show");
+    await page.click("#gno");                       // think again: nothing spent
+    await pause();
+    if ((await lim.textContent()).trim() !== "2 guesses left")
+      throw new Error("backing out of the confirm must not spend a guess");
+    await send(2).click();
+    await page.waitForSelector("#modal.show");
+    await page.click("#gyes");
     await page.waitForFunction(() =>
       document.getElementById("strikeline").textContent.includes("1/2"));
+    await page.waitForFunction(() =>
+      document.querySelector('.part[data-idx="2"] .glimit').textContent.trim()
+        === "1 guess left");
+    console.log("budget ok: confirm gate, cancel costs nothing, wrong costs one");
+
     await pause();
     await box(2).fill("42");
     await send(2).click();
+    await page.waitForSelector("#modal.show");
+    await page.click("#gyes");
     await page.waitForSelector('.part.done[data-idx="2"]');
     console.log("compete ok: 41 struck (1/2), 42 accepted");
 
-    // text variant accepted after a wrong name
+    // match_mode 'contains': the word inside a longer answer still counts
     await page.waitForSelector('.part.open[data-idx="3"]');
     await box(3).fill("dragon");
     await send(3).click();
     await page.waitForFunction(() =>
       document.getElementById("strikeline").textContent.includes("2/2"));
     await pause();
-    await box(3).fill("gryphon!!");
+    await box(3).fill("the gryphon, I think");
     await send(3).click();
     await page.waitForSelector('.part.done[data-idx="3"]');
-    console.log("text ok: dragon struck, gryphon variant accepted");
+    console.log("text ok: dragon struck, 'the gryphon, I think' matched by contains");
 
-    // the escape hatch: a clue nobody can answer must not end the run
+    // last part is collect mode: anything is data, and it ends the run
     await page.waitForSelector('.part.open[data-idx="4"]');
-    await page.locator('.part[data-idx="4"] .skipbtn').click();
-    await page.waitForSelector("#modal.show");
-    await page.click("#skyes");
-    await page.waitForSelector('.part.skipped[data-idx="4"]');
-    console.log("skip ok: part 4 skipped, run continues");
+    await box(4).fill("HIC IACET NEMO");
+    await send(4).click();
+    await page.waitForSelector('.part.done[data-idx="4"]');
 
-    // finishing (3 solved + 1 skipped) opens the win card mentioning the skip
+    // finishing all four opens the win card, with nothing left behind
     await page.waitForSelector("#modal.show");
     const card = await page.locator("#modalcard").textContent();
     if (!card.includes("given up its numbers")) throw new Error("win modal wrong");
-    if (!card.includes("1 left behind")) throw new Error("win card should note the skip");
+    if (card.includes("left behind")) throw new Error("nothing was skipped");
     await page.click("#mboard");
     await page.waitForFunction(() =>
       document.getElementById("modalcard").textContent.includes("Parts cracked"));
     const lb = await page.locator("#modalcard").textContent();
-    if (!lb.includes("hint")) throw new Error("leaderboard should note the hint: " + lb.slice(0,140));
-    if (!lb.includes("3/4") || !lb.includes("skipped"))
-      throw new Error("leaderboard should read 3/4 with a skip: " + lb.slice(0, 140));
+    if (!lb.includes("hint")) throw new Error("leaderboard should note the hints: " + lb.slice(0,140));
+    if (!lb.includes("4/4") || lb.includes("skipped"))
+      throw new Error("leaderboard should read 4/4 with no skip: " + lb.slice(0, 140));
     await page.click("#mclose");
-    console.log("board ok: 3/4 with 1 skipped");
+    console.log("board ok: 4/4, 2 hints, no skips");
 
     // reload resumes, and seen clues do NOT re-animate
     await page.reload();
     await page.waitForSelector("#s-quest.on", { timeout: 5000 });
     await page.waitForFunction(() =>
-      document.querySelectorAll(".part.done").length === 3 &&
-      document.querySelectorAll(".part.skipped").length === 1);
-    console.log("resume ok: 3 done + 1 skipped after reload");
+      document.querySelectorAll(".part.done").length === 4 &&
+      document.querySelectorAll(".part.skipped").length === 0);
+    // and the explainers are all still there, from the server, not from memory
+    await page.waitForFunction(() =>
+      document.querySelectorAll(".aftertext").length === 4, { timeout: 5000 });
+    console.log("resume ok: 4 done with all 4 explainers after reload");
 
     if (errors.length) throw new Error("page errors: " + errors.join(" | "));
     console.log("QUEST SMOKE TEST PASS");
