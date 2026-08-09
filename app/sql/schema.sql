@@ -79,7 +79,6 @@ create table public.submissions (
 );
 create index submissions_team_clue on public.submissions (team_id, clue_idx, created_at desc);
 
--- a taken hint: logged, counted against the team, one per (team, clue)
 -- landing-page registrations, taken before team codes are issued
 create table public.signups (
   id         bigint generated always as identity primary key,
@@ -87,6 +86,7 @@ create table public.signups (
   created_at timestamptz not null default now()
 );
 
+-- a taken hint: logged, counted against the team, one per (team, clue)
 create table public.hints (
   team_id    uuid not null references public.teams(id) on delete cascade,
   hunt_id    text not null,
