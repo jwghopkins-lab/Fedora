@@ -31,6 +31,7 @@ TEAMS = {t["code"].upper(): t["name"] for t in HUNT["teams"]}
 CLUES = {c["idx"]: c for c in HUNT["clues"]}
 SUBS = []   # {team, clue_idx, guess, correct, skipped, t}
 HINTS = []  # {team, clue_idx, t}
+SIGNUPS = []  # landing-page email registrations
 # mirrors hunts.hint_wait_s (env overrides it, so tests need not wait 5 minutes);
 # the client counts down using the value we report, so the two cannot drift
 HINT_WAIT = float(os.environ.get("MOCK_HINT_WAIT_S")
@@ -221,7 +222,12 @@ def rpc_submit(body):
             return {"status": "empty"}
         guess = guess[:40]
         acc = answers_of(c)
-        correct = (not acc) or guess in acc   # empty list = collect mode
+        if not acc:
+            correct = True                       # empty list = collect mode
+        elif c.get("match_mode") == "contains":  # answer may sit inside a longer reply
+            correct = any(x in guess for x in acc)
+        else:
+            correct = guess in acc
     before = {i for i in CLUES if is_unlocked(code, CLUES[i])}
     SUBS.append({"team": code, "clue_idx": idx, "guess": guess,
                  "correct": correct, "skipped": False, "t": time.time()})
@@ -238,6 +244,15 @@ def rpc_submit(body):
              if i != idx and i not in before and is_unlocked(code, CLUES[i])]
     return {"status": "correct", "idx": idx, "answer": guess,
             "newly_unlocked": newly}
+
+
+def rpc_signup(body):
+    e = (body.get("p_email") or "").strip().lower()
+    import re as _re
+    if not _re.fullmatch(r"[^@\s]+@[^@\s]+\.[^@\s]+", e) or len(e) > 200:
+        return {"status": "bad_email"}
+    SIGNUPS.append(e)
+    return {"status": "ok"}
 
 
 def rpc_hint(body):
@@ -348,6 +363,10 @@ class Handler(SimpleHTTPRequestHandler):
             time.sleep(int(os.environ.get("SLOW_POST_MS", "0")) / 1000)
             with LOCK:
                 self._json(200, rpc_submit(body))
+            return
+        if route == "/rest/v1/rpc/fedora_signup":
+            with LOCK:
+                self._json(200, rpc_signup(body))
             return
         if route == "/rest/v1/rpc/fedora_hint":
             with LOCK:

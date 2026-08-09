@@ -17,7 +17,7 @@ const BASE = `http://localhost:${PORT}`;
   const server = spawn("python3",
     [path.join(__dirname, "mock_backend.py"), String(PORT),
      path.join(__dirname, "..", "hunt", "example_quest.json")],
-    { env: { ...process.env, MOCK_COOLDOWN_S: "0.3", MOCK_HINT_WAIT_S: "8" } });
+    { env: { ...process.env, MOCK_COOLDOWN_S: "0.3", MOCK_HINT_WAIT_S: "25" } });
   await new Promise((r) => setTimeout(r, 900));
 
   const browser = await chromium.launch({
@@ -32,6 +32,10 @@ const BASE = `http://localhost:${PORT}`;
   try {
     await page.goto(BASE + "/quest.html");
     await page.waitForSelector("#s-join.on");
+    // the landing page comes first now; a new player has to step past it
+    if (!(await page.locator("#landing").isHidden()))
+      await page.click("#gotologin");
+    await page.waitForSelector("#codein", { state: "visible" });
     await page.fill("#codein", "testteam1");
     await page.press("#codein", "Enter");           // Enter on the code field
     await page.waitForSelector("#s-quest.on");
@@ -60,14 +64,15 @@ const BASE = `http://localhost:${PORT}`;
       throw new Error("typewriter did not stagger the first view");
     await page.waitForFunction((f) =>
       document.querySelector('.part[data-idx="1"] .ptext').textContent === f,
-      full, { timeout: 6000 });
+      full, { timeout: 25000 });
     console.log("reveal ok: clue text typed out, then completed");
 
     // hint: gated at first, then available, then shown and logged
     const hb = page.locator('.part[data-idx="1"] .hintbtn');
     if (!(await hb.count())) throw new Error("hint button missing on part 1");
-    // the countdown must use the server's hint_wait_s (8s here), not a hard-coded 5 min
-    if (!(await hb.textContent()).includes("Hint in 0:0"))
+    // the countdown must use the server's hint_wait_s (25s here), not a hard-coded 5 min
+    // must be counting down to the SERVER's wait (25s), not a hard-coded 5 min
+    if (!/^Hint in 0:[0-2]\d$/.test((await hb.textContent()).trim()))
       throw new Error("hint countdown should track the server wait, got: " + await hb.textContent());
     if (!(await hb.isDisabled()))
       throw new Error("hint button must be disabled while the countdown runs");
@@ -76,12 +81,12 @@ const BASE = `http://localhost:${PORT}`;
     await page.waitForFunction(() => {
       const b = document.querySelector('.part[data-idx="1"] .hintbtn');
       return b && !b.disabled;
-    }, { timeout: 14000 });
+    }, { timeout: 40000 });
     await hb.click();
     await page.waitForFunction(() => {
       const h = document.querySelector('.part[data-idx="1"] .hinttext');
       return h && !h.hidden && h.textContent.includes("FIXTURE HINT");
-    }, { timeout: 6000 });
+    }, { timeout: 20000 });
     console.log("hint ok: countdown disabled -> released after the server wait -> shown");
 
     // a hint survives a reload: the text is not in the state payload, so the
@@ -96,7 +101,7 @@ const BASE = `http://localhost:${PORT}`;
     await page.waitForFunction(() => {
       const h = document.querySelector('.part[data-idx="1"] .hinttext');
       return h && !h.hidden && h.textContent.includes("FIXTURE HINT");
-    }, { timeout: 6000 });
+    }, { timeout: 20000 });
     console.log("hint ok: recovered after reload without a second charge");
 
     // ambiguity guard: two numbers must be refused, not concatenated

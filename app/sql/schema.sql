@@ -1,4 +1,4 @@
--- Fedora hunt backend v5 — run in the Supabase SQL editor of the dedicated
+-- Fedora hunt backend v6 — run in the Supabase SQL editor of the dedicated
 -- project. It CREATES objects rather than replacing them, so over an existing
 -- install run app/sql/reset.sql first (destructive — read its header).
 --
@@ -43,6 +43,11 @@ create table public.clues (
   -- accepted answers, pre-normalized (A-Z0-9). Empty + qtype='number' means
   -- ANY whole number is accepted (collect mode). Empty + 'text' = misconfig.
   answers        text[] not null default '{}',
+  -- 'exact'    : the normalized guess must equal one of the accepted answers
+  -- 'contains' : an accepted answer need only appear INSIDE the guess, so
+  --              "the fighting temeraire" matches TEMERAIRE. Used where we care
+  --              that they know the word, not that they typed it alone.
+  match_mode     text not null default 'exact' check (match_mode in ('exact', 'contains')),
   clue_text      text not null check (char_length(clue_text) between 10 and 2000),
   hint           text,          -- released hunts.hint_wait_s after the clue
                                 -- unlocks, and logged against the team
@@ -75,6 +80,13 @@ create table public.submissions (
 create index submissions_team_clue on public.submissions (team_id, clue_idx, created_at desc);
 
 -- a taken hint: logged, counted against the team, one per (team, clue)
+-- landing-page registrations, taken before team codes are issued
+create table public.signups (
+  id         bigint generated always as identity primary key,
+  email      text not null check (char_length(email) between 5 and 200),
+  created_at timestamptz not null default now()
+);
+
 create table public.hints (
   team_id    uuid not null references public.teams(id) on delete cascade,
   hunt_id    text not null,
@@ -84,12 +96,13 @@ create table public.hints (
 );
 
 alter table public.hints       enable row level security;
+alter table public.signups     enable row level security;
 alter table public.hunts       enable row level security;
 alter table public.clues       enable row level security;
 alter table public.teams       enable row level security;
 alter table public.submissions enable row level security;
 revoke all on table public.hunts, public.clues, public.teams, public.submissions,
-  public.hints from anon, authenticated;
+  public.hints, public.signups from anon, authenticated;
 
 -- ---------------------------------------------------------------------------
 -- internal helpers (not granted to anon)
@@ -265,7 +278,13 @@ begin
     if char_length(guess) > 40 then guess := left(guess, 40); end if;
     -- empty accept-list = COLLECT mode for text too (an inscription we do not
     -- yet know); otherwise membership of the hidden set
-    is_right := cardinality(c.answers) = 0 or guess = any (c.answers);
+    if cardinality(c.answers) = 0 then
+      is_right := true;                       -- collect mode
+    elsif c.match_mode = 'contains' then
+      is_right := exists (select 1 from unnest(c.answers) x where guess like '%' || x || '%');
+    else
+      is_right := guess = any (c.answers);
+    end if;
   end if;
   select array_agg(k.idx) into before_unlocked from public.clues k
     where k.hunt_id = h.id and public.fedora_is_unlocked(t.id, k);
@@ -370,6 +389,20 @@ begin
   return jsonb_build_object('status', 'ok', 'idx', p_idx, 'hint', c.hint);
 end $$;
 
+-- Write-only: an address goes in, nothing comes back out. Anon can register
+-- but can never enumerate who else did.
+create or replace function public.fedora_signup(p_email text)
+returns jsonb language plpgsql security definer set search_path = '' as $$
+declare e text;
+begin
+  e := lower(btrim(coalesce(p_email, '')));
+  if e !~ '^[^@[:space:]]+@[^@[:space:]]+\.[^@[:space:]]+$' or char_length(e) > 200 then
+    return jsonb_build_object('status', 'bad_email');
+  end if;
+  insert into public.signups (email) values (e);
+  return jsonb_build_object('status', 'ok');
+end $$;
+
 create or replace function public.fedora_leaderboard(p_hunt text)
 returns jsonb language sql stable security definer set search_path = '' as $$
   select coalesce(jsonb_agg(row order by row->'eligible' desc,
@@ -406,3 +439,5 @@ grant execute on function public.fedora_submit(text, int, text) to anon;
 grant execute on function public.fedora_skip(text, int, text) to anon;
 grant execute on function public.fedora_hint(text, int) to anon;
 grant execute on function public.fedora_leaderboard(text) to anon;
+revoke execute on function public.fedora_signup(text) from public;
+grant  execute on function public.fedora_signup(text) to anon;

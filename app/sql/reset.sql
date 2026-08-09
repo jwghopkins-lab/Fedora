@@ -16,6 +16,7 @@
 -- Functions first. Those taking public.clues as a parameter depend on the
 -- table's row type and would be dropped by the table cascade anyway; naming
 -- them keeps this file honest about what exists.
+drop function if exists public.fedora_signup(text)                      cascade;
 drop function if exists public.fedora_leaderboard(text)                cascade;
 drop function if exists public.fedora_hint(text, int)                  cascade;
 drop function if exists public.fedora_skip(text, int, text)            cascade;
@@ -27,6 +28,7 @@ drop function if exists public.fedora_available_since(uuid, public.clues) cascad
 drop function if exists public.fedora_is_unlocked(uuid, public.clues)  cascade;
 
 -- Then tables, children before parents (cascade covers it either way).
+drop table if exists public.signups     cascade;
 drop table if exists public.hints       cascade;
 drop table if exists public.submissions cascade;
 drop table if exists public.teams       cascade;

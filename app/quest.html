@@ -144,11 +144,42 @@
     <div class="tagline">the city is the board</div></div></header>
   <div id="offline-banner" class="banner" style="display:none">
     No backend configured — this build can't check answers.</div>
-  <div class="card2">
-    <h2>Enter your team code</h2>
+
+  <div class="card2" id="landing">
+    <p>Welcome to the real-world London puzzle that will test your knowledge and
+       your puzzling at speed, and where you can look things up as much as you
+       like — in fact, you'll need to. But many clues can only be found by being
+       in the right place. So no AI will solve it from your sofa.</p>
+    <p>Inspired by some of our favourite movies. You can guess which ones.</p>
+    <p>Play in teams of 2–4. Launches Saturday, date TBC, at 4pm.
+       We recommend being in Zone 1 for the start.</p>
+    <p>If you plan on winning, keep your dinner plans open. There will be a table
+       and a £100 tab waiting for the victors.</p>
+    <p>Register an email to receive your team code in the run-up to the event.</p>
+    <input type="email" id="emailin" maxlength="200" placeholder="your email"
+           autocomplete="email" autocapitalize="off" autocorrect="off"
+           spellcheck="false" enterkeyhint="send" aria-label="Email address">
+    <div class="err" id="emailerr" role="alert" aria-live="assertive"></div>
+    <button class="btn primary" id="emailbtn" disabled>Submit</button>
+    <div style="height:8px"></div>
+    <button class="btn ghost" id="gotologin">Already registered — login &amp; research drops</button>
+  </div>
+
+  <div class="card2" id="thanks" hidden>
+    <h2>Submitted.</h2>
+    <p>If you want to get ahead, keep an eye on this page in the days before we
+       go live.</p>
+    <button class="btn ghost" id="gotologin2">Login &amp; research drops</button>
+  </div>
+
+  <div class="card2" id="logincard" hidden>
+    <h2>Three things, if you want to get ahead</h2>
+    <p>No spoilers.</p>
+    <p style="color:var(--ink)">1 &nbsp; British imperial units of measurement<br>
+       2 &nbsp; Statues of famous women<br>
+       3 &nbsp; Famous admirals of the Royal Navy</p>
     <p>One code per team — any number of phones can share it, and progress is
-       shared live. The questions lead somewhere real: this cannot be finished
-       from a sofa.</p>
+       shared live.</p>
     <input type="text" id="codein" maxlength="40" placeholder="TEAM CODE"
            autocomplete="off" autocapitalize="characters" autocorrect="off"
            spellcheck="false" enterkeyhint="go" aria-label="Team code">
@@ -278,19 +309,32 @@ function seenSet() { return new Set(LS.get("seen." + HUNT, [])); }
 function markSeen(idx) {
   const s = seenSet(); s.add(idx); LS.set("seen." + HUNT, [...s]);
 }
+// A THIRD of the old speed, with a beat at every full stop. The pace is not
+// decoration: it buys thinking time, it makes the reveal feel like something is
+// being told to you, and it makes the clue meaningfully slower to copy out and
+// paste into a machine than it is to simply read and think about.
+const TYPE_SLOWDOWN = 3;
+const SENTENCE_PAUSE_MS = 700;
 function typeInto(el, text, idx) {
   const total = text.length;
-  const step = Math.max(8, Math.min(22, Math.floor(3200 / Math.max(1, total))));
+  const step = Math.max(8, Math.min(22, Math.floor(3200 / Math.max(1, total))))
+               * TYPE_SLOWDOWN;
   let i = 0;
+  let paused = 0;
   el.textContent = "";
   const finish = () => {
     clearInterval(typing.get(idx)); typing.delete(idx);
     el.textContent = text; markSeen(idx);
   };
   const id = setInterval(() => {
-    i += 2;
+    if (paused > 0) { paused -= step; return; }
+    i += 1;
     if (i >= total) { finish(); return; }
     el.textContent = text.slice(0, i);
+    // hold on the punctuation that ends a thought, not on decimals or initials
+    if (".?!".includes(text[i - 1]) && (text[i] === undefined || text[i] === " " || text[i] === "\n")) {
+      paused = SENTENCE_PAUSE_MS;
+    }
   }, step);
   typing.set(idx, id);
   return finish;
@@ -610,6 +654,27 @@ $("refreshbtn").onclick = async () => {
   await refresh(true);
   toast("Synced");
 };
+// landing -> login. A returning player with a stored code skips both.
+function showLogin() {
+  $("landing").hidden = true; $("thanks").hidden = true;
+  $("logincard").hidden = false; $("codein").focus();
+}
+$("gotologin").onclick = showLogin;
+$("gotologin2").onclick = showLogin;
+$("emailin").oninput = () => { $("emailbtn").disabled = !$("emailin").value.trim(); };
+$("emailin").addEventListener("keydown", (ev) => {
+  if (ev.key === "Enter" && $("emailin").value.trim()) { ev.preventDefault(); $("emailbtn").click(); }
+});
+$("emailbtn").onclick = async () => {
+  $("emailbtn").disabled = true; $("emailerr").textContent = "";
+  try {
+    const r = await rpc("fedora_signup", { p_email: $("emailin").value.trim() });
+    if (r.status === "ok") { $("landing").hidden = true; $("thanks").hidden = false; }
+    else { $("emailerr").textContent = "That doesn't look like an email address.";
+           $("emailbtn").disabled = false; }
+  } catch (err) { $("emailerr").textContent = netMsg(err); $("emailbtn").disabled = false; }
+};
+
 $("codein").oninput = () => { $("joinbtn").disabled = !$("codein").value.trim(); };
 $("codein").addEventListener("keydown", (ev) => {
   if (ev.key === "Enter" && $("codein").value.trim()) { ev.preventDefault(); $("joinbtn").click(); }
@@ -628,6 +693,8 @@ document.addEventListener("visibilitychange", () => {
   if (!ONLINE) { $("offline-banner").style.display = "block"; return; }
   const saved = LS.get("code", null);
   if (saved) {
+    // a returning player never sees the marketing page again
+    showLogin();
     try { await join(saved); }
     catch (err) { $("joinerr").textContent = netMsg(err); }
   }

@@ -162,11 +162,20 @@ def check(hunt):
             if re.search(rf"\b{re.escape(a)}\b", text, re.I):
                 fails.append(f"answer {a} leaks in clue {c['idx']} text")
     if not is_grid:
-        # accepted answers must not appear in ANY clue text — or in any hint. A
-        # hint is a nudge that costs you; one containing the answer is a freebie.
+        # An accepted answer must not appear in any clue text or hint that a
+        # player could read BEFORE solving it. In a linear hunt, a later clue may
+        # safely name an earlier answer — the player already has it, and the
+        # prose reads far better for being allowed to refer back. Anything at or
+        # ahead of the answer's own clue is still a leak.
+        # (Caveat: a team that skipped clue N could learn N's answer from a later
+        # clue. A skip already forfeits that clue, so the exploit is not worth
+        # contorting every sentence to avoid.)
+        linear = bool(hunt.get("linear"))
         for c in clues:
             for a in c.get("answers", []):
                 for c2 in clues:
+                    if linear and c2["idx"] > c["idx"]:
+                        continue
                     if re.search(rf"\b{re.escape(a)}\b", c2["clue_text"], re.I):
                         fails.append(f"accepted answer {a!r} (clue {c['idx']}) "
                                      f"appears in clue {c2['idx']} text")
