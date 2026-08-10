@@ -60,13 +60,28 @@
   .btn.ghost { background: var(--key); color: var(--key-ink); }
   .err { color: var(--wrong); font-size: .8rem; margin-top: 8px; min-height: 1.1em; }
 
-  #progress { display: flex; align-items: center; gap: 10px; padding: 4px 2px 2px; }
-  #progressbar { flex: 1; height: 8px; border-radius: 999px; background: var(--key); overflow: hidden; }
-  #progressfill { height: 100%; width: 0; background: var(--accent); border-radius: 999px;
-                  transition: width .4s ease; }
-  #progresstext { font-size: .78rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
-  .strikeline { font-size: .74rem; color: var(--ink-soft); padding: 0 2px 6px; }
-  .strikeline b.out { color: var(--wrong); }
+  /* The meters ride at the top of the viewport while the journey scrolls under
+     them, so the current clue keeps the screen and the state is always in view. */
+  #topbar { position: sticky; top: 0; z-index: 6; background: var(--paper);
+            padding: 6px 2px 8px; border-bottom: 1px solid var(--line);
+            display: flex; flex-direction: column; gap: 5px; }
+  .meter { display: flex; align-items: center; gap: 9px; }
+  /* fixed gutter so both bars start on the same vertical line */
+  .mlabel { font-size: .72rem; color: var(--ink-soft); white-space: nowrap;
+            flex: 0 0 98px; text-align: left; }
+  button.mlabel.as-btn { border: none; background: none; padding: 0; cursor: pointer;
+                         font-family: inherit; text-decoration: underline;
+                         text-decoration-style: dotted; text-underline-offset: 3px; }
+  .mbar { flex: 1; height: 8px; border-radius: 999px; background: var(--key); overflow: hidden; }
+  .mfill { height: 100%; width: 0; border-radius: 999px; transition: width .4s ease; }
+  .mfill.good { background: var(--good); }
+  .mfill.bad  { background: var(--wrong); }
+  .mnum { font-size: .78rem; color: var(--ink-soft); font-variant-numeric: tabular-nums;
+          min-width: 3.2em; text-align: right; }
+  #lives.spent .mnum { color: var(--wrong); font-weight: 700; }
+  #livesnote { font-size: .74rem; color: var(--ink-soft); line-height: 1.45;
+               background: var(--key); border-radius: 8px; padding: 8px 10px; }
+  #livesnote.warn { background: var(--wrong-soft); color: var(--wrong); }
 
   #journey { flex: 1; }
   .part { background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
@@ -74,7 +89,6 @@
   .part.intro { border-style: dashed; border-color: var(--accent); }
   .part.done { border-color: var(--good); }
   .part.skipped { border-color: var(--ink-soft); }
-  .part.sealed { opacity: .5; }
   .phead { display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
            font-size: .72rem; font-weight: 700; letter-spacing: .06em;
            text-transform: uppercase; color: var(--ink-soft); margin-bottom: 8px; }
@@ -112,6 +126,23 @@
   .skipped .answer { color: var(--ink-soft); }
   .part.shake { animation: shake .35s; }
   @keyframes shake { 25% { transform: translateX(-6px) } 75% { transform: translateX(6px) } }
+
+  /* A newly opened part does not simply appear. A hairline draws across the top
+     of the card like a scanner pass, and the card resolves out of blur behind
+     it, before the typewriter starts. Roughly a second, once, and never on a
+     card the player has already seen. */
+  .part.arriving { position: relative; overflow: hidden;
+                   animation: resolve 1000ms cubic-bezier(.2,.7,.25,1) forwards; }
+  .part.arriving::after {
+    content: ""; position: absolute; top: 0; left: 0; height: 2px; width: 0;
+    background: var(--accent); animation: scanline 620ms ease-out forwards; }
+  @keyframes scanline { 0% { width: 0; opacity: 1 } 78% { width: 100%; opacity: 1 }
+                        100% { width: 100%; opacity: 0 } }
+  @keyframes resolve {
+    0%   { opacity: 0; filter: blur(7px); transform: translateY(7px) scale(.985); }
+    38%  { opacity: .35; filter: blur(7px); transform: translateY(7px) scale(.985); }
+    100% { opacity: 1; filter: blur(0);    transform: none; }
+  }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
 
   .toolrow { display: flex; gap: 6px; justify-content: center; padding: 10px 0 2px; }
@@ -204,11 +235,22 @@
     <div class="spacer"></div>
     <div id="teamtag"></div>
   </header>
-  <div id="progress">
-    <div id="progressbar"><div id="progressfill"></div></div>
-    <div id="progresstext"></div>
+  <!-- The meters stick to the top of the viewport. Everything above them
+       (wordmark, team) scrolls away, so a long clue gets the whole screen. -->
+  <div id="topbar">
+    <div class="meter" id="progress">
+      <span class="mlabel">Progress:</span>
+      <div class="mbar"><div id="progressfill" class="mfill good"></div></div>
+      <span class="mnum" id="progresstext"></span>
+    </div>
+    <div class="meter" id="lives" hidden>
+      <button class="mlabel as-btn" id="liveslabel" aria-expanded="false"
+              aria-controls="livesnote">Wrong answers:</button>
+      <div class="mbar"><div id="livesfill" class="mfill bad"></div></div>
+      <span class="mnum" id="livestext"></span>
+    </div>
+    <div id="livesnote" hidden></div>
   </div>
-  <div class="strikeline" id="strikeline" aria-live="polite"></div>
   <div id="journey"></div>
   <div class="toolrow">
     <button class="tool" id="lbbtn">Leaderboard</button>
@@ -340,12 +382,14 @@ function markSeen(idx) {
 // copy out and paste into a machine than it is to simply read and think about.
 const TYPE_SLOWDOWN = 3.9;
 const SENTENCE_PAUSE_MS = 700;
-function typeInto(el, text, idx) {
+const ARRIVE_MS = 1000;   // matches the `resolve` keyframe; text waits for it
+function typeInto(el, text, idx, delay) {
   const total = text.length;
   const step = Math.max(8, Math.min(22, Math.floor(3200 / Math.max(1, total))))
                * TYPE_SLOWDOWN;
   let i = 0;
-  let paused = 0;
+  // hold the pen until the card has finished resolving out of blur
+  let paused = delay || 0;
   el.textContent = "";
   const finish = () => {
     clearInterval(typing.get(idx)); typing.delete(idx);
@@ -365,16 +409,63 @@ function typeInto(el, text, idx) {
   return finish;
 }
 
+// The wrong-answer meter is about THIS clue, not the whole hunt. A budget spent
+// twenty parts ago is not something a player standing in the rain can act on.
+function currentOpen() {
+  const open = Object.keys(UNLOCKED).map(Number).sort((a, b) => a - b);
+  return open.length ? UNLOCKED[open[0]] : null;
+}
+function paintLives() {
+  const u = currentOpen();
+  const row = $("lives"), note = $("livesnote");
+  if (!u || u.guess_limit == null) {          // unlimited clue: no meter to show
+    row.hidden = true;
+    if (!note.classList.contains("warn")) note.hidden = true;
+    return;
+  }
+  const used = Math.min(u.guesses_used, u.guess_limit);
+  const left = u.guess_limit - used;
+  row.hidden = false;
+  row.classList.toggle("spent", left <= 0);
+  $("livesfill").style.width = (100 * used / u.guess_limit) + "%";
+  $("livestext").textContent = `${used}/${u.guess_limit}`;
+  if (!note.hidden) note.textContent = livesText(u);
+}
+// The consequence is not printed on the screen by default — it is a paragraph of
+// rules a player only wants when they are about to spend a try, or just did.
+function showLivesNote(u, warn) {
+  const note = $("livesnote");
+  note.textContent = livesText(u);
+  note.hidden = false;
+  note.classList.toggle("warn", !!warn);
+  $("liveslabel").setAttribute("aria-expanded", "true");
+  if (warn) {
+    clearTimeout(showLivesNote._t);
+    showLivesNote._t = setTimeout(() => {
+      if (note.classList.contains("warn")) { note.hidden = true; note.classList.remove("warn"); }
+      $("liveslabel").setAttribute("aria-expanded", "false");
+    }, 7000);
+  }
+}
+function livesText(u) {
+  const left = u.guess_limit - Math.min(u.guesses_used, u.guess_limit);
+  const hintsLeft = (u.n_hints || 0) - (u.hints_taken || 0);
+  if (left > 0)
+    return `You have ${left} wrong answer${left === 1 ? "" : "s"} left on this part. `
+         + (hintsLeft > 0
+            ? `Run out and you can still take a hint, and every hint you take here buys you another try.`
+            : `Run out and this part is closed to you.`);
+  return hintsLeft > 0
+    ? `No tries left on this part. Take a hint and you get another.`
+    : `No tries left on this part.`;
+}
+
 function render() {
   lastPrint = fingerprint();
   const nDone = Object.keys(SOLVED).length;
   $("progressfill").style.width = NCLUES ? (100 * nDone / NCLUES) + "%" : "0";
   $("progresstext").textContent = `${nDone}/${NCLUES}`;
-  $("strikeline").innerHTML = STRIKE_LIMIT == null ? "" : ELIGIBLE
-    ? `Wrong answers: <b>${STRIKES}/${STRIKE_LIMIT}</b> — go over and you can
-       finish, but you can't win.`
-    : `<b class="out">Out of the running</b> — too many wrong answers. Finish
-       for glory, not the crown.`;
+  paintLives();
 
   const j = $("journey");
   j.innerHTML = "";
@@ -418,7 +509,7 @@ function render() {
           'autocorrect="off" autocapitalize="off" spellcheck="false" autocomplete="off"'
         : 'placeholder="your answer" autocorrect="off" ' +
           'spellcheck="false" autocomplete="off"';
-      const left = u.guess_limit == null ? null : u.guess_limit - u.guesses_used;
+      // the per-clue budget lives in the sticky meter now, not on the card
       div.innerHTML =
         `<div class="phead"><span class="no">Part ${i}</span></div>
          <div class="ptext"></div>
@@ -429,8 +520,6 @@ function render() {
          </div>
          <div class="prow2">
            <button class="hintbtn" hidden></button>
-           ${left == null ? "" : `<span class="glimit${left <= 1 ? " low" : ""}">${
-             left > 0 ? `${left} guess${left === 1 ? "" : "es"} left` : "no guesses left"}</span>`}
          </div>
          <div class="hinttext" hidden></div>`;
       const textEl = div.querySelector(".ptext");
@@ -439,7 +528,13 @@ function render() {
       if (REDUCED || seenSet().has(i)) {
         textEl.textContent = u.clue_text;
       } else {
-        const finish = typeInto(textEl, u.clue_text, i);
+        // arrive first, then type: the card resolves out of blur behind a
+        // hairline, and only once it has settled does the text begin
+        div.classList.add("arriving");
+        div.addEventListener("animationend", (ev) => {
+          if (ev.animationName === "resolve") div.classList.remove("arriving");
+        });
+        const finish = typeInto(textEl, u.clue_text, i, ARRIVE_MS);
         div.addEventListener("click", (ev) => {
           if (typing.has(i) && ev.target !== inp) finish();
         }, { once: false });
@@ -450,14 +545,31 @@ function render() {
       });
       wireHint(div, i, u);
     } else {
-      div.className = "part sealed";
-      div.innerHTML = `<div class="phead"><span class="no">Part ${i}</span>
-        <span class="state">🔒</span></div>
-        <div class="ptext" style="font-size:.8rem;color:var(--ink-soft)">
-        Sealed until the part before it falls.</div>`;
+      // A part that has not opened is not drawn at all. A column of padlocks
+      // told the player how far they still had to go and nothing else, and it
+      // pushed the one clue that matters off the bottom of the screen.
+      continue;
     }
     j.appendChild(div);
   }
+  focusCurrent();
+}
+
+// Put the open clue directly under the sticky meters. History stays above it,
+// so the explainer for the part just solved still reads into the next clue, but
+// the default view is the question and nothing else.
+let lastFocused = null;
+function focusCurrent() {
+  const card = document.querySelector(".part.open");
+  if (!card) return;
+  const key = card.dataset.idx;
+  if (key === lastFocused) return;             // don't fight the player's scroll
+  lastFocused = key;
+  requestAnimationFrame(() => {
+    const top = card.getBoundingClientRect().top + window.scrollY
+              - ($("topbar").offsetHeight + 10);
+    window.scrollTo({ top: Math.max(0, top), behavior: REDUCED ? "auto" : "smooth" });
+  });
 }
 
 // Hints are a SEQUENCE: each one has its own delay measured from the moment the
@@ -590,12 +702,14 @@ async function submit(idx, inp, btn, div) {
         if (next) next.scrollIntoView({ behavior: REDUCED ? "auto" : "smooth", block: "center" });
       }
     } else if (r.status === "wrong") {
-      const wasEligible = ELIGIBLE;
       if (r.strike_limit != null) {
         STRIKES = r.strikes; STRIKE_LIMIT = r.strike_limit; ELIGIBLE = r.eligible;
       }
       if (u0 && Number.isFinite(r.guesses_used)) u0.guesses_used = r.guesses_used;
+      if (u0 && Number.isFinite(r.guess_limit)) u0.guess_limit = r.guess_limit;
       render();
+      // every wrong answer states the cost, in the meter's own words
+      if (u0 && u0.guess_limit != null) showLivesNote(u0, true);
       const card = document.querySelector(`.part[data-idx="${idx}"]`);
       if (card) {
         const again = card.querySelector("input");
@@ -603,16 +717,15 @@ async function submit(idx, inp, btn, div) {
         void card.offsetWidth; card.classList.add("shake");
       }
       const left = u0 && u0.guess_limit != null ? u0.guess_limit - u0.guesses_used : null;
-      toast(wasEligible && !ELIGIBLE
-        ? "Wrong — and that was one too many. You're out of the running."
-        : left === 0 ? "Wrong, and that was your last guess on this one."
-        : left != null ? `Wrong. ${left} guess${left === 1 ? "" : "es"} left here.`
+      toast(left === 0 ? "Wrong, and that was your last try on this part."
+        : left != null ? `Wrong. ${left} left on this part.`
         : "The square disagrees. Look again.");
     } else if (r.status === "no_guesses_left") {
       if (u0) { u0.guess_limit = r.guess_limit; u0.guesses_used = r.guess_limit; }
       render();
-      toast(r.hints_left > 0 ? "No guesses left — take a hint to earn another."
-                             : "No guesses left on this one.");
+      if (u0) showLivesNote(u0, true);
+      toast(r.hints_left > 0 ? "No tries left — take a hint to earn another."
+                             : "No tries left on this part.");
     } else if (r.status === "ambiguous") {
       toast("Two numbers in there — give one whole number.");
     } else if (r.status === "cooldown") {
@@ -721,6 +834,16 @@ function showWin() {
   $("mclose2").onclick = () => $("modal").classList.remove("show");
 }
 
+$("liveslabel").onclick = () => {
+  const note = $("livesnote");
+  if (!note.hidden && !note.classList.contains("warn")) {
+    note.hidden = true;
+    $("liveslabel").setAttribute("aria-expanded", "false");
+  } else {
+    const u = currentOpen();
+    if (u && u.guess_limit != null) showLivesNote(u, false);
+  }
+};
 $("lbbtn").onclick = showBoard;
 $("refreshbtn").onclick = async () => {
   await refresh(true);

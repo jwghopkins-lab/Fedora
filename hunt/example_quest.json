@@ -21,7 +21,8 @@
     "FIXTURE HINT TWO: really, truly, any number at all."
    ],
    "hint_waits": [],
-   "after_text": "FIXTURE AFTER ONE: counted. Now walk to the example bakery."
+   "after_text": "FIXTURE AFTER ONE: counted. Now walk to the example bakery.",
+   "guess_limit": 3
   },
   {
    "idx": 2,
@@ -67,7 +68,8 @@
     4,
     9
    ],
-   "after_text": "FIXTURE AFTER THREE: named. One last inscription to read."
+   "after_text": "FIXTURE AFTER THREE: named. One last inscription to read.",
+   "guess_limit": 3
   },
   {
    "idx": 4,

@@ -45,10 +45,29 @@ const BASE = `http://localhost:${PORT}`;
     await page.fill("#codein", "testteam1");
     await page.press("#codein", "Enter");           // Enter on the code field
     await page.waitForSelector("#s-quest.on");
-    if ((await page.locator(".part.sealed").count()) !== 3)
-      throw new Error("expected 3 sealed parts, got " + await page.locator(".part.sealed").count());
-    if (!(await page.locator("#progresstext").textContent()).includes("0/4"))
-      throw new Error("progress not 0/4");
+    // Locked parts are no longer drawn at all: a column of padlocks told the
+    // player nothing and pushed the live clue off the screen.
+    if (await page.locator(".part.sealed").count())
+      throw new Error("locked parts must not be rendered");
+    if ((await page.locator(".part").count()) !== 1)
+      throw new Error("only the open part should exist, got "
+                      + await page.locator(".part").count());
+    if ((await page.locator("#progresstext").textContent()).trim() !== "0/4")
+      throw new Error("progress should read 0/4");
+    if (!(await page.locator("#progress .mlabel").textContent()).includes("Progress:"))
+      throw new Error("progress meter needs its label");
+    if ((await page.locator("#livestext").textContent()).trim() !== "0/3")
+      throw new Error("part 1 should show 0/3 wrong answers, got "
+                      + await page.locator("#livestext").textContent());
+    // the consequence is not on screen until you ask for it
+    if (!(await page.locator("#livesnote").isHidden()))
+      throw new Error("the limit explanation must start hidden");
+    await page.click("#liveslabel");
+    await page.waitForSelector("#livesnote:not([hidden])");
+    if (!(await page.locator("#livesnote").textContent()).includes("this part"))
+      throw new Error("the explanation must be about the current part");
+    await page.click("#liveslabel");
+    await page.waitForFunction(() => document.getElementById("livesnote").hidden);
     // The brief and the type pills are deliberately GONE: a player who knows a
     // question is Ground Truth knows not to search, and deciding that for
     // themselves is the game. Assert absence so they cannot creep back.
@@ -61,7 +80,7 @@ const BASE = `http://localhost:${PORT}`;
     const body = await page.locator("#s-quest").textContent();
     for (const k of ["WITS", "THE DIG", "GROUND TRUTH"])
       if (body.includes(k)) throw new Error("clue type leaked into the UI: " + k);
-    console.log("join ok: anagram warning shown, no brief, no pills, 1 open, 3 sealed, 0/4");
+    console.log("join ok: anagram warning, no brief, no pills, no locked parts, meters 0/4 and 0/3");
 
     // there is no escape hatch any more: a skip button anywhere is a regression
     if (await page.locator(".skipbtn").count())
@@ -133,12 +152,16 @@ const BASE = `http://localhost:${PORT}`;
     // ambiguity guard: two numbers must be refused, not concatenated
     await box(1).fill("20-22");
     await send(1).click();
+    await page.waitForSelector("#modal.show");
+    await page.click("#gyes");
     await page.waitForFunction(() =>
       document.getElementById("toast").textContent.includes("one whole number"));
     await pause();
     // collect mode: any single whole number accepted, echoed normalized
     await box(1).fill("17 lampposts");
     await send(1).click();
+    await page.waitForSelector("#modal.show");
+    await page.click("#gyes");
     await page.waitForSelector('.part.done[data-idx="1"]');
     const a1 = (await page.locator('.part.done[data-idx="1"] .answer').textContent()).trim();
     if (a1 !== "17") throw new Error("collect answer not normalized to 17: " + a1);
@@ -157,25 +180,27 @@ const BASE = `http://localhost:${PORT}`;
     console.log("after ok: part 1's explainer shown on the solved card");
 
     // a budgeted clue asks before it spends a guess, and says how many are left
-    const lim = page.locator('.part[data-idx="2"] .glimit');
-    if ((await lim.textContent()).trim() !== "2 guesses left")
-      throw new Error("part 2 should show its budget, got: " + await lim.textContent());
+    const lim = page.locator("#livestext");
+    if ((await lim.textContent()).trim() !== "0/2")
+      throw new Error("part 2 should show 0/2, got: " + await lim.textContent());
     await box(2).fill("41");
     await send(2).click();
     await page.waitForSelector("#modal.show");
     await page.click("#gno");                       // think again: nothing spent
     await pause();
-    if ((await lim.textContent()).trim() !== "2 guesses left")
+    if ((await lim.textContent()).trim() !== "0/2")
       throw new Error("backing out of the confirm must not spend a guess");
     await send(2).click();
     await page.waitForSelector("#modal.show");
     await page.click("#gyes");
+    // the meter counts wrong answers on THIS part, and warns without being asked
     await page.waitForFunction(() =>
-      document.getElementById("strikeline").textContent.includes("1/2"));
-    await page.waitForFunction(() =>
-      document.querySelector('.part[data-idx="2"] .glimit').textContent.trim()
-        === "1 guess left");
-    console.log("budget ok: confirm gate, cancel costs nothing, wrong costs one");
+      document.getElementById("livestext").textContent.trim() === "1/2");
+    await page.waitForFunction(() => {
+      const n = document.getElementById("livesnote");
+      return n && !n.hidden && n.classList.contains("warn");
+    });
+    console.log("budget ok: confirm gate, cancel costs nothing, wrong warns and costs one");
 
     await pause();
     await box(2).fill("42");
@@ -189,11 +214,15 @@ const BASE = `http://localhost:${PORT}`;
     await page.waitForSelector('.part.open[data-idx="3"]');
     await box(3).fill("dragon");
     await send(3).click();
+    await page.waitForSelector("#modal.show");
+    await page.click("#gyes");
     await page.waitForFunction(() =>
-      document.getElementById("strikeline").textContent.includes("2/2"));
+      document.getElementById("livestext").textContent.trim() === "1/3");
     await pause();
     await box(3).fill("the gryphon, I think");
     await send(3).click();
+    await page.waitForSelector("#modal.show");
+    await page.click("#gyes");
     await page.waitForSelector('.part.done[data-idx="3"]');
     console.log("text ok: dragon struck, 'the gryphon, I think' matched by contains");
 
