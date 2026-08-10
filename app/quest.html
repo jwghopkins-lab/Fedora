@@ -129,13 +129,13 @@
 
   /* A newly opened part does not simply appear. A hairline draws across the top
      of the card like a scanner pass, and the card resolves out of blur behind
-     it, before the typewriter starts. Roughly a second, once, and never on a
-     card the player has already seen. */
+     it, before the typewriter starts. Three seconds, once, and never on a card
+     the player has already seen. */
   .part.arriving { position: relative; overflow: hidden;
-                   animation: resolve 1000ms cubic-bezier(.2,.7,.25,1) forwards; }
+                   animation: resolve 3000ms cubic-bezier(.2,.7,.25,1) forwards; }
   .part.arriving::after {
     content: ""; position: absolute; top: 0; left: 0; height: 2px; width: 0;
-    background: var(--accent); animation: scanline 620ms ease-out forwards; }
+    background: var(--accent); animation: scanline 1860ms ease-out forwards; }
   @keyframes scanline { 0% { width: 0; opacity: 1 } 78% { width: 100%; opacity: 1 }
                         100% { width: 100%; opacity: 0 } }
   @keyframes resolve {
@@ -382,7 +382,7 @@ function markSeen(idx) {
 // copy out and paste into a machine than it is to simply read and think about.
 const TYPE_SLOWDOWN = 3.9;
 const SENTENCE_PAUSE_MS = 700;
-const ARRIVE_MS = 1000;   // matches the `resolve` keyframe; text waits for it
+const ARRIVE_MS = 3000;   // matches the `resolve` keyframe; text waits for it
 function typeInto(el, text, idx, delay) {
   const total = text.length;
   const step = Math.max(8, Math.min(22, Math.floor(3200 / Math.max(1, total))))
