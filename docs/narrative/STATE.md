@@ -237,9 +237,9 @@ Five independent verifiers with web search, 18 assertions, blind.
 | D2 | Motive | **LOCKED** — national and scientific, with two corrections |
 | D3 | Artifacts | **LOCKED** — diary, marked string, chalk marks |
 | D4 | Route | **LOCKED** — keep the spine, rebuild Covent Garden |
-| D5 | Who wrote the diary | open |
-| D6 | What the map's lines cross on | open |
-| D7 | What the players end up holding | open |
+| D5 | Who wrote the diary | **LOCKED** — two hands, layered |
+| D6 | What the map's lines cross on | **PARKED** by the client, 15 Aug: forcing a geographic crossing produces a map that lies. Settle it after the route is rebuilt (Phase 4/5), not before |
+| D7 | What the players end up holding | **LOCKED** — their own measurement |
 
 ### D1 — Frame: in character from the walk *(15 Aug)*
 Sign-up, team codes and the landing page stay plainly a puzzle event, so nobody
@@ -290,6 +290,53 @@ Parts 1–16 (Parliament and Trafalgar) carry the measurement story and stay
 largely intact, retargeted. Parts 17–22 are rewritten around the light thread and
 the map. **Dryden is cut** — wrong century. **Emma Bowden stays untouched** as
 the closing human note; she is a real private person and is not fictionalised.
+
+### D5 — Diary: two hands, layered *(15 Aug)*
+A Victorian document carrying a modern researcher's annotations in the margins.
+
+**The Victorian hand is the vestry clerk of St Martin-in-the-Fields** — an
+invented man in a real office, corresponding with Smyth in the 1880s, his
+survey book ending in 1900 when he is told to hand the parish's standards over
+and does not. Smyth died Feb 1900 and the vestries went the same year, so the
+dating locks without being forced, and no record of him surviving is exactly
+what you would expect. *(Swappable for a Board of Trade inspector from the
+Jewel Tower if the client prefers insider access to un-refutability — but that
+department's records are the most searchable of any option.)*
+
+**Why the layering is a structural win, not just flavour.** The red-team
+result says fiction must live in the *interpretation* register, never the fact
+register. Two hands give us that separation physically: the Victorian document
+stays close to the record, and the modern marginalia carries every
+unverifiable reading — *"I have been over the terrace twice and I am satisfied
+the perch does not match its neighbours."* A margin note is an opinion by
+construction. It cannot be refuted by search because it is not a claim about
+the record.
+
+**Consequences accepted:**
+- Two typefaces and two inks in the facsimile. Real production cost.
+- **The reveal must carry two disappearances** — the clerk in 1900 and the
+  researcher now — and they have to rhyme, not merely repeat.
+- The planted errors live in the marginalia, where a mistake reads as a
+  researcher's slip rather than a forger's.
+- The modern hand can *point* — arrows, "see p.14", "this does not match" —
+  so the cord and chalk mechanics hang off the annotations and the Victorian
+  never has to explain a 21st-century puzzle.
+
+### D7 — Payoff: their own measurement *(15 Aug)*
+They finish holding the marked cord and a number they read off it themselves,
+written on the map in their own hand. Nothing is handed over at the end.
+
+**Consequences accepted:**
+- The cord is **issued or found early**, not at the finish.
+- The measuring act needs a genuine public standard, and the **Trafalgar north
+  terrace plates are the only one on the route** — at part 12, not at the end.
+  So the act happens mid-walk and the *meaning* lands in Covent Garden.
+  Resolve in Phase 7; do not loop the route back to Trafalgar to fix it.
+- No prop is handed over at the finish, so the debrief sheet is the only
+  physical handout. Cheaper, and it makes the debrief the close rather than an
+  anticlimax after it.
+- **Precedent to echo, and it is true:** the Cunningham bust on the north
+  terrace has a note by its sculptor sealed inside it.
 
 ---
 
