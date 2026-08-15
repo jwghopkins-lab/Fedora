@@ -145,13 +145,13 @@
 
   /* A newly opened part does not simply appear. A hairline draws across the top
      of the card like a scanner pass, and the card resolves out of blur behind
-     it, before the typewriter starts. Three seconds, once, and never on a card
+     it, before the typewriter starts. Two seconds, once, and never on a card
      the player has already seen. */
   .part.arriving { position: relative; overflow: hidden;
-                   animation: resolve 3000ms cubic-bezier(.2,.7,.25,1) forwards; }
+                   animation: resolve 2000ms cubic-bezier(.2,.7,.25,1) forwards; }
   .part.arriving::after {
     content: ""; position: absolute; top: 0; left: 0; height: 2px; width: 0;
-    background: var(--accent); animation: scanline 1860ms ease-out forwards; }
+    background: var(--accent); animation: scanline 1240ms ease-out forwards; }
   @keyframes scanline { 0% { width: 0; opacity: 1 } 78% { width: 100%; opacity: 1 }
                         100% { width: 100%; opacity: 0 } }
   @keyframes resolve {
@@ -397,9 +397,9 @@ function markSeen(idx) {
 // is not decoration: it buys thinking time, it makes the reveal feel like
 // something is being told to you, and it makes the clue meaningfully slower to
 // copy out and paste into a machine than it is to simply read and think about.
-const TYPE_SLOWDOWN = 3.9;
+const TYPE_SLOWDOWN = 2.6;
 const SENTENCE_PAUSE_MS = 700;
-const ARRIVE_MS = 3000;   // matches the `resolve` keyframe; text waits for it
+const ARRIVE_MS = 2000;   // matches the `resolve` keyframe; text waits for it
 // Words, not characters. Character typing re-wrapped the line on every word
 // boundary, which is what made it feel clunky; here the whole text is laid out
 // invisibly at once (so the card holds its final height from the first frame)
