@@ -4,7 +4,7 @@ The working memory for the Chapter Two narrative rebuild. Read this first in a
 new session. Decisions land here the moment they are made, with the reasoning,
 so nothing has to be re-argued and no session starts cold.
 
-Status: **planning — awaiting decisions D1 to D4.**
+Status: **spine locked (D1–D4). Working on cast, documents and the map.**
 
 ---
 
@@ -175,12 +175,63 @@ Five independent verifiers with web search, 18 assertions, blind.
 
 | # | Decision | Status |
 |---|---|---|
-| D1 | Frame: game, or presented as real | **open** |
-| D2 | Motive for the cover-up | **open** |
-| D3 | Physical artifacts: how far | **open** |
-| D4 | How much of the existing 22 parts survives | **open** |
+| D1 | Frame | **LOCKED** — in character from the walk |
+| D2 | Motive | **LOCKED** — national and scientific, with two corrections |
+| D3 | Artifacts | **LOCKED** — diary, marked string, chalk marks |
+| D4 | Route | **LOCKED** — keep the spine, rebuild Covent Garden |
+| D5 | Who wrote the diary | open |
+| D6 | What the map's lines cross on | open |
+| D7 | What the players end up holding | open |
 
-*(Answers, with reasoning, get appended here as they are made.)*
+### D1 — Frame: in character from the walk *(15 Aug)*
+Sign-up, team codes and the landing page stay plainly a puzzle event, so nobody
+is deceived into playing. From the moment the diary is opened it never breaks
+character, and the client is genuinely unreachable all day. Honest at the door,
+total immersion inside. A debrief at the finish separates fact from invention.
+
+### D2 — Motive: national and scientific *(15 Aug)*
+The establishment buries the defect to protect Britain's standing, not its
+geodesy. **Two corrections were required to make it survive scrutiny:**
+
+1. **The error must be a few parts per million, not a thousandth.** Smyth's
+   claimed thousandth is a thousand ppm; real inter-standard discrepancies were
+   single digits — the Indian foot and Clarke's foot differ by ~7 ppm, and that
+   difference is still in surveying software today. A thousandth would have been
+   caught in a week. At single-digit ppm it plausibly survives seventy years and
+   propagates silently into the figure of the Earth and every chart's scale.
+2. **The stake is credibility, not longitude.** Longitude is angular, fixed
+   astronomically by the transit circle; a wrong yard does not move the meridian,
+   and any thoughtful player will see that. The real stake: in 1884 Britain was
+   handed the world's meridian on an expressed hope it would accede to the
+   Convention du Mètre — Strachey said it would — **and Britain never did.** It
+   could not afford anyone proving its own standard defective at that table
+   while arguing its standards were the best in the world.
+
+Smyth's side needs no further motive than the human one: he was right, and he
+was buried for it.
+
+**Supporting facts, all verified:**
+- Clarke's medal was for *"comparison of standards of length, and determination
+  of the figure of the earth"* — in Victorian geodesy, one job. The shape of the
+  Earth was computed **from** the length standards.
+- Clarke, 1866: the metre = 39.370432 British Imperial inches, by comparing
+  standards.
+- Lough Foyle base, 1827–28, Colby's compensation bars; remeasured
+  electronically in 1960 and out by about an inch.
+- 1884: France and Brazil abstained; the resolution passed 22–1.
+
+### D3 — Artifacts: diary, string, chalk *(15 Aug)*
+Printed facsimile diary, plus the marked cord of the "true yard" whose intervals
+map to letters with one or two planted errors, plus chalk marks laid on the route
+before each cohort. The cord is the machine-proof channel: a key that exists only
+as a physical length, recoverable at 0%. Chalk needs a dawn walk on the day and a
+re-check an hour before the start.
+
+### D4 — Route: keep the spine, rebuild Covent Garden *(15 Aug)*
+Parts 1–16 (Parliament and Trafalgar) carry the measurement story and stay
+largely intact, retargeted. Parts 17–22 are rewritten around the light thread and
+the map. **Dryden is cut** — wrong century. **Emma Bowden stays untouched** as
+the closing human note; she is a real private person and is not fictionalised.
 
 ---
 
