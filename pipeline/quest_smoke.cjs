@@ -51,6 +51,21 @@ const BASE = `http://localhost:${PORT}`;
     await page.fill("#codein", "testteam1");
     await page.press("#codein", "Enter");           // Enter on the code field
     await page.waitForSelector("#s-quest.on");
+    // The location pre-flight fires once, on wifi, before anyone sets off — a
+    // phone that has quietly denied the site does not prompt on a street
+    // corner, it just refuses with the clue withheld.
+    await page.waitForSelector("#modal.show");
+    if (!(await page.locator("#modalcard").textContent()).includes("Before you set off"))
+      throw new Error("expected the location pre-flight on first join");
+    await page.click("#lcgo");
+    await page.waitForFunction(() =>
+      document.getElementById("modalcard").textContent.includes("That works"),
+      { timeout: 15000 });
+    await page.click("#lcdone");
+    await page.waitForFunction(() =>
+      !document.getElementById("modal").classList.contains("show"));
+    console.log("preflight ok: location checked up front, once");
+
     // Locked parts are no longer drawn at all: a column of padlocks told the
     // player nothing and pushed the live clue off the screen.
     if (await page.locator(".part.sealed").count())
@@ -155,6 +170,8 @@ const BASE = `http://localhost:${PORT}`;
     // both hints survive a reload, with no second call and no third hint
     await page.reload();
     await page.waitForSelector("#s-quest.on");
+    if ((await page.locator("#modal").getAttribute("class") || "").includes("show"))
+      throw new Error("the pre-flight must not nag once it has passed");
     await page.waitForFunction(() =>
       document.querySelectorAll('.part[data-idx="1"] .hintone').length === 2,
       { timeout: 20000 });

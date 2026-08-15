@@ -175,6 +175,9 @@
           max-height: 86dvh; overflow-y: auto; }
   .card h2 { font-family: Georgia, serif; font-size: 1.35rem; margin-bottom: 6px; }
   .card .sub { color: var(--ink-soft); font-size: .82rem; margin-bottom: 10px; line-height: 1.45; }
+  .card .sub ol { margin: 6px 0 0 18px; }
+  .card .sub li { margin-bottom: 5px; }
+  .card .sub b { color: var(--ink); }
   .lb { margin-top: 8px; font-size: .86rem; }
   .lbrow { display: flex; gap: 8px; padding: 4px 0; align-items: baseline;
            font-variant-numeric: tabular-nums; }
@@ -693,6 +696,83 @@ function wireHint(div, idx, u) {
   btn.onclick = () => takeHint(div, idx, btn, out);
 }
 
+// Three parts of this hunt ask where you are, and a phone that has quietly
+// denied the site will not prompt — it just refuses, on a street corner, with
+// the clue withheld. So we check ONCE at the start, while there is still wifi
+// and patience, and hand out instructions for the phone actually in their hand.
+function platform() {
+  const ua = navigator.userAgent;
+  if (/iPad|iPhone|iPod/.test(ua) ||
+      (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1)) return "ios";
+  if (/Android/.test(ua)) return "android";
+  return "desktop";
+}
+const HOWTO = {
+  ios: `<b>iPhone or iPad</b>
+    <ol>
+      <li><b>Settings → Safari → Location</b>. If it says <b>Deny</b>, change it
+          to <b>Ask</b>. On Deny you will never even see a prompt.</li>
+      <li>Back here, tap <b>aA</b> (or ⋯) in the address bar →
+          <b>Website Settings</b> → <b>Location</b> → <b>Allow</b>.</li>
+      <li><b>Settings → Privacy &amp; Security → Location Services</b> on, and
+          <b>Safari Websites</b> set to <b>While Using the App</b>.</li>
+    </ol>
+    If you saved this to your Home Screen, that counts as a separate app and
+    needs its own permission.`,
+  android: `<b>Android</b>
+    <ol>
+      <li>Tap the icon just left of the address bar (a lock or two sliders) →
+          <b>Permissions</b> → <b>Location</b> → <b>Allow</b>.</li>
+      <li>Then <b>Settings → Location</b> on the phone itself, and make sure
+          your browser is allowed to use it.</li>
+    </ol>`,
+  desktop: `<b>On a computer</b>
+    <ol>
+      <li>Click the icon at the left of the address bar → <b>Site settings</b>
+          → <b>Location</b> → <b>Allow</b>, then reload.</li>
+    </ol>
+    A laptop's location is far rougher than a phone's. Play on the phone.`,
+};
+
+function locationCheck(force) {
+  if (!force && LS.get("locok." + HUNT, false)) return;
+  const show = (body, buttons) => {
+    $("modalcard").innerHTML = `<h2>Before you set off</h2>${body}
+      <div class="btnrow">${buttons}</div>`;
+    $("modal").classList.add("show");
+  };
+  const intro = `<div class="sub">Three parts of this hunt only open when you
+    are standing in the right place, so the app needs permission to check your
+    location. It is read once each time you tap the button, never tracked, and
+    never while the app is closed.<br><br>Let's make sure it works now, rather
+    than find out on a street corner.</div>`;
+  show(intro, `<button class="btn ghost" id="lclater">Later</button>
+               <button class="btn primary" id="lcgo">Check location</button>`);
+  $("lclater").onclick = () => $("modal").classList.remove("show");
+  $("lcgo").onclick = async () => {
+    $("lcgo").disabled = true; $("lcgo").textContent = "Checking…";
+    try {
+      await getFix();
+      LS.set("locok." + HUNT, true);
+      show(`<div class="sub"><b>That works.</b> Nothing else to do — the app
+        will ask again at each of the three places.</div>`,
+        `<button class="btn primary" id="lcdone">Good</button>`);
+      $("lcdone").onclick = () => $("modal").classList.remove("show");
+    } catch (err) {
+      const blocked = err && err.code === 1;
+      show(`<div class="sub">${blocked
+          ? "Location is switched off for this site. Here is how to turn it on."
+          : "No fix here — that is usually walls, not settings. Try again "
+            + "outside. If it keeps failing, check the settings below."}</div>
+        <div class="sub">${HOWTO[platform()]}</div>`,
+        `<button class="btn ghost" id="lcskip">I'll sort it later</button>
+         <button class="btn primary" id="lcretry">Try again</button>`);
+      $("lcskip").onclick = () => $("modal").classList.remove("show");
+      $("lcretry").onclick = () => locationCheck(true);
+    }
+  };
+}
+
 // One position fix, on demand, when the player taps — never a running watch,
 // which would flatten a phone battery over a two-hour walk.
 function getFix() {
@@ -911,6 +991,7 @@ async function join(code) {
   clearInterval(pollInt);
   pollInt = setInterval(refresh, 30000);
   if (NCLUES && Object.keys(SOLVED).length === NCLUES) showWin();
+  else locationCheck(false);   // once per team, while there is still wifi
   return true;
 }
 
