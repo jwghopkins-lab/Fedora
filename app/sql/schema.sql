@@ -71,6 +71,18 @@ create table public.clues (
   unlocked_by    int[] not null default '{}',
   unlock_mode    text not null default 'any' check (unlock_mode in ('any', 'all')),
   available_from timestamptz,
+  -- LOCATION GATE. When set, the clue's text is withheld until the team has
+  -- checked in within gate_radius_m of (gate_lat, gate_lon) — or explicitly
+  -- skipped, which is logged. GPS among tall buildings is routinely 30-100m
+  -- out, so the check is generous by construction: a fix passes when
+  -- distance - reported_accuracy <= radius. The gate can slow a team down;
+  -- it must never be able to strand one, hence the skip path.
+  gate_lat       double precision,
+  gate_lon       double precision,
+  gate_radius_m  int check (gate_radius_m is null or gate_radius_m >= 50),
+  gate_prompt    text,
+  check ((gate_lat is null) = (gate_lon is null)
+     and (gate_lat is null) = (gate_radius_m is null)),
   primary key (hunt_id, idx)
 );
 
@@ -103,6 +115,23 @@ create table public.signups (
   created_at timestamptz not null default now()
 );
 
+-- every location check-in, pass or fail: where the team actually stood when
+-- they asked, which is trail data as much as it is a gate
+create table public.checkins (
+  id         bigint generated always as identity primary key,
+  team_id    uuid not null references public.teams(id) on delete cascade,
+  hunt_id    text not null,
+  clue_idx   int  not null,
+  lat        double precision,
+  lon        double precision,
+  acc_m      double precision,
+  distance_m double precision,
+  passed     boolean not null,
+  skipped    boolean not null default false,   -- the testing escape hatch
+  created_at timestamptz not null default now()
+);
+create index checkins_team_clue on public.checkins (team_id, clue_idx);
+
 -- a taken hint: logged and counted against the team, one row per hint. The key
 -- carries hint_no because a clue hands out several, in order, and the count of
 -- rows here is what tells fedora_hint which one comes next.
@@ -115,6 +144,7 @@ create table public.hints (
   primary key (team_id, clue_idx, hint_no)
 );
 
+alter table public.checkins    enable row level security;
 alter table public.hints       enable row level security;
 alter table public.signups     enable row level security;
 alter table public.hunts       enable row level security;
@@ -122,7 +152,7 @@ alter table public.clues       enable row level security;
 alter table public.teams       enable row level security;
 alter table public.submissions enable row level security;
 revoke all on table public.hunts, public.clues, public.teams, public.submissions,
-  public.hints, public.signups from anon, authenticated;
+  public.hints, public.signups, public.checkins from anon, authenticated;
 
 -- ---------------------------------------------------------------------------
 -- internal helpers (not granted to anon)
@@ -145,16 +175,42 @@ returns boolean language sql stable security definer set search_path = '' as $$
              end)
 $$;
 
+-- great-circle distance in metres (haversine); good to well under a metre at
+-- walking scales, which is far tighter than any phone fix
+create or replace function public.fedora_distance_m(
+  lat1 double precision, lon1 double precision,
+  lat2 double precision, lon2 double precision)
+returns double precision language sql immutable set search_path = '' as $$
+  select 2 * 6371008.8 * asin(least(1, sqrt(
+    pow(sin(radians(lat2 - lat1) / 2), 2)
+    + cos(radians(lat1)) * cos(radians(lat2))
+      * pow(sin(radians(lon2 - lon1) / 2), 2))))
+$$;
+
+-- has this team passed (or skipped) the clue's location gate?
+create or replace function public.fedora_gate_passed(p_team uuid, p_clue public.clues)
+returns boolean language sql stable security definer set search_path = '' as $$
+  select p_clue.gate_lat is null
+      or exists (select 1 from public.checkins k
+                 where k.team_id = p_team and k.clue_idx = p_clue.idx and k.passed)
+$$;
+
 -- A clue becomes available when its last-satisfied prerequisite was answered
 -- (or, with no prerequisites, when the team was created). The hint timer runs
--- from that moment, so a player who never guesses still earns a hint.
+-- from that moment — or, on a location-gated clue, from the moment the gate was
+-- passed, because until then the team has not even seen the question.
 create or replace function public.fedora_available_since(p_team uuid, p_clue public.clues)
 returns timestamptz language sql stable security definer set search_path = '' as $$
-  select coalesce(
-    (select max(s.created_at) from public.submissions s
-     where s.team_id = p_team and (s.correct or s.skipped)
-       and s.clue_idx = any (p_clue.unlocked_by)),
-    (select t.created_at from public.teams t where t.id = p_team))
+  select greatest(
+    coalesce(
+      (select max(s.created_at) from public.submissions s
+       where s.team_id = p_team and (s.correct or s.skipped)
+         and s.clue_idx = any (p_clue.unlocked_by)),
+      (select t.created_at from public.teams t where t.id = p_team)),
+    coalesce(
+      (select min(k.created_at) from public.checkins k
+       where k.team_id = p_team and k.clue_idx = p_clue.idx and k.passed),
+      'epoch'::timestamptz))
 $$;
 
 create or replace function public.fedora_strikes(p_team uuid)
@@ -188,7 +244,14 @@ returns jsonb language sql stable security definer set search_path = '' as $$
        join public.clues c on c.hunt_id = p_hunt and c.idx = fs.clue_idx),
       '[]'::jsonb),
     'unlocked', coalesce((
-       select jsonb_agg(jsonb_build_object('idx', c.idx, 'qtype', c.qtype,
+       select jsonb_agg(case
+         -- an unpassed location gate: the clue EXISTS but its text does not
+         -- leave the server. All the player gets is the question of presence.
+         when not public.fedora_gate_passed(p_team, c) then
+           jsonb_build_object('idx', c.idx, 'gated', true,
+             'gate_prompt', coalesce(c.gate_prompt, 'Are you there?'),
+             'since', public.fedora_available_since(p_team, c))
+         else jsonb_build_object('idx', c.idx, 'qtype', c.qtype,
                           'kind', c.kind, 'clue_text', c.clue_text,
                           'n_hints', cardinality(c.hints),
                           'hints_taken', k.taken,
@@ -207,7 +270,7 @@ returns jsonb language sql stable security definer set search_path = '' as $$
                           'guess_limit', case when c.guess_limit is null
                             then null else c.guess_limit + k.taken end,
                           'guesses_used', k.used,
-                          'since', public.fedora_available_since(p_team, c))
+                          'since', public.fedora_available_since(p_team, c)) end
                         order by c.idx)
        from public.clues c
        cross join lateral (select
@@ -287,6 +350,9 @@ begin
   if not public.fedora_is_unlocked(t.id, c) then
     return jsonb_build_object('status', 'locked');
   end if;
+  if not public.fedora_gate_passed(t.id, c) then
+    return jsonb_build_object('status', 'gated');
+  end if;
   -- a per-clue guess budget, enforced here and not merely warned about in the
   -- UI. Every hint taken on this clue is worth one more guess, so a team that
   -- runs out can always earn its way forward instead of hitting a wall.
@@ -357,7 +423,12 @@ begin
   return jsonb_build_object('status', 'correct', 'idx', p_idx, 'answer', guess,
     'after_text', c.after_text,
     'newly_unlocked', coalesce((
-      select jsonb_agg(jsonb_build_object('idx', k.idx, 'qtype', k.qtype,
+      select jsonb_agg(case
+        when k.gate_lat is not null and not public.fedora_gate_passed(t.id, k) then
+          jsonb_build_object('idx', k.idx, 'gated', true,
+            'gate_prompt', coalesce(k.gate_prompt, 'Are you there?'),
+            'since', public.fedora_available_since(t.id, k))
+        else jsonb_build_object('idx', k.idx, 'qtype', k.qtype,
                                           'kind', k.kind, 'clue_text', k.clue_text,
                                           'n_hints', cardinality(k.hints),
                                           'hints_taken', 0,
@@ -366,7 +437,7 @@ begin
                                              else coalesce(k.hint_waits[1], h.hint_wait_s) end,
                                           'guess_limit', k.guess_limit,
                                           'guesses_used', 0,
-                                          'since', public.fedora_available_since(t.id, k))
+                                          'since', public.fedora_available_since(t.id, k)) end
                        order by k.idx)
       from public.clues k
       where k.hunt_id = h.id and public.fedora_is_unlocked(t.id, k)
@@ -411,7 +482,12 @@ begin
     values (t.id, h.id, p_idx, note, false, true);
   return jsonb_build_object('status', 'skipped', 'idx', p_idx,
     'newly_unlocked', coalesce((
-      select jsonb_agg(jsonb_build_object('idx', k.idx, 'qtype', k.qtype,
+      select jsonb_agg(case
+        when k.gate_lat is not null and not public.fedora_gate_passed(t.id, k) then
+          jsonb_build_object('idx', k.idx, 'gated', true,
+            'gate_prompt', coalesce(k.gate_prompt, 'Are you there?'),
+            'since', public.fedora_available_since(t.id, k))
+        else jsonb_build_object('idx', k.idx, 'qtype', k.qtype,
                                           'kind', k.kind, 'clue_text', k.clue_text,
                                           'n_hints', cardinality(k.hints),
                                           'hints_taken', 0,
@@ -420,7 +496,7 @@ begin
                                              else coalesce(k.hint_waits[1], h.hint_wait_s) end,
                                           'guess_limit', k.guess_limit,
                                           'guesses_used', 0,
-                                          'since', public.fedora_available_since(t.id, k))
+                                          'since', public.fedora_available_since(t.id, k)) end
                        order by k.idx)
       from public.clues k
       where k.hunt_id = h.id and public.fedora_is_unlocked(t.id, k)
@@ -445,6 +521,9 @@ begin
   if not found then return jsonb_build_object('status', 'no_such_clue'); end if;
   if not public.fedora_is_unlocked(t.id, c) then
     return jsonb_build_object('status', 'locked');
+  end if;
+  if not public.fedora_gate_passed(t.id, c) then
+    return jsonb_build_object('status', 'gated');
   end if;
   if cardinality(c.hints) = 0 then return jsonb_build_object('status', 'no_hint'); end if;
   -- the next one in sequence, never a later one first
@@ -472,6 +551,78 @@ begin
                       then coalesce(c.hint_waits[n + 1], h.hint_wait_s) else null end,
     'more', n < cardinality(c.hints));
 end $$;
+
+-- The location check-in. Every attempt is logged, pass or fail; a pass reveals
+-- the clue (the reply carries the full card so the UI need not re-poll). The
+-- check is deliberately generous: a phone that admits its fix is loose gets the
+-- benefit of the doubt, because GPS in a courtyard is routinely 30-100m out and
+-- a gate must never strand a team. p_skip is the TESTING escape hatch — it
+-- passes the gate and is flagged in the log.
+create or replace function public.fedora_checkin(
+  p_code text, p_idx int,
+  p_lat double precision, p_lon double precision, p_acc double precision,
+  p_skip boolean default false)
+returns jsonb language plpgsql security definer set search_path = '' as $$
+declare
+  t public.teams; h public.hunts; c public.clues;
+  dist double precision; ok boolean;
+begin
+  select * into t from public.teams
+    where code = upper(regexp_replace(coalesce(p_code, ''), '\s', '', 'g'));
+  if not found then return jsonb_build_object('status', 'bad_code'); end if;
+  select * into h from public.hunts where id = t.hunt_id;
+  if not h.active then return jsonb_build_object('status', 'inactive'); end if;
+  select * into c from public.clues where hunt_id = h.id and idx = p_idx;
+  if not found then return jsonb_build_object('status', 'no_such_clue'); end if;
+  if c.gate_lat is null then return jsonb_build_object('status', 'no_gate'); end if;
+  if not public.fedora_is_unlocked(t.id, c) then
+    return jsonb_build_object('status', 'locked');
+  end if;
+  perform pg_advisory_xact_lock(hashtext(t.id::text || ':g' || p_idx::text));
+  if public.fedora_gate_passed(t.id, c) then
+    return jsonb_build_object('status', 'ok', 'already', true)
+           || public.fedora_reveal(t.id, h, c);
+  end if;
+  if p_skip then
+    insert into public.checkins (team_id, hunt_id, clue_idx, passed, skipped)
+      values (t.id, h.id, p_idx, true, true);
+    return jsonb_build_object('status', 'ok', 'skipped', true)
+           || public.fedora_reveal(t.id, h, c);
+  end if;
+  if p_lat is null or p_lon is null then
+    return jsonb_build_object('status', 'no_fix');
+  end if;
+  dist := public.fedora_distance_m(p_lat, p_lon, c.gate_lat, c.gate_lon);
+  -- the fix's own claimed error is subtracted before comparing: a phone that
+  -- says "I am here, give or take 80m" is not punished for the give-or-take.
+  -- The accuracy credit is capped so a fabricated acc=99999 cannot walk through
+  -- the gate from a sofa.
+  ok := dist - least(coalesce(p_acc, 0), 150) <= c.gate_radius_m;
+  insert into public.checkins (team_id, hunt_id, clue_idx, lat, lon, acc_m,
+                               distance_m, passed)
+    values (t.id, h.id, p_idx, p_lat, p_lon, p_acc, round(dist), ok);
+  if not ok then
+    -- warm/cold, never yes/no: the distance comes back so the UI can say
+    -- "about 200m away" instead of "no"
+    return jsonb_build_object('status', 'far', 'distance_m', round(dist));
+  end if;
+  return jsonb_build_object('status', 'ok') || public.fedora_reveal(t.id, h, c);
+end $$;
+
+-- the full card for a clue whose gate has just been passed (internal)
+create or replace function public.fedora_reveal(p_team uuid, h public.hunts, c public.clues)
+returns jsonb language sql stable security definer set search_path = '' as $$
+  select jsonb_build_object('idx', c.idx, 'qtype', c.qtype, 'kind', c.kind,
+    'clue_text', c.clue_text,
+    'n_hints', cardinality(c.hints),
+    'hints_taken', 0, 'hints_shown', '[]'::jsonb,
+    'next_hint_wait', case when cardinality(c.hints) = 0 then null
+                      else coalesce(c.hint_waits[1], h.hint_wait_s) end,
+    'guess_limit', c.guess_limit, 'guesses_used',
+      (select count(*) from public.submissions s
+       where s.team_id = p_team and s.clue_idx = c.idx),
+    'since', public.fedora_available_since(p_team, c))
+$$;
 
 -- Write-only: an address goes in, nothing comes back out. Anon can register
 -- but can never enumerate who else did.
@@ -525,3 +676,8 @@ grant execute on function public.fedora_hint(text, int) to anon;
 grant execute on function public.fedora_leaderboard(text) to anon;
 revoke execute on function public.fedora_signup(text) from public;
 grant  execute on function public.fedora_signup(text) to anon;
+revoke execute on function public.fedora_distance_m(double precision, double precision, double precision, double precision) from public, anon, authenticated;
+revoke execute on function public.fedora_gate_passed(uuid, public.clues) from public, anon, authenticated;
+revoke execute on function public.fedora_reveal(uuid, public.hunts, public.clues) from public, anon, authenticated;
+revoke execute on function public.fedora_checkin(text, int, double precision, double precision, double precision, boolean) from public;
+grant  execute on function public.fedora_checkin(text, int, double precision, double precision, double precision, boolean) to anon;

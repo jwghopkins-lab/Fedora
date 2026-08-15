@@ -83,6 +83,17 @@
                background: var(--key); border-radius: 8px; padding: 8px 10px; }
   #livesnote.warn { background: var(--wrong-soft); color: var(--wrong); }
 
+  /* the location gate: a question of presence, before the question itself */
+  .gatewrap { text-align: center; padding: 6px 2px 2px; }
+  .gateq { font-family: Georgia, serif; font-size: 1.05rem; margin-bottom: 12px; }
+  .gatebtn { margin-bottom: 8px; }
+  .gatestat { font-size: .78rem; color: var(--ink-soft); min-height: 1.2em;
+              margin-bottom: 6px; font-variant-numeric: tabular-nums; }
+  .gateskip { border: none; background: none; color: var(--ink-soft);
+              font-size: .7rem; text-decoration: underline dotted;
+              text-underline-offset: 3px; cursor: pointer; padding: 6px; }
+  .gatenote { font-size: .68rem; color: var(--ink-soft); margin-top: 4px; }
+
   #journey { flex: 1; }
   .part { background: var(--panel); border: 1px solid var(--line); border-radius: 14px;
           padding: 14px; margin-bottom: 10px; box-shadow: var(--shadow); }
@@ -96,7 +107,12 @@
   .phead .state { margin-left: auto; }
   .ptext { font-family: Georgia, serif; font-size: 1rem; line-height: 1.55;
            white-space: pre-line; }   /* clue text carries real line breaks */
-  .ptext .caret { opacity: .55; font-family: system-ui, sans-serif; }
+  /* Words, not characters. The full text is laid out invisibly from the first
+     frame — so the card never grows and lines never re-wrap mid-reveal — and
+     each word then darkens into place, like a voice rather than a machine. */
+  .ptext .w { opacity: 0; }
+  .ptext .w.on { opacity: 1; transition: opacity .45s ease; }
+  @media (prefers-reduced-motion: reduce) { .ptext .w { opacity: 1; } }
   .pans { margin-top: 12px; display: flex; gap: 8px; }
   .pans input { flex: 1; padding: 12px; font-size: 1.05rem; border-radius: 9px;
                 border: 1.5px solid var(--line); background: var(--paper); color: var(--ink);
@@ -329,6 +345,7 @@ function netMsg(err) {
 // call sites and drifted: a field added to one of them was silently missing
 // from the others.
 function openCard(u) {
+  if (u.gated) return { gated: true, gate_prompt: u.gate_prompt, since: u.since };
   return { qtype: u.qtype, kind: u.kind || "ground", clue_text: u.clue_text,
            since: u.since,
            n_hints: u.n_hints || 0,
@@ -365,7 +382,7 @@ function fingerprint() {
           // the fields too, not just the keys: a teammate taking a hint or
           // spending a guess on another phone changes nothing about WHICH clues
           // are open, and a keys-only fingerprint would suppress the re-render
-          Object.keys(UNLOCKED).sort().map((i) =>
+          Object.keys(UNLOCKED).sort().map((i) => UNLOCKED[i].gated ? "G" :
             `${UNLOCKED[i].hints_taken}/${UNLOCKED[i].n_hints}:${UNLOCKED[i].guesses_used}`
           ).join("|")].join("~");
 }
@@ -383,29 +400,62 @@ function markSeen(idx) {
 const TYPE_SLOWDOWN = 3.9;
 const SENTENCE_PAUSE_MS = 700;
 const ARRIVE_MS = 3000;   // matches the `resolve` keyframe; text waits for it
+// Words, not characters. Character typing re-wrapped the line on every word
+// boundary, which is what made it feel clunky; here the whole text is laid out
+// invisibly at once (so the card holds its final height from the first frame)
+// and the words darken into place one by one. Each sentence starts slow,
+// quickens through the middle and slows again into the full stop, with a beat
+// before the next one begins. No caret: this is telling, not typing.
 function typeInto(el, text, idx, delay) {
-  const total = text.length;
-  const step = Math.max(8, Math.min(22, Math.floor(3200 / Math.max(1, total))))
-               * TYPE_SLOWDOWN;
-  let i = 0;
-  // hold the pen until the card has finished resolving out of blur
-  let paused = delay || 0;
   el.textContent = "";
-  const finish = () => {
-    clearInterval(typing.get(idx)); typing.delete(idx);
-    el.textContent = text; markSeen(idx);
-  };
-  const id = setInterval(() => {
-    if (paused > 0) { paused -= step; return; }
-    i += 1;
-    if (i >= total) { finish(); return; }
-    el.textContent = text.slice(0, i);
-    // hold on the punctuation that ends a thought, not on decimals or initials
-    if (".?!".includes(text[i - 1]) && (text[i] === undefined || text[i] === " " || text[i] === "\n")) {
-      paused = SENTENCE_PAUSE_MS;
+  const words = [];
+  // whitespace (including real line breaks) rides as plain text nodes, so the
+  // rendered text is character-identical to the source
+  for (const tok of text.split(/(\s+)/)) {
+    if (!tok) continue;
+    if (/^\s+$/.test(tok)) { el.appendChild(document.createTextNode(tok)); continue; }
+    const w = document.createElement("span");
+    w.className = "w"; w.textContent = tok;
+    el.appendChild(w); words.push(w);
+  }
+  // per-word pace derived from the old per-character step, so overall duration
+  // matches what was already tuned
+  const step = Math.max(8, Math.min(22, Math.floor(3200 / Math.max(1, text.length))))
+               * TYPE_SLOWDOWN;
+  // position of each word within its sentence, for the speed curve
+  const bounds = [];   // index into words where each sentence starts
+  let s0 = 0;
+  words.forEach((w, k) => {
+    if (/[.?!]["')\]]?$/.test(w.textContent) || k === words.length - 1) {
+      bounds.push([s0, k]); s0 = k + 1;
     }
-  }, step);
-  typing.set(idx, id);
+  });
+  const posIn = (k) => {
+    for (const [a, b] of bounds)
+      if (k >= a && k <= b) return b === a ? 0.5 : (k - a) / (b - a);
+    return 0.5;
+  };
+  let k = 0, t = null;
+  const finish = () => {
+    clearTimeout(t); typing.delete(idx);
+    for (const w of words) { w.classList.remove("w", "on"); }
+    markSeen(idx);
+  };
+  const tick = () => {
+    if (k >= words.length) { finish(); return; }
+    const w = words[k];
+    w.classList.add("on");
+    const p = posIn(k);
+    // slow into and out of every sentence, quick through the middle;
+    // the factor averages ~1 so total time stays as tuned
+    const curve = 1.35 - 0.7 * Math.sin(Math.PI * p);
+    let wait = step * (w.textContent.length + 1) * curve;
+    if (/[.?!]["')\]]?$/.test(w.textContent)) wait += SENTENCE_PAUSE_MS;
+    k += 1;
+    t = setTimeout(tick, wait);
+  };
+  t = setTimeout(tick, delay || 0);
+  typing.set(idx, { finish });   // stored so `typing.has(idx)` still answers
   return finish;
 }
 
@@ -418,7 +468,7 @@ function currentOpen() {
 function paintLives() {
   const u = currentOpen();
   const row = $("lives"), note = $("livesnote");
-  if (!u || u.guess_limit == null) {          // unlimited clue: no meter to show
+  if (!u || u.gated || u.guess_limit == null) {  // unlimited or gated: no meter
     row.hidden = true;
     if (!note.classList.contains("warn")) note.hidden = true;
     return;
@@ -498,6 +548,28 @@ function render() {
           div.addEventListener("click", () => { if (typing.has(key)) done(); });
         }
       }
+    } else if (UNLOCKED[i] && UNLOCKED[i].gated) {
+      // The gate: the clue exists, but the server is holding its text until
+      // this team stands roughly where the clue is. Warm/cold, never yes/no —
+      // GPS in a courtyard can be 100m out, and a gate that can say "no" to a
+      // team that IS there would be worse than no gate at all.
+      const u = UNLOCKED[i];
+      div.className = "part open";
+      div.innerHTML =
+        `<div class="phead"><span class="no">Part ${i}</span></div>
+         <div class="gatewrap">
+           <div class="gateq">${escapeHtml(u.gate_prompt || "Are you there?")}</div>
+           <button class="btn primary gatebtn">Share our location</button>
+           <div class="gatestat"></div>
+           <button class="gateskip">Skip the location check (testing)</button>
+           <div class="gatenote">Your location is checked once when you tap,
+           never tracked.</div>
+         </div>`;
+      const btn = div.querySelector(".gatebtn");
+      const stat = div.querySelector(".gatestat");
+      btn.onclick = () => checkin(i, btn, stat, false);
+      div.querySelector(".gateskip").onclick = () =>
+        checkin(i, btn, stat, true);
     } else if (UNLOCKED[i]) {
       const u = UNLOCKED[i];
       div.className = "part open";
@@ -619,6 +691,53 @@ function wireHint(div, idx, u) {
   };
   tick(true);
   btn.onclick = () => takeHint(div, idx, btn, out);
+}
+
+// One position fix, on demand, when the player taps — never a running watch,
+// which would flatten a phone battery over a two-hour walk.
+function getFix() {
+  return new Promise((resolve, reject) => {
+    if (!navigator.geolocation) { reject(new Error("nogeo")); return; }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => resolve(pos.coords),
+      (err) => reject(err),
+      { enableHighAccuracy: true, timeout: 12000, maximumAge: 20000 });
+  });
+}
+
+async function checkin(idx, btn, stat, skip) {
+  btn.disabled = true;
+  let args = { p_code: CODE, p_idx: idx, p_lat: null, p_lon: null,
+               p_acc: null, p_skip: !!skip };
+  if (!skip) {
+    stat.textContent = "Finding you…";
+    try {
+      const c = await getFix();
+      args.p_lat = c.latitude; args.p_lon = c.longitude; args.p_acc = c.accuracy;
+    } catch (err) {
+      stat.textContent = err && err.code === 1
+        ? "Location is blocked for this site — allow it in your browser settings, or skip."
+        : "Couldn't get a fix here. Try again in the open, or skip.";
+      btn.disabled = false;
+      return;
+    }
+  }
+  try {
+    const r = await rpc("fedora_checkin", args);
+    if (r.status === "ok") {
+      UNLOCKED[idx] = openCard(r);
+      // the card must arrive like any other: re-render plays the reveal
+      lastPrint = null;
+      render();
+      if (!skip) toast("You're there.");
+    } else if (r.status === "far") {
+      const d = r.distance_m;
+      stat.textContent = d >= 1000 ? `About ${(d / 1000).toFixed(1)}km away.`
+        : d > 250 ? `About ${Math.round(d / 50) * 50}m away.`
+        : `Warm — about ${Math.round(d / 10) * 10}m. Keep going.`;
+      btn.disabled = false;
+    } else { toast("Hmm: " + r.status); btn.disabled = false; }
+  } catch (err) { toast(netMsg(err)); btn.disabled = false; }
 }
 
 async function takeHint(div, idx, btn, out) {

@@ -127,6 +127,18 @@ def check(hunt):
         mm = c.get("match_mode", "exact")
         if mm not in ("exact", "contains"):
             fails.append(f"clue {c['idx']}: bad match_mode {mm!r}")
+        # location gate: all three coordinates or none, radius honest about GPS
+        g = [c.get("gate_lat"), c.get("gate_lon"), c.get("gate_radius_m")]
+        if any(v is not None for v in g):
+            if any(v is None for v in g):
+                fails.append(f"clue {c['idx']}: gate needs lat, lon AND radius")
+            else:
+                lat, lon, rad = g
+                if not (-90 <= lat <= 90 and -180 <= lon <= 180):
+                    fails.append(f"clue {c['idx']}: gate coordinates out of range")
+                if not (isinstance(rad, int) and rad >= 50):
+                    fails.append(f"clue {c['idx']}: gate radius must be an int "
+                                 f">= 50m — urban GPS is routinely 30-100m out")
         if mm == "contains" and not c.get("answers"):
             fails.append(f"clue {c['idx']}: match_mode 'contains' is meaningless "
                          f"in collect mode (no accepted answers)")

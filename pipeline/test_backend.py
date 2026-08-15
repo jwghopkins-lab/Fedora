@@ -253,6 +253,66 @@ def budget_checks():
            "the explainer comes back on every reload and every teammate's phone")
 
 
+QUEST = json.loads((MOCK.parent.parent / "hunt" / "example_quest.json").read_text())
+
+
+def as_quest(h):
+    """Swap the grid fixture for the QA-journey fixture, in place."""
+    h.clear()
+    h.update(copy.deepcopy(QUEST))
+
+
+def gate_checks():
+    rpc("fedora_submit", p_code="TESTTEAM1", p_idx=1, p_guess="7")
+    time.sleep(0.35)
+    r = rpc("fedora_submit", p_code="TESTTEAM1", p_idx=2, p_guess="42")
+    card = r["newly_unlocked"][0]
+    expect(card.get("gated") is True and "clue_text" not in card,
+           "a gated clue unlocks as a QUESTION OF PRESENCE: no text leaves the server")
+    expect("FIXTURE GATE" in card["gate_prompt"], "the gate carries its prompt")
+    r = rpc("fedora_submit", p_code="TESTTEAM1", p_idx=3, p_guess="GRIFFIN")
+    expect(r["status"] == "gated", "submit is refused while the gate is shut")
+    r = rpc("fedora_hint", p_code="TESTTEAM1", p_idx=3)
+    expect(r["status"] == "gated", "hints too: the text is unseen")
+    r = rpc("fedora_join", p_code="TESTTEAM1")
+    open3 = [u for u in r["unlocked"] if u["idx"] == 3][0]
+    expect(open3.get("gated") is True and "clue_text" not in open3,
+           "rejoin keeps the text withheld")
+    r = rpc("fedora_checkin", p_code="TESTTEAM1", p_idx=3,
+            p_lat=51.5007, p_lon=-0.1266, p_acc=20, p_skip=False)
+    expect(r["status"] == "far" and 700 < r["distance_m"] < 950,
+           "a fix 800m out is told HOW far, warm/cold not yes/no")
+    r = rpc("fedora_checkin", p_code="TESTTEAM1", p_idx=3,
+            p_lat=51.5085, p_lon=-0.1283, p_acc=60, p_skip=False)
+    expect(r["status"] == "ok" and "clue_text" in r,
+           "a fix inside radius+accuracy passes and the reply carries the card")
+    r = rpc("fedora_checkin", p_code="TESTTEAM1", p_idx=3,
+            p_lat=None, p_lon=None, p_acc=None, p_skip=False)
+    expect(r["status"] == "ok" and r.get("already") is True,
+           "a second check-in is idempotent")
+    time.sleep(0.35)
+    r = rpc("fedora_submit", p_code="TESTTEAM1", p_idx=3, p_guess="gryphon")
+    expect(r["status"] == "correct", "and the clue now answers normally")
+    r = rpc("fedora_join", p_code="TESTTEAM1")
+    open4 = [u for u in r["unlocked"] if u["idx"] == 4][0]
+    expect("clue_text" in open4, "ungated clues are untouched by any of this")
+
+
+def gate_skip_checks():
+    rpc("fedora_submit", p_code="TESTTEAM1", p_idx=1, p_guess="7")
+    time.sleep(0.35)
+    rpc("fedora_submit", p_code="TESTTEAM1", p_idx=2, p_guess="42")
+    # a sofa spoof: absurd claimed accuracy must NOT walk through the gate
+    r = rpc("fedora_checkin", p_code="TESTTEAM1", p_idx=3,
+            p_lat=51.47, p_lon=-0.45, p_acc=99999, p_skip=False)
+    expect(r["status"] == "far",
+           "claimed accuracy is capped: acc=99999 from Heathrow does not pass")
+    r = rpc("fedora_checkin", p_code="TESTTEAM1", p_idx=3,
+            p_lat=None, p_lon=None, p_acc=None, p_skip=True)
+    expect(r["status"] == "ok" and r.get("skipped") is True and "clue_text" in r,
+           "the testing skip passes the gate and says so")
+
+
 with_variant(lambda h: h.update(starts_at="2999-01-01T00:00:00Z"), PORT + 1, pre_start_checks)
 with_variant(lambda h: h.update(active=False), PORT + 2, inactive_checks)
 with_variant(lambda h: h["clues"][0].update(available_from="2999-01-01T00:00:00Z"),
@@ -268,4 +328,6 @@ with_variant(lambda h: (h.update(hint_wait_s=1),
                         h["clues"][1].update(
                           after_text="TEST AFTER: the dial told the hour by shadow.")),
              PORT + 6, budget_checks, env={"MOCK_HINT_WAIT_S": "1"})
+with_variant(as_quest, PORT + 7, gate_checks)
+with_variant(as_quest, PORT + 8, gate_skip_checks)
 print("VARIANT DRIVES PASS")

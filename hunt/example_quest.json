@@ -69,7 +69,11 @@
     9
    ],
    "after_text": "FIXTURE AFTER THREE: named. One last inscription to read.",
-   "guess_limit": 3
+   "guess_limit": 3,
+   "gate_lat": 51.508,
+   "gate_lon": -0.128,
+   "gate_radius_m": 100,
+   "gate_prompt": "FIXTURE GATE: are you at the example inn?"
   },
   {
    "idx": 4,

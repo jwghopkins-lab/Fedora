@@ -31,6 +31,7 @@ TEAMS = {t["code"].upper(): t["name"] for t in HUNT["teams"]}
 CLUES = {c["idx"]: c for c in HUNT["clues"]}
 SUBS = []   # {team, clue_idx, guess, correct, skipped, t}
 HINTS = []  # {team, clue_idx, hint_no, t}
+CHECKINS = []  # {team, clue_idx, passed, skipped, distance_m, t}
 SIGNUPS = []  # landing-page email registrations
 # mirrors hunts.hint_wait_s (env overrides it, so tests need not wait 5 minutes);
 # the client counts down using the value we report, so the two cannot drift
@@ -135,11 +136,14 @@ def latest_accepted_guess(team, idx):
 
 def available_since(team, c):
     need = c.get("unlocked_by", [])
-    if not need:
-        return TEAM_BORN.get(team, START_T)
-    ts = [s["t"] for s in SUBS if s["team"] == team and s["clue_idx"] in need
-          and (s["correct"] or s.get("skipped"))]
-    return max(ts) if ts else START_T
+    base = TEAM_BORN.get(team, START_T)
+    if need:
+        ts = [s["t"] for s in SUBS if s["team"] == team and s["clue_idx"] in need
+              and (s["correct"] or s.get("skipped"))]
+        base = max(ts) if ts else START_T
+    # a gated clue's hint clock runs from the moment the gate was passed
+    g = gate_passed_at(team, c["idx"])
+    return max(base, g) if g is not None else base
 
 
 def hints_taken(team, idx):
@@ -164,10 +168,40 @@ def budget_for(team, c, idx):
         else c["guess_limit"] + hints_taken(team, idx)
 
 
+def distance_m(lat1, lon1, lat2, lon2):
+    import math
+    return 2 * 6371008.8 * math.asin(min(1.0, math.sqrt(
+        math.sin(math.radians(lat2 - lat1) / 2) ** 2
+        + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2))
+        * math.sin(math.radians(lon2 - lon1) / 2) ** 2)))
+
+
+def gate_passed(team, c):
+    if c.get("gate_lat") is None:
+        return True
+    return any(k["team"] == team and k["clue_idx"] == c["idx"] and k["passed"]
+               for k in CHECKINS)
+
+
+def gate_passed_at(team, idx):
+    ts = [k["t"] for k in CHECKINS
+          if k["team"] == team and k["clue_idx"] == idx and k["passed"]]
+    return min(ts) if ts else None
+
+
+def gated_card(team, c):
+    return {"idx": c["idx"], "gated": True,
+            "gate_prompt": c.get("gate_prompt") or "Are you there?",
+            "since": iso(available_since(team, c))}
+
+
 def open_card(team, i, fresh=False):
     """The payload for a clue the team can currently see. `fresh` is for a clue
-    that has only just unlocked, where no hint or guess can exist yet."""
+    that has only just unlocked, where no hint or guess can exist yet. Behind an
+    unpassed location gate, the clue's text does not leave the server at all."""
     c = CLUES[i]
+    if not gate_passed(team, c):
+        return gated_card(team, c)
     hints = c.get("hints") or []
     taken = 0 if fresh else hints_taken(team, i)
     n_hints = len(hints)
@@ -233,6 +267,8 @@ def rpc_submit(body):
         return {"status": "already_solved"}
     if not is_unlocked(code, c):
         return {"status": "locked"}
+    if not gate_passed(code, c):
+        return {"status": "gated"}
     lim = budget_for(code, c, idx)
     if lim is not None and guesses_used(code, idx) >= lim:
         return {"status": "no_guesses_left", "guess_limit": lim,
@@ -300,6 +336,8 @@ def rpc_hint(body):
         return {"status": "no_such_clue"}
     if not is_unlocked(code, c):
         return {"status": "locked"}
+    if not gate_passed(code, c):
+        return {"status": "gated"}
     hints = c.get("hints") or []
     if not hints:
         return {"status": "no_hint"}
@@ -337,6 +375,38 @@ def rpc_skip(body):
     newly = [open_card(code, i, fresh=True) for i in sorted(CLUES)
              if i != idx and i not in before and is_unlocked(code, CLUES[i])]
     return {"status": "skipped", "idx": idx, "newly_unlocked": newly}
+
+
+def rpc_checkin(body):
+    code = norm_code(body.get("p_code"))
+    if code not in TEAMS:
+        return {"status": "bad_code"}
+    idx = body.get("p_idx")
+    c = CLUES.get(idx)
+    if not c:
+        return {"status": "no_such_clue"}
+    if c.get("gate_lat") is None:
+        return {"status": "no_gate"}
+    if not is_unlocked(code, c):
+        return {"status": "locked"}
+    if gate_passed(code, c):
+        return {"status": "ok", "already": True, **open_card(code, idx)}
+    if body.get("p_skip"):
+        CHECKINS.append({"team": code, "clue_idx": idx, "passed": True,
+                         "skipped": True, "distance_m": None, "t": time.time()})
+        return {"status": "ok", "skipped": True, **open_card(code, idx)}
+    lat, lon = body.get("p_lat"), body.get("p_lon")
+    if lat is None or lon is None:
+        return {"status": "no_fix"}
+    d = distance_m(lat, lon, c["gate_lat"], c["gate_lon"])
+    # the fix's claimed error is credited, capped so a fabricated accuracy
+    # cannot pass the gate from a sofa (mirrors the SQL)
+    ok = d - min(float(body.get("p_acc") or 0), 150) <= c["gate_radius_m"]
+    CHECKINS.append({"team": code, "clue_idx": idx, "passed": ok,
+                     "skipped": False, "distance_m": round(d), "t": time.time()})
+    if not ok:
+        return {"status": "far", "distance_m": round(d)}
+    return {"status": "ok", **open_card(code, idx)}
 
 
 def rpc_leaderboard(body):
@@ -408,6 +478,10 @@ class Handler(SimpleHTTPRequestHandler):
         if route == "/rest/v1/rpc/fedora_signup":
             with LOCK:
                 self._json(200, rpc_signup(body))
+            return
+        if route == "/rest/v1/rpc/fedora_checkin":
+            with LOCK:
+                self._json(200, rpc_checkin(body))
             return
         if route == "/rest/v1/rpc/fedora_hint":
             with LOCK:

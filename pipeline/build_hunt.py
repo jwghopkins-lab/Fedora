@@ -68,14 +68,21 @@ def seed_sql(hunt):
         warr = "'{" + ",".join(str(int(w)) for w in waits) + "}'::int[]"
         after = q(c["after_text"]) if c.get("after_text") else "null"
         glim = int(c["guess_limit"]) if c.get("guess_limit") is not None else "null"
+        if c.get("gate_lat") is not None:
+            gate = (f"{float(c['gate_lat'])}, {float(c['gate_lon'])}, "
+                    f"{int(c['gate_radius_m'])}, "
+                    + (q(c["gate_prompt"]) if c.get("gate_prompt") else "null"))
+        else:
+            gate = "null, null, null, null"
         out.append(
             "insert into public.clues (hunt_id, idx, qtype, kind, answers, match_mode, "
             "clue_text, hints, hint_waits, after_text, guess_limit, unlocked_by, "
-            "unlock_mode, available_from) values\n"
+            "unlock_mode, available_from, gate_lat, gate_lon, gate_radius_m, "
+            "gate_prompt) values\n"
             f"  ({q(hid)}, {c['idx']}, {q(c.get('qtype', 'text'))}, "
             f"{q(c.get('kind', 'ground'))}, {aarr}, {q(c.get('match_mode', 'exact'))}, "
             f"{q(c['clue_text'])}, {harr}, {warr}, {after}, {glim}, {arr}, "
-            f"{q(c.get('unlock_mode', 'any'))}, {avail});")
+            f"{q(c.get('unlock_mode', 'any'))}, {avail}, {gate});")
     for t in hunt.get("teams", []):
         out.append("insert into public.teams (hunt_id, name, code) values\n"
                    f"  ({q(hid)}, {q(t['name'])}, {q(t['code'].upper())});")

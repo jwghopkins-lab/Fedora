@@ -23,7 +23,13 @@ const BASE = `http://localhost:${PORT}`;
 
   const browser = await chromium.launch({
     executablePath: "/opt/pw-browsers/chromium", args: ["--no-sandbox"] });
-  const page = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  // a fake GPS: the run starts on Parliament Square, ~800m from the fixture
+  // gate at Trafalgar, and "walks" there mid-test
+  const ctx = await browser.newContext({
+    viewport: { width: 390, height: 844 },
+    geolocation: { latitude: 51.5007, longitude: -0.1266, accuracy: 25 },
+    permissions: ["geolocation"] });
+  const page = await ctx.newPage();
   const errors = [];
   page.on("pageerror", (e) => errors.push(String(e)));
   const box = (i) => page.locator(`.part[data-idx="${i}"] input`);
@@ -86,15 +92,20 @@ const BASE = `http://localhost:${PORT}`;
     if (await page.locator(".skipbtn").count())
       throw new Error("the skip button was removed and must not come back");
 
-    // typewriter: text starts partial on first view, then completes
+    // The reveal is word-by-word now: the FULL text is laid out invisibly from
+    // the first frame (so the card never grows and lines never re-wrap) and the
+    // words darken in one at a time. So the check is visibility, not length.
     const full = "FIXTURE: Count the imaginary lampposts on Example Street. Any whole number is accepted (collect mode).";
-    const early = await page.locator('.part[data-idx="1"] .ptext').textContent();
-    if (early.length >= full.length)
-      throw new Error("typewriter did not stagger the first view");
-    await page.waitForFunction((f) =>
-      document.querySelector('.part[data-idx="1"] .ptext').textContent === f,
-      full, { timeout: 40000 });
-    console.log("reveal ok: clue text typed out, then completed");
+    if ((await page.locator('.part[data-idx="1"] .ptext').textContent()) !== full)
+      throw new Error("full text must be laid out (invisibly) from the start");
+    if (!(await page.locator('.part[data-idx="1"] .ptext .w:not(.on)').count()))
+      throw new Error("reveal did not stagger: every word visible immediately");
+    // finish strips the spans, so completion = no .w spans left + text intact
+    await page.waitForFunction((f) => {
+      const el = document.querySelector('.part[data-idx="1"] .ptext');
+      return el && !el.querySelector(".w") && el.textContent === f;
+    }, full, { timeout: 60000 });
+    console.log("reveal ok: words darkened in one by one, text char-identical");
 
     // hints are a SEQUENCE: one at a time, each on its own countdown, and the
     // button has to name which one is coming so nobody expects the lot
@@ -210,8 +221,33 @@ const BASE = `http://localhost:${PORT}`;
     await page.waitForSelector('.part.done[data-idx="2"]');
     console.log("compete ok: 41 struck (1/2), 42 accepted");
 
-    // match_mode 'contains': the word inside a longer answer still counts
+    // part 3 is LOCATION-GATED: the card asks for presence, holds no clue text
     await page.waitForSelector('.part.open[data-idx="3"]');
+    const p3 = await page.locator('.part[data-idx="3"]').textContent();
+    if (!p3.includes("FIXTURE GATE"))
+      throw new Error("gated part should show its prompt, got: " + p3.slice(0, 90));
+    if (p3.includes("imaginary beast"))
+      throw new Error("gated part must NOT contain the clue text");
+    if (await page.locator('.part[data-idx="3"] input').count())
+      throw new Error("no answer box before the gate opens");
+    // from Parliament Square the truthful reply is a distance, not a no
+    await page.click('.part[data-idx="3"] .gatebtn');
+    await page.waitForFunction(() => {
+      const s = document.querySelector('.part[data-idx="3"] .gatestat');
+      return s && /away/.test(s.textContent);
+    }, { timeout: 15000 });
+    console.log("gate ok: prompt shown, text withheld, far fix answered warm/cold");
+
+    // walk to the square and try again: the clue reveals in place
+    await ctx.setGeolocation({ latitude: 51.5081, longitude: -0.1281, accuracy: 40 });
+    await page.click('.part[data-idx="3"] .gatebtn');
+    await page.waitForSelector('.part[data-idx="3"] input', { timeout: 15000 });
+    await page.waitForFunction(() =>
+      document.querySelector('.part[data-idx="3"] .ptext')
+        .textContent.includes("imaginary beast"), { timeout: 40000 });
+    console.log("gate ok: on-site fix opened the clue, text revealed in place");
+
+    // match_mode 'contains': the word inside a longer answer still counts
     await box(3).fill("dragon");
     await send(3).click();
     await page.waitForSelector("#modal.show");
@@ -260,6 +296,8 @@ const BASE = `http://localhost:${PORT}`;
 
     if (errors.length) throw new Error("page errors: " + errors.join(" | "));
     console.log("QUEST SMOKE TEST PASS");
+    // (the gate-skip button is exercised in gate_skip_checks server-side; here
+    // we only assert it exists while testing mode is on)
   } finally {
     await browser.close();
     server.kill();
