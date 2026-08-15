@@ -3,9 +3,72 @@
 Phase 5. The existing 22 parts, cut and rebuilt against the locked decisions
 (D1–D5, D7, D8). **Shape only** — no clue text is written here. Text is Phase 6.
 
-The count comes out at **22 again**, which is not a coincidence I engineered so
-much as one I checked for and was pleased to find: 17 parts survive untouched
-or retargeted, 4 are cut, 1 is replaced in place, 4 are new.
+**23 parts.** 18 survive untouched or retargeted, 3 are cut, 1 is replaced in
+place, 4 are new.
+
+## SQUIRE stays — and the numbers say we lose nothing by it
+
+*(client, 15 Aug: reluctant to cut it, the padlock reading has now been checked
+on the ground, and it is one of the few genuinely real-world clues. Condition:
+only cut it if the rest of the quest is confidently gated in the real world.)*
+
+**It stays.** The padlock is verified, it costs zero travel time — the smallest
+police station is in the square's south-east corner — and the condition turns
+out to be satisfied either way. The audit:
+
+| | ground *(only findable on site)* | dig *(research)* | wits *(think, no phone)* |
+|---|---|---|---|
+| old 22 parts | **11 — 50%** | 7 | 4 |
+| new 23 parts | **13 — 57%** | 6 | 4 |
+
+The rebuild is *more* real-world, not less, in absolute terms and as a share.
+Three of the four new parts and the replacement are ground clues — the
+Cenotaph, Mountbatten Green, St Martin's and Maiden Lane are all things you
+have to be standing in front of. So the honest answer to "can we afford to lose
+SQUIRE?" is yes; the answer to "should we?" is no, because we do not need to.
+
+**Placement:** part **10**, after the fountain pair. Deliberately *not* between
+Belsky and Nelson — parts 16 and 17 are the strongest adjacency in the game
+(*he sealed a measure where nobody can check it* → *and here is a measure
+nobody checked for 150 years*) and nothing goes between them.
+
+## Gates must not do the navigating
+
+The real risk the client identified is not answer-leakage, it is that
+geofencing quietly turns the walk into a series of check-ins where the app
+tells you where to go. Three rules:
+
+1. **A gate prompt may only echo what the previous part's explainer already
+   told them.** It confirms arrival; it never reveals a destination. *"Are you
+   at Parliament Square?"* is legal because part 1's explainer said to go
+   there. A prompt naming the thing the current clue asks you to find is not.
+2. **Prefer an unsolvable-from-home clue over a gate.** A gate is a lock on the
+   door; a ground clue is a room that can only be reached on foot. Reach for a
+   gate only when the clue itself cannot be made ground-only.
+3. **Navigation lives in the prose, not the geofence.** The explainer says
+   where to walk, the clue makes you look — the gate only ever agrees that you
+   got there.
+
+## The diary is in hand from part 1
+
+*(client, 15 Aug)* This settles the open thread about where the diary enters:
+it does not enter, it is simply there, and D1's frame is live from the first
+screen.
+
+What it buys, and what it costs:
+
+- **It is the navigation channel the phone is not.** A printed book cannot be
+  searched, summarised or asked. Directions that live in the diary are
+  directions a player has to read and think about. This is the direct answer to
+  "we don't want AI telling you where to go entirely."
+- **The split: the diary carries the *why* and the *where*; the app carries the
+  *what is the answer* and the *did you get it right*.** The app must never
+  print something the diary already says, or the diary becomes decoration.
+- **The researcher's marginalia can point ahead.** Both hands are visible from
+  the start (D5), so the modern annotations can gesture at places the players
+  have not reached yet. Foreshadowing at zero cost.
+- **Cost: the diary now has to be right before launch, not near it.** It is
+  load-bearing from part 1, so it can no longer be the last thing produced.
 
 ---
 
@@ -47,7 +110,7 @@ back. Route: Parliament Square → Whitehall for the Cenotaph → west through K
 Charles Street to Horse Guards Road → Mountbatten → north to the Mall and
 Admiralty Arch → Trafalgar. No backtracking.
 
-### Act 2 — Trafalgar Square *(11 parts, was 13)*
+### Act 2 — Trafalgar Square *(12 parts, was 13)*
 
 | # | Part | Status |
 |---|---|---|
@@ -55,24 +118,24 @@ Admiralty Arch → Trafalgar. No backtracking.
 | 7 | Napier's lion → the WADE grate | keep (was 5). Napier stays as a *waypoint*, not a character |
 | 8 | The fountain | keep (was 6) |
 | 9 | Lutyens' fish | keep (was 7) |
-| 10 | The Temeraire | keep (was 8). **Turner's first appearance** — it pays off at part 21 |
-| 11 | The brass measures | keep (was 9). **This is where the cord comes out** |
-| 12 | The chain | keep (was 10) |
-| 13 | PERCH | keep (was 12) |
-| 14 | Cunningham | keep (was 13) |
-| 15 | **Belsky's sixpence** | keep (was 14) — **but its explainer is rewritten. This is the pivot of the whole game** |
-| 16 | **Nelson's Column** | **NEW. The turn** |
+| 10 | **SQUIRE / the padlock** | **keep** (was 15) — moved here so nothing splits 16 from 17 |
+| 11 | The Temeraire | keep (was 8). **Turner's first appearance** — it pays off at part 22 |
+| 12 | The brass measures | keep (was 9). **This is where the cord comes out** |
+| 13 | The chain | keep (was 10) |
+| 14 | PERCH | keep (was 12) |
+| 15 | Cunningham | keep (was 13) |
+| 16 | **Belsky's sixpence** | keep (was 14) — **but its explainer is rewritten. This is the pivot of the whole game** |
+| 17 | **Nelson's Column** | **NEW. The turn** |
 | — | ~~cricket~~ | **cut** (was 11) |
-| — | ~~SQUIRE / the padlock~~ | **cut** (was 15) |
 
-**Part 15 was already doing our work and nobody noticed.** Its existing
+**Part 16 was already doing our work and nobody noticed.** Its existing
 explainer ends: *"this square holds two obsolete measures. One set in brass in
 public so it could never be lost, and one sealed inside a man's head where
 nobody can ever see it."* That is the promise/proof structure of D7, already
 written, six months early. It only ever needed the terrace measurement to
 answer it.
 
-**Part 16 is the turn.** A published national dimension — 185 ft — was wrong by
+**Part 17 is the turn.** A published national dimension — 185 ft — was wrong by
 fourteen and a half feet for about 150 years, until a laser survey in 2006 found
 169 ft 3 in. Entirely factual, entirely checkable, standing in the middle of
 everything. It is the moment a player stops treating the walk as trivia. It has
@@ -83,12 +146,12 @@ arrives with somewhere to go.
 
 | # | Part | Status |
 |---|---|---|
-| 17 | **St Martin-in-the-Fields** | **NEW**, replacing Cavell in place. The clerk's parish |
-| 18 | Mr Fogg | keep (was 17). Verne: the day gained by crossing the line, written twelve years before anyone fixed where the line was |
-| 19 | The pavement light | keep (was 18) |
-| 20 | Goodwin's Court | keep (was 19) |
-| 21 | **Maiden Lane — Turner** | **NEW.** Born four hundred yards from here; watched the 1834 fire from the river and painted it twice. Closes the loop opened at part 1 and rhymed at part 10 |
-| 22 | Electricity | keep (was 22), **closer rewritten** |
+| 18 | **St Martin-in-the-Fields** | **NEW**, replacing Cavell in place. The clerk's parish |
+| 19 | Mr Fogg | keep (was 17). Verne: the day gained by crossing the line, written twelve years before anyone fixed where the line was |
+| 20 | The pavement light | keep (was 18) |
+| 21 | Goodwin's Court | keep (was 19) |
+| 22 | **Maiden Lane — Turner** | **NEW.** Born on this lane; watched the 1834 fire from the river and painted it twice. Closes the loop opened at part 1 and rhymed at part 11 |
+| 23 | Electricity | keep (was 22), **closer rewritten** |
 | — | ~~Dryden~~ | **cut** (D4 — wrong century) |
 | — | ~~Emma Bowden~~ | **cut** (D8 — real private person, removed entirely rather than half-used) |
 
@@ -103,9 +166,9 @@ replace.
 ## Where the cord goes *(D7)*
 
 - **Issued at the start**, in the pack with the diary. Not found at the end.
-- **Used at part 11**, on the terrace brass, because that is the only genuine
+- **Used at part 12**, on the terrace brass, because that is the only genuine
   public standard on the route and they are already standing on it.
-- **Means something at part 22**, in Covent Garden, when the number they wrote
+- **Means something at part 23**, in Covent Garden, when the number they wrote
   down two hours earlier turns out to be the answer to Belsky.
 
 So the measuring act sits mid-walk and the meaning lands at the end. The route
@@ -122,13 +185,17 @@ it is rejected.
    the late Turin cast plus a zoo carcass that decomposed too fast. The "his own
    dog" story needs a source before it goes near a clue — this is precisely the
    detail a player checks on the pavement.
-2. **Hints for the two unlimited parts.** Old 4 and 17 (new **6** and **18**)
+2. **Hints for the two unlimited parts.** Old 4 and 17 (new **6** and **19**)
    still have fewer than two hints, so they cannot carry lives.
-3. **Gates.** Currently on old 2, 4, 18 → now **2, 6, 19**. The four new parts
+3. **Gates.** Currently on old 2, 4, 18 → now **2, 6, 20**. The four new parts
    may want their own; and the testing skip still has to come out once the radii
    are walked.
-4. **Database.** This replaces all 22 clue rows — another content migration in
+4. **Database.** This replaces all 23 clue rows — another content migration in
    the shape of v9. No SQL until the text exists.
-5. **The diary's entry point is still unplaced.** The frame is locked (D1: in
-   character from the moment it opens) but nothing in the route yet *opens* it.
-   Phase 6.
+5. **St Martin's east window needs a field decision.** The clue below targets
+   the Houshiary/Horne east window of 2008 — a grid of horizontals and
+   verticals warped towards a central **ellipse**, described by the church as
+   celebrating light, and said to be visible externally as well as internally.
+   It rhymes exactly with the Cenotaph having no straight lines. But it sits
+   above the altar, so it depends on the church being open and not in use.
+   Walk it before committing, and hold an outdoor fallback.
