@@ -8,7 +8,8 @@ Status: **spine, cast and route locked (D1–D5, D7, D8). Phase 4 — the map �
 parked. Next is Phase 6: writing the clue text against `ROUTE.md`.**
 
 Companion documents: **`CAST.md`** (who, and what is fact vs reading vs
-invention) and **`ROUTE.md`** (the rebuilt 22 parts).
+invention), **`ROUTE.md`** (the rebuilt 23 parts) and **`MECHANIC.md`** (the
+cord).
 
 ---
 
@@ -245,7 +246,9 @@ Five independent verifiers with web search, 18 assertions, blind.
 | D6 | What the map's lines cross on | **PARKED** by the client, 15 Aug: forcing a geographic crossing produces a map that lies. Settle it after the route is rebuilt (Phase 4/5), not before |
 | D7 | What the players end up holding | **LOCKED** — their own measurement |
 | D8 | Cast membership and size | **LOCKED** — six on the route, two objects, two in the document. Full page in `CAST.md` |
-| D9 | Route surgery | **LOCKED** — 17 kept, 4 cut, 1 replaced, 4 new, still 22. Full page in `ROUTE.md` |
+| D9 | Route surgery | **LOCKED** — 18 kept, 3 cut, 1 replaced, 4 new, 23 parts. Full page in `ROUTE.md` |
+| D10 | The cord is a key, not a ruler | **LOCKED** — full page in `MECHANIC.md` |
+| D11 | What the decoded message resolves to | open — fixes the ending |
 
 ### D1 — Frame: in character from the walk *(15 Aug)*
 Sign-up, team codes and the landing page stay plainly a puzzle event, so nobody
@@ -410,6 +413,43 @@ Two things worth carrying forward:
   sealed inside a man's head where nobody can ever see it"* — the promise/proof
   structure of D7, written months before we decided it. It only needed the
   terrace measurement to answer it.
+
+### D10 — The cord is a key, not a ruler *(15 Aug)*
+Full page: **`MECHANIC.md`**.
+
+**A few ppm over a yard is a few microns.** It is smaller than the mark you
+would draw to show it, smaller than the cord's stretch under hand tension, and
+smaller than its own thermal change between a cold morning and a warm
+afternoon. Over the terrace's whole hundred-foot run the signal is still under
+a millimetre while the hand-error budget is inches. **No cord can show the
+discrepancy**, and scripting a measurement that must come out at a particular
+number would break the game in public on the first outing.
+
+So the cord becomes a **key**. Knots laid along the terrace brass select
+markers; the markers give **page, line and word into the diary**. Three
+physical objects must be present at once — cord, terrace, book — and none of
+the three can be substituted.
+
+This costs nothing, because what made the cord valuable was never precision but
+that it is a length existing only as an object. Red-team numbers: a partial
+register keyed page/line/word survives photograph → OCR → model at about
+**30%**; the key itself, being a physical length, at **0%**.
+
+**D7 survives intact and improves.** They still finish holding a number they
+produced themselves, but now they *read* it rather than estimating it, so it is
+exact and identical for every team. Part 12's text is unchanged — laying the
+cord along the Crown's own ruler is what produces the reading, and the players
+will not know that is what they are doing.
+
+**Planted errors go in the researcher's marginalia**, never on the cord (an
+error there is unrecoverable) and never in the clerk's hand (it is the one
+voice that must stay trustworthy). One confident wrong index, one hedged right
+one.
+
+**Hard production order: diary paginated → knots measured on site against the
+actual brass → cord cut.** The 2003 rebuild moved the plates and no drawing is
+authoritative, so knot positions are a field job. Non-stretch braided line.
+Spares, because a lost cord is a dead hunt.
 
 ---
 
