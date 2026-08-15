@@ -4,7 +4,11 @@ The working memory for the Chapter Two narrative rebuild. Read this first in a
 new session. Decisions land here the moment they are made, with the reasoning,
 so nothing has to be re-argued and no session starts cold.
 
-Status: **spine locked (D1–D4). Working on cast, documents and the map.**
+Status: **spine, cast and route locked (D1–D5, D7, D8). Phase 4 — the map — is
+parked. Next is Phase 6: writing the clue text against `ROUTE.md`.**
+
+Companion documents: **`CAST.md`** (who, and what is fact vs reading vs
+invention) and **`ROUTE.md`** (the rebuilt 22 parts).
 
 ---
 
@@ -241,6 +245,7 @@ Five independent verifiers with web search, 18 assertions, blind.
 | D6 | What the map's lines cross on | **PARKED** by the client, 15 Aug: forcing a geographic crossing produces a map that lies. Settle it after the route is rebuilt (Phase 4/5), not before |
 | D7 | What the players end up holding | **LOCKED** — their own measurement |
 | D8 | Cast membership and size | **LOCKED** — six on the route, two objects, two in the document. Full page in `CAST.md` |
+| D9 | Route surgery | **LOCKED** — 17 kept, 4 cut, 1 replaced, 4 new, still 22. Full page in `ROUTE.md` |
 
 ### D1 — Frame: in character from the walk *(15 Aug)*
 Sign-up, team codes and the landing page stay plainly a puzzle event, so nobody
@@ -387,13 +392,37 @@ and nobody took a statement from him because that autumn nobody was taking
 statements. Note the deliberate eighteen-year gap — the *book* ends in 1900,
 the *man* in 1918 — which is why it was in a cupboard and not an archive.
 
+### D9 — Route: 17 kept, 4 cut, 1 replaced, 4 new *(15 Aug)*
+Full page: **`ROUTE.md`**. Lands back on **22 parts**.
+
+**Cut:** cricket, SQUIRE/the padlock, Dryden, Emma Bowden.
+**Replaced in place:** Cavell → **St Martin-in-the-Fields**, which is the
+clerk's own parish and sits exactly on the Act 2 / Act 3 hinge. The players walk
+past the address on the diary's flyleaf without being told.
+**New:** the Cenotaph and Mountbatten Green in Act 1; **Nelson's Column** as the
+turn in Act 2; **Maiden Lane / Turner** to close the loop in Act 3.
+
+Two things worth carrying forward:
+- **Act 1 was ten dead minutes.** The Cenotaph and Mountbatten do not add time,
+  they convert a hike up Whitehall into the two beats that set up everything
+  after. Biggest single improvement in the phase.
+- **Part 15 was already doing our work.** Its existing explainer ends *"one
+  sealed inside a man's head where nobody can ever see it"* — the promise/proof
+  structure of D7, written months before we decided it. It only needed the
+  terrace measurement to answer it.
+
 ---
 
 ## Open threads not yet decided
 
-- Emma Bowden (1864) is a real private person. Standing rule: **not
-  fictionalised in any respect.** A conspiracy link would break that.
 - The testing skip on location gates must come out before launch.
-- Parts 4 and 17 need more hints if they are ever to carry lives.
-- Clue 15's SQUIRE rests on an unverified padlock reading.
-- Gate radii are unverified on the ground.
+- New parts **6** and **18** still have fewer than two hints, so they cannot
+  carry lives.
+- **The lions: dog or cat?** The script says dog-like paws and "his own dog";
+  published accounts say a domestic cat's paws and concave backs, caused by the
+  late Turin cast and a zoo carcass that rotted. Needs a source before it goes
+  near a clue.
+- Gate radii are unverified on the ground; gates now sit on parts **2, 6, 19**.
+- The diary's entry point is unplaced — the frame is locked but nothing in the
+  route yet *opens* it. Phase 6.
+- Phase 4 (the map, and D6) is parked until the route is walked.
