@@ -240,6 +240,7 @@ Five independent verifiers with web search, 18 assertions, blind.
 | D5 | Who wrote the diary | **LOCKED** — two hands, layered |
 | D6 | What the map's lines cross on | **PARKED** by the client, 15 Aug: forcing a geographic crossing produces a map that lies. Settle it after the route is rebuilt (Phase 4/5), not before |
 | D7 | What the players end up holding | **LOCKED** — their own measurement |
+| D8 | Cast membership and size | **LOCKED** — six on the route, two objects, two in the document. Full page in `CAST.md` |
 
 ### D1 — Frame: in character from the walk *(15 Aug)*
 Sign-up, team codes and the landing page stay plainly a puzzle event, so nobody
@@ -337,6 +338,54 @@ written on the map in their own hand. Nothing is handed over at the end.
   anticlimax after it.
 - **Precedent to echo, and it is true:** the Cunningham bust on the north
   terrace has a note by its sculptor sealed inside it.
+
+### D8 — Cast: six on the route *(15 Aug)*
+Full page with fact / interpretation / invented for each: **`CAST.md`**.
+
+**Kept:** Belsky, Lutyens, Turner (the spine — each appears in two acts), then
+Ray Strachey, Landseer, Verne (once each, hard). Plus two objects that behave
+like characters: **Nelson's Column** and **the terrace plates**. Plus the two
+people who exist only in the document: the clerk and the researcher.
+
+**Cut:** William IV (a date, not a character — the tally-stick fact survives as
+narration), Edith Cavell, Emma Bowden, Dryden, and **Napier**. On Napier
+specifically, since the question was asked: the India link *is* contemporaneous
+— he was there 1842–51 while the Great Trigonometrical Survey and the Indian
+foot were live — but he was a general with no role in any of it, so it is a
+coincidence of place and date rather than a connection. Statue retained as a
+clue target if one is needed.
+
+**The rule that governs the cast is not the count:** every character appears at
+least twice; at least one appears in all three acts. A character seen once is
+scenery, a character seen three times is evidence, and the feeling of a pattern
+is the entire emotional payload of a conspiracy story.
+
+**Belsky is now the strongest thread in the game, and nearly all of it is true.**
+He sealed a Guinness bottle, that day's newspaper, **a sixpence** and a signed
+note into *every casting he made*. The Cunningham bust went up on the north
+terrace on **2 April 1967** — the year the Decimal Currency Act began killing
+the sixpence, and two years after Douglas Jay told the Commons Britain would go
+metric by 1975. His Mountbatten, off Horse Guards Road, went up on **2 November
+1983** with a jam jar of coins in its left leg, **cast by the Meridian Bronze
+Foundry**, twelve days after the 17th CGPM redefined the metre as a property of
+light on 21 October 1983. Every one of those is checkable. The *reading* — that
+a refugee from a country measured off the map was depositing units where they
+could not be legislated away, and the autograph was cover — is unrefutable
+because it is a reading.
+
+**Two hard rules that come out of Belsky:**
+1. **The bust cannot be opened, and nothing may ever suggest otherwise.** No
+   clue, hint or explainer may hint at touching, prising or tapping any
+   sculpture. It is to be looked at.
+2. That constraint *is* the ending, and it falls straight out of D7: they
+   cannot open the bust, so they measure the terrace instead. **The bust is the
+   promise, the plate is the proof, their hand does the work.**
+
+**The clerk dies in the Spanish flu** *(client)*. Better than the war: he is
+past sixty by 1918, so a war death needs explaining and a flu death does not,
+and nobody took a statement from him because that autumn nobody was taking
+statements. Note the deliberate eighteen-year gap — the *book* ends in 1900,
+the *man* in 1918 — which is why it was in a cupboard and not an archive.
 
 ---
 
