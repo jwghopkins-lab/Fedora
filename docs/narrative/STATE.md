@@ -142,6 +142,50 @@ between them, never contradict them.
 - **Emma Bowden (1864) is not fictionalised in any respect.** Real private person.
 - **Dryden (1679) is cut** — wrong century for this story.
 
+### Cast links found in the existing route (all verified 15 Aug)
+
+Everyone below is *already* on the walk. These are real joins to the
+measurement and light threads, not inventions. Graded by strength.
+
+| Character | The join | Grade |
+|---|---|---|
+| **J. M. W. Turner** | Born Maiden Lane, **Covent Garden** — the end of the walk. Watched the **1834 fire from the south bank**, sketched it, painted it twice. He is an eyewitness to the destruction of the standard yard, and he is the painter of light. Joins both ends of the route and both threads. | ★★★★★ |
+| **Nelson's Column** | Believed 185 ft for ~150 years. A **2006 laser survey** during refurbishment found **169 ft 3 in — 14 ft 6 in short**. The best "recorded number was wrong and nobody re-measured" fact on the route, at its centre. | ★★★★★ |
+| **Lutyens** | The **Cenotaph has no straight lines**: entasis from measurements of the Parthenon, verticals converging ~1000 ft above, horizontals arcs of a circle centred ~900 ft below the pavement, 33 manuscript pages of calculation. A national monument where nothing is the length it looks. He also **remodelled the Trafalgar Square fountains (1937–39)**, so he is on the route twice. | ★★★★★ |
+| **William IV** | The 1834 fire was started by burning **two cart-loads of Exchequer tally sticks** in the House of Lords stoves — an obsolete measuring/accounting system, disused since 1826. Measurement destroyed the standard of measurement. | ★★★★☆ |
+| **Napier** | Descended from **John Napier of Merchiston, inventor of logarithms** (via Francis Napier, 6th Lord Napier → Col. George Napier). Merchiston is Edinburgh — Smyth's city. Second join: C-in-C India, Sindh 1843, i.e. the **Indian foot** already carrying the ~7 ppm discrepancy. | ★★★★☆ |
+| **Cunningham** | Bust by **Franta Belsky**, at the foot of the National Gallery steps — the north terrace, beside the standards. **A note by the sculptor and a ½-pint Guinness bottle are sealed inside it.** A document hidden in public sculpture, and it is true. This is the mechanic rhyme. | ★★★★☆ |
+| **Verne** | *Around the World in Eighty Days* (1872) turns entirely on the **day gained by crossing the meridian** — twelve years before the conference that fixed it at Greenwich. Mr Fogg's is already a gate (part 18). | ★★★★☆ |
+| **Landseer** | The lions are **anatomically wrong** — domestic-cat paws, concave backs — because the Turin cast was late and the zoo lion decomposed faster than he could work. A celebrated monument that is measurably incorrect and nobody minds. Also: **Lutyens was his godson and namesake** (Edwin *Landseer* Lutyens). | ★★★☆☆ |
+| **Edith Cavell** | Only honest join: **"Patriotism is not enough" was added to the memorial in 1924**, four years after it was unveiled — a monument amended after the fact. No invented motive, ever. | ★★☆☆☆ |
+| **Emma Bowden** | None, by rule. Not fictionalised in any respect. | — |
+
+### The Millicent Fawcett plinth (part 1)
+
+59 names. The clue reads one off the stone, so **swapping which name costs
+nothing** — same plinth, same mechanic.
+
+- **Henrietta Franklin** (currently chosen, 1866–1964). Father **Samuel
+  Montagu, 1st Baron Swaythling** — a bank that began in the exchange of
+  **coins and bullion**, a trade that lives or dies on weight standards.
+  Married Ernest Louis Franklin and so is **related by marriage to Rosalind
+  Franklin** (X-ray diffraction: measuring structure with light). Both real.
+- **Ray Strachey** — *the strongest name on the stone.* Married **Oliver
+  Strachey** in 1911; Oliver was the son of **Lieut.-Gen. Sir Richard
+  Strachey**, one of the four British commissioners at the **1884
+  International Meridian Conference** and elected one of its secretaries.
+  That is the exact table the motive (D2) rests on. Bonus: **Oliver Strachey
+  was a cryptographer** — MI1, then GC&CS, head of the **ISOS** section
+  ("Illicit Services Oliver Strachey").
+- **Sophia Duleep Singh** — India, and so adjacent to Napier. Political, not
+  metrological. Weaker.
+- **Hertha Ayrton is NOT on the plinth** — checked, because she would have
+  been perfect (line-divider patented **1884**, and the definitive work on the
+  electric arc). Do not chase this; the full 59 do not include her.
+- Unchecked but promising: **Chrystal Macmillan** (Edinburgh maths and natural
+  philosophy, named for George Chrystal) and **Mary Lowndes** (stained glass,
+  Lowndes & Drury — the light thread).
+
 ### The three documented gaps a fiction can live in
 1. **No register of the thirty-five bars.** Every source stops at "cities and
    other countries."
