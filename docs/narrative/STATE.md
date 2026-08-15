@@ -128,6 +128,20 @@ between them, never contradict them.
   lights in 1871**. Electric light: Victoria Embankment 1878, Savoy Theatre
   10 Oct 1881.
 
+### Hard constraints on the cast (verified — do not build against these)
+- **Piazzi Smyth had NO children.** Married Jessie Duncan 1855, childless; she
+  died 1896, he died 21 Feb 1900 near Ripon. Residuary estate to the Royal
+  Society of Edinburgh; papers inventoried at the Royal Observatory Edinburgh.
+  **A "descendant of Smyth" is refutable in thirty seconds and must not be used.**
+  Use a *correspondent* instead. Anything absent from the Edinburgh inventory is
+  genuinely unaccounted for — that absence is itself a usable gap.
+- **Smyth died Feb 1900. The vestries were abolished in 1900.** Months apart.
+  A parish clerk who corresponded with him in the 1880s is the natural join.
+- **Edith Cavell will not be given an invented reason for her execution.** A real
+  woman, shot by a firing squad; inventing a secret motive cheapens it.
+- **Emma Bowden (1864) is not fictionalised in any respect.** Real private person.
+- **Dryden (1679) is cut** — wrong century for this story.
+
 ### The three documented gaps a fiction can live in
 1. **No register of the thirty-five bars.** Every source stops at "cities and
    other countries."
