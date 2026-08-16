@@ -485,6 +485,52 @@ indoor or weatherproof; and it must be nameable by a single decoded word.
 
 ---
 
+## What is left (as of 15 Aug)
+
+**Critical path:** diary written → diary paginated → cords knotted. The cords
+also need the terrace measured, so **fieldwork and diary content are the two
+long poles and they run in parallel** until pagination. Everything else fits
+around them.
+
+### Blocked on D11
+- Phase 7: the reveal and the debrief.
+- The diary's **last entry** only. The rest of it is not blocked.
+
+### Narrative writing still to do
+- **The diary itself** — the single biggest remaining creative job. Both hands,
+  the clerk 1880s–1900 and the researcher's marginalia.
+- The marginalia's planted errors: one confident wrong index, one hedged right
+  one (D10).
+- The **Strachey → 1884 meridian table** edge, which lives in the margin and
+  nowhere else (D8: contrived if asserted, uncanny if found).
+- The part-drawn map. **Parked with D6** until the route is walked.
+
+### Fieldwork
+- One walk. Everything in **`FIELDWORK.md`**. Two items carry real risk: the
+  Cenotaph clue may be unsafe to solve from the pavement, and the terrace brass
+  gates the entire physical build.
+
+### App and database
+- Migration to the **23-part route**. Needs sign-off on the Phase 6 text first,
+  then a rebuilt hunt JSON, then a v10 migration verified against a replica.
+- New parts **6 and 19** still have fewer than two hints, so they cannot carry
+  lives.
+- Gates move to parts **2, 6, 20** under the new numbering.
+- Remove the testing skip once radii are walked.
+- Re-run `validate_hunt.py`, `test_backend.py`, `quest_smoke.cjs` after the
+  content change.
+
+### Physical production
+- Diary: written, designed, two typefaces and two inks, printed, **paginated
+  before the cords are cut**.
+- Cords: non-stretch braided line, knotted against the measured brass, one per
+  team plus two spares.
+- The map, printed.
+- Chalk marks: a dawn walk on the day and a re-check an hour before the start.
+- The debrief sheet — the only thing handed over at the finish (D7).
+- A fallback if a team loses its cord. Probably the last hint on part 12. Not
+  designed yet.
+
 ## Open threads not yet decided
 
 - The testing skip on location gates must come out before launch.
