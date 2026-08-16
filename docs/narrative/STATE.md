@@ -317,7 +317,10 @@ Five independent verifiers with web search, 18 assertions, blind.
 | D8 | Cast membership and size | **LOCKED** — six on the route, two objects, two in the document. Full page in `CAST.md` |
 | D9 | Route surgery | **LOCKED** — 18 kept, 3 cut, 1 replaced, 4 new, 23 parts. Full page in `ROUTE.md` |
 | D10 | The cord is a key, not a ruler | **LOCKED** — full page in `MECHANIC.md` |
-| D11 | What the decoded message resolves to | **open**, two live candidates — a **name**, or a **place where he is waiting**. Now also carries *who acts in the modern half* |
+| D11 | The decoded word | **LOCKED** — a name that is also a place. **SOUTHAMPTON**, and it is a coincidence |
+| D16 | The 1900 refusal | **LOCKED** — nobody comes for them |
+| D17 | Smyth's letters | **LOCKED** — he was collecting data by post |
+| D18 | Who acts today | **LOCKED** — nobody |
 | D12 | The establishment antagonist | **LOCKED** — **Airy** |
 | D13 | Smyth's fate | **LOCKED** — destroyed truthfully; the crank is the camouflage |
 | D14 | The modern stake | **LOCKED** — both, layered: infrastructure makes it matter, concealment makes someone act |

@@ -341,6 +341,85 @@ This folds into **D11**, which is still open.
 
 ---
 
+## The last four decisions *(15 Aug)*
+
+| | | |
+|---|---|---|
+| **D11** | The word | **Both — a name that is also a place** |
+| **D16** | The 1900 refusal | **Nobody comes for them** |
+| **D17** | Smyth's letters | **He was collecting data** |
+| **D18** | Who acts today | **Nobody** |
+
+### D16 — nobody comes for them
+
+There is no refusal. Twenty-eight new boroughs absorb the property of dozens of
+parishes in one movement, and a case of brass in a back room of a parish
+nobody prioritised does not get collected. He writes twice asking what to do
+with it and gets no reply. So he keeps it, and having kept it he eventually
+reads what is in the drawer beside it.
+
+**This is the thesis expressed as a plot event.** No villain, no defiance, no
+decision — just inattention, exactly as with Nelson's Column being wrong for a
+century and a half because everybody copied everybody. He becomes a custodian
+by accident, which is the only way anyone in this story ever becomes anything.
+
+### D17 — Smyth was collecting data
+
+An amateur national survey by post. He cannot get official figures, so he
+writes to vestry clerks up and down the country asking what their local yard
+measures against the imperial and when it was last compared.
+
+**This is D13 compressed into one gesture: the crank doing genuine, careful,
+useful fieldwork by entirely the wrong road.** It also puts numbers in the book
+for a reason, and a Victorian gentleman running a private survey by
+correspondence is precisely what a Victorian gentleman did.
+
+### D18 — nobody acts
+
+The researcher is not pursued. Nobody is protecting anything. The record sat in
+five archives for a century and no one assembled it because no one could be
+bothered. They stopped for a human reason.
+
+**And the reader supplies the conspiracy themselves**, because every
+conspiracy story they have ever read has trained them to. That is the book's
+actual subject arriving in the reader's own hands.
+
+**Consequence to hold onto:** with no antagonist, the tension has to come from
+somewhere else. It comes from *the reader's certainty that there must be one*.
+Every chapter should offer a shape that looks like a pattern and is not, and
+the last chapter should decline to resolve it — because the true facts are
+astonishing enough without one, and that is the point being made.
+
+### D11 — a name that is also a place, and it is already on the route
+
+**SOUTHAMPTON.**
+
+**Southampton Street** runs from the Strand up to the Covent Garden piazza and
+crosses **Maiden Lane**, which is part 22 — the last stop on the walk. The
+knots spell a word, they look up, and they are standing on it.
+
+And **Southampton is where Clarke did the comparisons.** Twenty-seven years at
+the Ordnance Survey Office, Southampton; the 1866 *Comparisons of the Standards
+of Length*; the Clarke 1866 ellipsoid, still under North American
+infrastructure today. One word that names the town the Earth was measured from,
+in a set of brass bars.
+
+**It is a coincidence, and that is why it is the right answer.** Southampton
+Street is named for the Earls of Southampton, via the Bedford estate. It has
+nothing whatever to do with the Ordnance Survey.
+
+So the walk ends by handing the players a pattern that is not there — and the
+debrief says so. Under D18, where nobody is acting and the conspiracy exists
+only in the reader's head, **the final word is a coincidence that feels exactly
+like a signal.** The thesis of the whole thing, delivered as something that
+happens to them rather than something they are told.
+
+*Field check: confirm the Southampton Street / Maiden Lane geometry, and find
+a weatherproof spot on or beside it that one person can occupy for two or three
+hours.*
+
+---
+
 ## Two passages
 
 ### From chapter 2 — the fire *(mostly type 1)*
