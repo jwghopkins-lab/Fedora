@@ -4,14 +4,17 @@ The working memory for the Chapter Two narrative rebuild. Read this first in a
 new session. Decisions land here the moment they are made, with the reasoning,
 so nothing has to be re-argued and no session starts cold.
 
-Status: **spine, cast, route, clue text and the cord mechanic are all locked
-(D1–D5, D7–D10). Phase 4 — the map — is parked. One narrative decision remains
-(D11: what the cord's message resolves to) and it fixes the ending. After that
-it is Phase 7 (the reveal) and Phase 8 (production and field verification).**
+Status: **every narrative decision is closed (D1–D5, D7–D18). Phase 4 — the
+map — stays parked until the route is walked. Nothing now blocks writing.**
+The two remaining workstreams are **the field walk** (`FIELDWORK.md`, which
+gates the whole physical build) and **the writing** (`SPINE.md`).
 
 Companion documents: **`CAST.md`** (who, and what is fact vs reading vs
 invention), **`ROUTE.md`** (the rebuilt 23 parts), **`MECHANIC.md`** (the cord)
-and **`FIELDWORK.md`** (everything that must be walked before launch).
+**`FIELDWORK.md`** (everything that must be walked before launch),
+**`NARRATIVE.md`** (the story, and why) and **`SPINE.md`** (the writing
+document — structure, voice, 21 chapter briefs with their turns, and the order
+to write in).
 
 ---
 
