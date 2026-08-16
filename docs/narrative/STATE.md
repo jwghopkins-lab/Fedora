@@ -427,10 +427,32 @@ a millimetre while the hand-error budget is inches. **No cord can show the
 discrepancy**, and scripting a measurement that must come out at a particular
 number would break the game in public on the first outing.
 
-So the cord becomes a **key**. Knots laid along the terrace brass select
-markers; the markers give **page, line and word into the diary**. Three
-physical objects must be present at once — cord, terrace, book — and none of
-the three can be substituted.
+So the cord becomes a **key** — and specifically a **pointer**, not a ruler
+*(client's design, superseding the first page/line/word version)*. The diary
+names a knot and an anchor; you put the cord's zero on the anchor, pull it
+straight, and the knot lands on one letter of a real inscription. One character
+per location, spelling a word across the walk.
+
+**Why the revision is better:** the old version read the payload out of our own
+invented document. This one reads it off the pavement, so under the structural
+law the answer is a fact node again and the diary demotes to the reference book
+that tells you which knot and where to stand.
+
+**The attack that has to be designed against is proportion, not stencils.** Lay
+a cord end-to-end along an inscription and the knot sits at a *fraction*, which
+any photograph yields without scale. So the cord is never aligned to the
+target's extent: **zero on a named physical anchor, knot landing at an absolute
+offset — ideally anchoring on one object and landing on another**, so no single
+photograph contains both at a known scale.
+
+**And the theme was waiting for it.** Beating the bounds — the parish
+perambulation, walking the boundary and striking the marks — is still done by
+**St Martin-in-the-Fields**. St Paul's Covent Garden was carved out of St
+Martin's in 1646 with its boundary defined as *"40 foote without the ... bricke
+wall"*: a parish boundary specified as a distance. The players walk out of St
+Martin's into Covent Garden carrying a cord, transferring lengths from place to
+place. **The cord is the clerk's perambulation cord** and none of that is
+invented.
 
 This costs nothing, because what made the cord valuable was never precision but
 that it is a length existing only as an object. Red-team numbers: a partial
@@ -448,10 +470,12 @@ error there is unrecoverable) and never in the clerk's hand (it is the one
 voice that must stay trustworthy). One confident wrong index, one hedged right
 one.
 
-**Hard production order: diary paginated → knots measured on site against the
-actual brass → cord cut.** The 2003 rebuild moved the plates and no drawing is
-authoritative, so knot positions are a field job. Non-stretch braided line.
-Spares, because a lost cord is a dead hunt.
+**Hard production order: field measurements → cords knotted → diary references
+written from them.** Distances are *discovered, not designed* — the cord cannot
+be derived from any document because it did not exist in one before somebody
+measured it, and that is the entire security argument. Knots are whipped
+coloured thread, not ink. Non-stretch braided line. Spares, because a lost cord
+is a dead hunt.
 
 ### D11 — open, with two candidates *(client, 15 Aug)*
 
@@ -487,10 +511,10 @@ indoor or weatherproof; and it must be nameable by a single decoded word.
 
 ## What is left (as of 15 Aug)
 
-**Critical path:** diary written → diary paginated → cords knotted. The cords
-also need the terrace measured, so **fieldwork and diary content are the two
-long poles and they run in parallel** until pagination. Everything else fits
-around them.
+**Critical path:** field walk → knot distances measured → cords cut → the
+diary's knot and anchor references written from them. The diary's *prose* can
+be written in parallel; only its references wait on the walk. **The field walk
+is now the gating item for the entire physical build.**
 
 ### Blocked on D11
 - Phase 7: the reveal and the debrief.
