@@ -4,8 +4,10 @@ The working memory for the Chapter Two narrative rebuild. Read this first in a
 new session. Decisions land here the moment they are made, with the reasoning,
 so nothing has to be re-argued and no session starts cold.
 
-Status: **spine, cast and route locked (D1–D5, D7, D8). Phase 4 — the map — is
-parked. Next is Phase 6: writing the clue text against `ROUTE.md`.**
+Status: **spine, cast, route, clue text and the cord mechanic are all locked
+(D1–D5, D7–D10). Phase 4 — the map — is parked. One narrative decision remains
+(D11: what the cord's message resolves to) and it fixes the ending. After that
+it is Phase 7 (the reveal) and Phase 8 (production and field verification).**
 
 Companion documents: **`CAST.md`** (who, and what is fact vs reading vs
 invention), **`ROUTE.md`** (the rebuilt 23 parts) and **`MECHANIC.md`** (the
