@@ -193,6 +193,53 @@ nothing** — same plinth, same mechanic.
   philosophy, named for George Chrystal) and **Mary Lowndes** (stained glass,
   Lowndes & Drury — the light thread).
 
+### Beating the bounds — the thesis, not the flavour *(researched 15 Aug)*
+
+- **Rogationtide**: the week Ascension Day falls in. Also the *Common Walk*,
+  *Gangdays*, *going a-ganging*. Anglo-Saxon in England at least; the religious
+  form traced to Bishop Mamertus of Vienne, c. AD 470.
+- Clergy and parish walk the boundary once a year — often every seven — and
+  **strike the marks** (stones, gateposts, walls, trees) with willow or birch
+  wands.
+- The **boys were taken along and hurt at the marks**: beaten, bumped against
+  the stone, thrown into nettles, ducked. The point was to install the boundary
+  in a body.
+- **Before authoritative maps, the perambulation WAS the legal record** — a
+  shared mental map that had to stand up in court.
+- **The case that makes it:** a 75-year-old man testified he knew exactly where
+  the eastern boundary ran, because he had been thrown into a heap of nettles
+  there sixty years earlier as a boy. Merely saying he remembered would not
+  have stood up. **The pain was the evidence**, and his parish won.
+- **Then it dies.** The Tithe Commutation Act **1836** makes the tithe maps.
+  The Ordnance Survey's definitive large-scale maps from **1862** — 25 inch and
+  6 inch to the mile — make the walk unnecessary.
+- **And the sting:** where a boundary was disputed, **the Ordnance Survey's own
+  surveyors fell back on the memories of men who had been beaten as children.**
+  The state's measuring instrument deferring to a body.
+- **St Martin-in-the-Fields still does it.** And St Paul's Covent Garden was
+  carved out of St Martin's parish in 1646 with its boundary defined as
+  *"40 foote without the ... bricke wall"* — a parish boundary specified as a
+  distance, on our route.
+
+**Why this is the spine and not a decoration.** Lay the dates end to end:
+
+| | |
+|---|---|
+| 1834 | the standard yard burns |
+| 1836 | Tithe Commutation Act — the maps begin |
+| 1838–42 | Airy's commission restores the yard |
+| 1845 | the forty bronze bars |
+| **1862** | **OS definitive maps; the perambulations stop** |
+| 1876 | public standards set into the Trafalgar terrace, outdoors *on purpose*, so any citizen could check for himself |
+| 1900 | the vestries abolished, their local standards dispersed |
+
+**One century in which measurement moves out of bodies and local objects and
+into paper and central authority.** The clerk of St Martin's is the last man in
+that chain still holding a physical standard; the cord is the last
+perambulation cord; and the 1876 terrace is the last gasp of the idea that a
+citizen checks for himself. Every part of it is true. The only invented thing
+is the man.
+
 ### The three documented gaps a fiction can live in
 1. **No register of the thirty-five bars.** Every source stops at "cities and
    other countries."

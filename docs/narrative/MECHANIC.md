@@ -93,6 +93,78 @@ decoration.
 
 That is the difference between a puzzle a photograph solves and one it cannot.
 
+### The attack that beats anchor-and-offset, and what to do about it
+
+*(raised by the client, 15 Aug)* Measure the cord with a ruler before you set
+off — zero to blue, blue to green — feed those numbers to a model with
+photographs of the targets, and read the answers off a screen.
+
+**It works, and it should be assumed to work.** The only thing standing between
+the model and the answer is *scale on the photograph*, and scale is recoverable
+from a street scene by more routes than we can close: a standard brick is
+215 mm, paving and kerbs are standard, doors and people are known, several of
+these monuments have published dimensions, and a confederate can simply hold a
+tape in frame.
+
+**But look at what the attacker had to do first: hold the cord.** The cord is
+handed over in person at the start. So this is not a sofa attack, it is a
+*café* attack — somebody who has already collected the prop and begun the walk,
+solving the back half indoors. That is a far smaller failure, and the cord's
+real job, which it does unconditionally, is to make possession of a physical
+object necessary. There is also plain effort asymmetry: measuring, photographing,
+rectifying and modelling costs more than walking twenty yards and holding a
+piece of string against a plaque. This is a game, not a vault.
+
+### The two-hop traverse *(client's fix — adopted)*
+
+Instead of one absolute offset from an anchor, use **the span between two
+knots** and walk it across the object in two hops: from the bottom-left corner
+up to a letter, then from that letter down and right into another. Dividers,
+not a ruler. **Direction unstated** — you sweep until it sits.
+
+Three reasons this is stronger than it looks:
+
+1. **Error compounds across hops.** A 2% scale error on a photograph is 2% of
+   one span; chain two and the second hop begins from an already-wrong origin.
+   On site there is no scale error at all, because the cord *is* the scale.
+2. **Unstated direction makes the search underdetermined.** A model must sweep
+   a two-dimensional angle space from each anchor and will surface several
+   plausible landings with no way to rank them. A person on site gets a
+   confirmation the model does not: the knot sits *dead centre* on a letter and
+   it feels right. That click is a strong signal in the world and a weak one in
+   a rectified photograph.
+3. **The second hop self-verifies.** Get hop one wrong and hop two lands on
+   nothing sensible. A free integrity check for the player; a compounding
+   penalty for the attacker.
+
+### Two further defences, one of them better than all of the above
+
+- **Go round a corner.** A cord follows an edge; a photograph flattens it.
+  Anchor on one face, run the cord round the arris onto the adjacent face. No
+  single photograph sees both faces at once or measures the wrap. It is
+  effortless with string, near-unrecoverable from imagery — and it is literally
+  what a perambulation cord does, which is that it goes round things.
+- **Mix planes.** Anchor at pavement level, land on a wall. Foreshortening
+  wrecks mixed horizontal/vertical recovery and costs the player nothing.
+- **And the cheapest: never print a number.** The diary names colours, never
+  distances. The numbers exist only on the cord, and the only way to have them
+  is to have it.
+
+### The oracle, and why it is safe
+
+Players type a letter and the app says yes or no, which also helps a
+brute-forcer — 26 letters is not many. **The guess limit is what closes this**:
+three lives per part, each hint buying one back. Already built, and it is now
+load-bearing for the cord's security as well as for pacing.
+
+### The cost to watch
+
+Direction-free sweeping is delightful at ninety seconds and miserable at
+fifteen minutes. Mitigate by giving a *sense* of direction without the angle —
+*"upward, and to the left of where you are standing"* — and by making every
+landing unmistakable: the centre of a letter, a full stop, a bolt head. Never
+"somewhere near".
+
 ### Knots, not dots
 
 Coloured thread whipped at a knot. Tactile, unambiguous, cannot rub off,
