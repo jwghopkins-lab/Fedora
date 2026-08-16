@@ -121,7 +121,27 @@ between them, never contradict them.
 - **1879–c.1888**: the International Institute for Preserving and Perfecting
   Anglo-Saxon Weights and Measures. Smyth a vice-president. A magazine mixing
   metrology with occultism; a song, *A Pint's a Pound the World Around* (1883).
-- **1888**: Smyth resigns from the Royal Society. **1900**: Smyth dies.
+- **1874**: the **Royal Society rejects Smyth's pyramid paper** — the trigger,
+  twelve years before the break. **1888**: after Airy's withering public
+  criticism of Calton Hill, Smyth resigns his Fellowship *and* leaves the Royal
+  Observatory. **1900**: Smyth dies, aged 81, at Ripon.
+- **Isaac Newton, *A Dissertation upon the Sacred Cubit of the Jews***,
+  published 1737 in Greaves's *Miscellaneous Works*, working from Greaves's
+  *Pyramidographia* (1646) survey of Giza. Newton wanted the Egyptian cubit in
+  order to recover the Hebrew sacred cubit in order to reconstruct the Temple of
+  Solomon. **Taylor's pyramid inch is 1/25 of Newton's cubit.** So pyramid
+  metrology is not fringe — the Royal Society rejected a pyramid paper in 1874
+  while holding its own founding god's.
+- **Alexander Ross Clarke, 1828–1914.** Ordnance Survey Southampton 1850–81
+  under Sir Henry James. *Comparisons of the Standards of Length*, 1866 — from
+  which the **Clarke 1866** and **Clarke 1880** ellipsoids. **He resigned in
+  1881** rather than accept a posting abroad after 27 years, and it has never
+  been explained. Royal Medal 1887. **He outlives Airy (1892), Smyth (1900) and
+  Strachey (1908) and dies in 1914 — the last man alive who could have known.**
+- **Clarke 1866 is still in service**: the basis of NAD27, still the datum of
+  record for older railways, canals and pipelines in North America, in every GIS
+  package; Clarke 1880 underpins several African and French datums. **A defect
+  in the standards is not a curiosity — it is in the ground, today.**
 - **1895**: a Commons Select Committee recommends metric be **compulsory within
   two years**. The **1897 Act legalises but does not compel**. Britain misses
   metrication by a hair.
@@ -317,11 +337,20 @@ geodesy. **Two corrections were required to make it survive scrutiny:**
    propagates silently into the figure of the Earth and every chart's scale.
 2. **The stake is credibility, not longitude.** Longitude is angular, fixed
    astronomically by the transit circle; a wrong yard does not move the meridian,
-   and any thoughtful player will see that. The real stake: in 1884 Britain was
-   handed the world's meridian on an expressed hope it would accede to the
-   Convention du Mètre — Strachey said it would — **and Britain never did.** It
-   could not afford anyone proving its own standard defective at that table
-   while arguing its standards were the best in the world.
+   and any thoughtful player will see that.
+
+   **CORRECTED 15 Aug — I had this backwards, and the true version is better.**
+   Britain did *not* renege. **Britain signed the Metre Convention on 17
+   September 1884.** The International Meridian Conference opened in Washington
+   on **1 October 1884** and gave Greenwich the meridian 22–1 on the 13th. **Two
+   weeks apart.** Britain paid up front and collected a fortnight later — a
+   transaction, on the public record, that nobody notices because the two events
+   are filed under different subjects in every history ever written.
+
+   And then, having signed, Britain did nothing: the 1895 Select Committee
+   recommended compulsory metric, the 1897 Act legalised without compelling, and
+   the signature sat untouched until Douglas Jay stood up in 1965. **Signed to
+   get Greenwich, then sat on it.**
 
 Smyth's side needs no further motive than the human one: he was right, and he
 was buried for it.
