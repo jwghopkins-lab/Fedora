@@ -317,7 +317,11 @@ Five independent verifiers with web search, 18 assertions, blind.
 | D8 | Cast membership and size | **LOCKED** — six on the route, two objects, two in the document. Full page in `CAST.md` |
 | D9 | Route surgery | **LOCKED** — 18 kept, 3 cut, 1 replaced, 4 new, 23 parts. Full page in `ROUTE.md` |
 | D10 | The cord is a key, not a ruler | **LOCKED** — full page in `MECHANIC.md` |
-| D11 | What the decoded message resolves to | **open**, two live candidates from the client — a **name**, or a **place where he is waiting** |
+| D11 | What the decoded message resolves to | **open**, two live candidates — a **name**, or a **place where he is waiting**. Now also carries *who acts in the modern half* |
+| D12 | The establishment antagonist | **LOCKED** — **Airy** |
+| D13 | Smyth's fate | **LOCKED** — destroyed truthfully; the crank is the camouflage |
+| D14 | The modern stake | **LOCKED** — both, layered: infrastructure makes it matter, concealment makes someone act |
+| D15 | Why it surfaces now | **LOCKED** — digitisation |
 
 ### D1 — Frame: in character from the walk *(15 Aug)*
 Sign-up, team codes and the landing page stay plainly a puzzle event, so nobody

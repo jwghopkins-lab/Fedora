@@ -271,6 +271,76 @@ Annotating the clerk's book. Missing.
 
 ---
 
+## The four branches, decided *(15 Aug)*
+
+| | | |
+|---|---|---|
+| **D12** | Antagonist | **Airy** |
+| **D13** | Smyth's fate | **Destroyed truthfully** — the crank is the camouflage |
+| **D14** | Modern stake | **Both, layered** — the infrastructure makes it matter, the concealment makes someone act |
+| **D15** | Why now | **Digitisation** — assembled by search, from five archives that never talked to each other |
+
+### What D14 + D15 do to each other — and the answer is very good
+
+Taken together these two produce a problem and then solve it.
+
+**The problem.** If the trigger is digitisation, then everything the researcher
+used is *already public*. Newton's dissertation, Airy's account of the
+standards, Clarke's comparisons, the 1884 conference proceedings, the vestry
+records — all of it online, all of it citable, none of it suppressible. **You
+cannot seize a document that is already on five servers.** So in the modern
+half there is nothing to take, and with Airy dead in 1892 there is nobody
+obvious to take it.
+
+**The answer, which falls straight out of "both, layered".** The *facts* are
+public and unsuppressible. What is not public is the **concealment record** —
+the minute, the marginal note, the sheets Clarke asked to be kept together.
+And the reason that has never been digitised is that it was never catalogued,
+and the reason it was never catalogued is that it was **never officially a
+document at all**.
+
+It is a parish clerk's working survey book.
+
+So: digitisation makes every fact in the story freely available, and leaves
+exactly one thing outside the net — the one object that was never in an
+archive because nobody ever thought it was worth putting in one. **That is the
+book the players are carrying.** The trigger and the artifact turn out to be
+the same idea seen from two ends.
+
+### The consequence chain, which is what makes it matter
+
+Clarke's Royal Medal was for *comparison of standards of length* **and**
+*determination of the figure of the earth* — one job, because the Earth's shape
+was computed **from** the standards. Clarke 1866 became the basis of NAD27,
+still the datum of record for older railways, canals and pipelines across North
+America and present in every GIS package; Clarke 1880 underpins several African
+and French datums. Every link is type 1 and checkable in minutes.
+
+So the reader is never asked to believe an error moved a border. They are shown
+that **the standards and the shape of the Earth were the same computation**, and
+left to sit with it.
+
+### Still open, and it is now the sharpest question in the book
+
+**Who acts in the modern half, and why?** D14 says the concealment record is
+what makes someone act — but D15 has removed the obvious lever. Candidates:
+
+1. **Somebody whose current work depends on it.** A boundary case, an
+   infrastructure body, a survey still being maintained on NAD27 precisely to
+   avoid re-surveying. Concrete, and it makes the stake financial and legal
+   rather than reputational.
+2. **Institutional reputation.** A body that would rather the minute stayed
+   uncatalogued. Plausible, but thin motive for anything dramatic.
+3. **Nobody acts at all.** The researcher is not being pursued. They stopped
+   for a human reason and the reader supplies the conspiracy — which is exactly
+   what the whole book is about, and would be the bravest ending available.
+   It also rhymes with Nelson's Column: wrong for 150 years because everybody
+   copied everybody, and nobody was to blame.
+
+This folds into **D11**, which is still open.
+
+---
+
 ## Two passages
 
 ### From chapter 2 — the fire *(mostly type 1)*
