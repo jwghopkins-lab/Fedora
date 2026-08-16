@@ -10,8 +10,8 @@ Status: **spine, cast, route, clue text and the cord mechanic are all locked
 it is Phase 7 (the reveal) and Phase 8 (production and field verification).**
 
 Companion documents: **`CAST.md`** (who, and what is fact vs reading vs
-invention), **`ROUTE.md`** (the rebuilt 23 parts) and **`MECHANIC.md`** (the
-cord).
+invention), **`ROUTE.md`** (the rebuilt 23 parts), **`MECHANIC.md`** (the cord)
+and **`FIELDWORK.md`** (everything that must be walked before launch).
 
 ---
 
@@ -250,7 +250,7 @@ Five independent verifiers with web search, 18 assertions, blind.
 | D8 | Cast membership and size | **LOCKED** — six on the route, two objects, two in the document. Full page in `CAST.md` |
 | D9 | Route surgery | **LOCKED** — 18 kept, 3 cut, 1 replaced, 4 new, 23 parts. Full page in `ROUTE.md` |
 | D10 | The cord is a key, not a ruler | **LOCKED** — full page in `MECHANIC.md` |
-| D11 | What the decoded message resolves to | open — fixes the ending |
+| D11 | What the decoded message resolves to | **open**, two live candidates from the client — a **name**, or a **place where he is waiting** |
 
 ### D1 — Frame: in character from the walk *(15 Aug)*
 Sign-up, team codes and the landing page stay plainly a puzzle event, so nobody
@@ -452,6 +452,36 @@ one.
 actual brass → cord cut.** The 2003 rebuild moved the plates and no drawing is
 authoritative, so knot positions are a field job. Non-stretch braided line.
 Spares, because a lost cord is a dead hunt.
+
+### D11 — open, with two candidates *(client, 15 Aug)*
+
+**(a) A name.** The client's instance was "who killed the clerk". **Note the
+collision:** D5 locks the clerk dying of Spanish flu, so nobody killed him.
+The two are reconcilable — autumn 1918 is precisely the cover a death would
+hide behind, because nobody was investigating anything and nobody took
+statements — but it must be a deliberate choice, not an accident. Since the
+clerk is invented there is no record to contradict, so it is legal under the
+structural law. The real cost is **genre**: a murder pulls the walk towards
+detective fiction and away from "the country never checked", which is the
+thesis everything else has been built to land. If we go here, the name should
+probably be *who took the parish's standards in 1900* or *who he was writing
+to*, not a killer.
+
+**(b) A place, and the client is standing in it.** This is the stronger idea
+and it solves three problems at once:
+- **The second disappearance resolves in person.** The researcher who vanished
+  is the man they walk up to. No prop, no reveal document, no anticlimax — the
+  two disappearances rhyme because one of them ends.
+- **D7 lands physically.** They arrive holding the cord and the reading they
+  took off the terrace, and hand it to somebody who has been waiting for it.
+- **The debrief has a natural seam.** In character when they arrive, out of
+  character when he tells them which half was true.
+It is also consistent with D1: genuinely unreachable *during*, present at the
+end.
+
+**What (b) would require:** somewhere walkable from Maiden Lane; somewhere one
+person can sit for two or three hours while teams arrive at different times;
+indoor or weatherproof; and it must be nameable by a single decoded word.
 
 ---
 
