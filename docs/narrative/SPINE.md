@@ -67,14 +67,61 @@ chapter has drifted into invention; if T1 is over 85% it has become a lecture.
 
 ---
 
+## The frame *(D19–D22, decided 15 Aug)*
+
+| | | |
+|---|---|---|
+| **D20** | Narrator | **First person, and not the researcher** |
+| **D21** | Provenance | **It was posted to them** |
+| **D22** | Why the researcher stopped | **Never explained. They disappeared, and that is all anyone knows.** |
+| **D19** | Book vs walk | **The book comes after the walk** |
+
+**Three voices, then.** The clerk in the body of the book, the researcher in
+the margins, and the narrator reading both. The narrator receives it in the
+post, unprompted, with no covering letter or a very short one, shortly before
+the researcher stops. Two questions land on page one and neither is ever fully
+answered: *why me*, and *why give it up*.
+
+### D22 is the riskiest decision in the book, and it needs a specific defence
+
+An unexplained disappearance is the most conventional move in the genre. Doing
+that **and** having nobody act **and** ending on a coincidence means the book
+withholds three times. Some readers will feel cheated. The defence is not to
+soften it — it is to make the withholding visibly deliberate:
+
+- **The narrator must try, and be shown trying.** Emails, an address, a
+  university department, a last known employer. The search has to be on the
+  page or the silence reads as authorial laziness rather than as fact.
+- **Every failure must be ordinary.** People do not answer. Records are not
+  public. The flat is somebody else's now. Nothing is stonewalled, nothing is
+  sinister — it is simply that you cannot find a person who has stopped wanting
+  to be found, and there is no agency in the world whose job it is to help you.
+- **The narrator gets almost everything.** Where they lived, what they were
+  reading, the order they read it in, the week they stopped. Everything except
+  the person. That is not a dodge; it is what research actually returns.
+
+Done that way, D22 is the same move as Southampton. **The book declines to
+close the loop and the reader closes it themselves** — and then, if it has
+worked, catches themselves doing it.
+
+### D19: the book comes after
+
+The walk runs first, for as many cohorts as it is worth running. The book is
+the record of it. Costs nothing, keeps every clue intact, and it makes the
+ending literally true: people really did walk it and really did find the word.
+Every anchor photographed for the cord becomes material.
+
+---
+
 ## The chapters
 
 ### PART ONE — THE BOOK
 
 **1 · The book arrives**
-The survey book, two hands, and the modern one stopping mid-sentence.
-*Carries:* the object, the two registers, and the fact that the Victorian hand
-is a nobody.
+It comes in the post, unprompted. The survey book, two hands, and the modern
+one stopping mid-sentence.
+*Carries:* the object, the two registers, the fact that the Victorian hand is a
+nobody, and the two questions the book never answers — why me, why give it up.
 *Turn:* the marginalia is not commentary. It is instructions.
 *Types:* almost entirely T3 — this is the one chapter where that is allowed,
 because nothing in it is asserted as history.
@@ -178,7 +225,8 @@ The word completes. They look up at the street sign.
 and has nothing to do with the Ordnance Survey.
 
 **21 · The debrief**
-What was true, what was a reading, what was made up. Delivered straight.
+What was true, what was a reading, what was made up. Delivered straight. And
+the search for the researcher, which returns everything except the researcher.
 *Turn:* the reader has spent twenty chapters waiting for someone to come, and
 nobody ever did — and they should be able to feel exactly when they started
 expecting it.
