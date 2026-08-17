@@ -22,7 +22,9 @@ treatment checked against all 23 parts — what carries story, what carries only
 theme, what carries nothing, and what is missing from each side.
 **`TREATMENT_v2.md`** supersedes `TREATMENT.md` — it repairs the three faults
 the mapping found: the missing twentieth century, the missing light thread, and
-an ending that landed on nothing.
+an ending that landed on nothing. **`EDITS.md`** is the v4 edit list — every
+annotation enumerated with a verdict, three factual corrections, and the
+crossing-point geometry computed. `crossing_point.py` reproduces it.
 
 ---
 
