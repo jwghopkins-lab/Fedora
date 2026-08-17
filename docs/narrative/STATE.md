@@ -15,7 +15,9 @@ invention), **`ROUTE.md`** (the rebuilt 23 parts), **`MECHANIC.md`** (the cord)
 **`NARRATIVE.md`** (the story, and why) **`SPINE.md`** (the writing
 document — structure, voice, 21 chapter briefs with their turns, and the order
 to write in) and **`CLUE_MAP.md`** (each chapter mapped to what can be stood in
-front of, plus five candidate sites not yet in the route).
+front of, plus five candidate sites not yet in the route). **`TREATMENT.md`**
+is the readable version — the whole story start to finish, in prose, for
+anyone who wants to read it rather than plan it.
 
 ---
 
