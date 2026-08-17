@@ -12,9 +12,10 @@ gates the whole physical build) and **the writing** (`SPINE.md`).
 Companion documents: **`CAST.md`** (who, and what is fact vs reading vs
 invention), **`ROUTE.md`** (the rebuilt 23 parts), **`MECHANIC.md`** (the cord)
 **`FIELDWORK.md`** (everything that must be walked before launch),
-**`NARRATIVE.md`** (the story, and why) and **`SPINE.md`** (the writing
+**`NARRATIVE.md`** (the story, and why) **`SPINE.md`** (the writing
 document — structure, voice, 21 chapter briefs with their turns, and the order
-to write in).
+to write in) and **`CLUE_MAP.md`** (each chapter mapped to what can be stood in
+front of, plus five candidate sites not yet in the route).
 
 ---
 
