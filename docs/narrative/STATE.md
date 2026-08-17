@@ -20,6 +20,9 @@ is the readable version — the whole story start to finish, in prose, for
 anyone who wants to read it rather than plan it. **`MAPPING.md`** is the
 treatment checked against all 23 parts — what carries story, what carries only
 theme, what carries nothing, and what is missing from each side.
+**`TREATMENT_v2.md`** supersedes `TREATMENT.md` — it repairs the three faults
+the mapping found: the missing twentieth century, the missing light thread, and
+an ending that landed on nothing.
 
 ---
 
