@@ -17,7 +17,9 @@ document — structure, voice, 21 chapter briefs with their turns, and the order
 to write in) and **`CLUE_MAP.md`** (each chapter mapped to what can be stood in
 front of, plus five candidate sites not yet in the route). **`TREATMENT.md`**
 is the readable version — the whole story start to finish, in prose, for
-anyone who wants to read it rather than plan it.
+anyone who wants to read it rather than plan it. **`MAPPING.md`** is the
+treatment checked against all 23 parts — what carries story, what carries only
+theme, what carries nothing, and what is missing from each side.
 
 ---
 
