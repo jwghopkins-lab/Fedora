@@ -1,8 +1,16 @@
-# WORDPLAY — the San Greal shelf
+# WORDPLAY — San Greal-class reveals
 
-A survey of reveals in the *san greal / sang real* class: wordplay that could
-close a narrative like this one, ranked, with the back-story each one implies.
-Research document, 18 Aug 2026. Nothing here is a decision.
+A standalone research project: wordplay in the *san greal / sang real* class —
+reveals that could serve as the final clincher of a Da Vinci Code-shaped
+narrative, and from which a story could be backworked. Surveyed broadly,
+shortlisted to ten, ranked; top five in full, ranks six to ten as an appendix.
+
+**This is a separate project.** It shares a repository with the Fedora hunt
+for convenience only. Nothing in Fedora's `docs/` references this file, and
+nothing here is a decision about that project; a short crossover note at the
+end records where the two *could* touch, and nothing more.
+
+Scope: the English-speaking world. Research document, 18 Aug 2026.
 
 ---
 
@@ -16,7 +24,8 @@ it appears in fifteenth-century English writing (Hardyng's chronicle puns on
 the author *right about the wordplay*, and that verified kernel launders the
 invented everything-else.
 
-So the anatomy, in the terms of this project:
+So the first law, borrowing the Fedora book's typing shorthand (T1 =
+verifiable fact, T2 = a reading of a fact, T3 = invention):
 
 > **The wordplay itself must be a T1.** The reading built on it may be as wild
 > as you like — that is the T2/T3 layer — but the split, the anagram, the
@@ -30,8 +39,8 @@ Four more properties, from taking San Greal apart:
 2. **It lands aloud, in one sentence.** *San greal. Sang real.* No diagram.
 3. **The two readings are causally linked**, not coincidentally similar — the
    split *is* the history. This is what separates it from a mere pun.
-4. **It arrives last and reframes everything before it** — it is a turn, in
-   this project's sense, for the whole book at once.
+4. **It arrives last and reframes everything before it** — a turn for the
+   whole book at once.
 
 ## Grading criteria
 
@@ -41,7 +50,7 @@ Four more properties, from taking San Greal apart:
 | **Truth** | T1 attested / hedged / contested / false. False is fatal unless the falseness is the point. |
 | **Fresh** | Not burned by Dan Brown, QI, or every etymology listicle. |
 | **Story** | Does a narrative fall out backwards — a keeper, a loss, a motive, a modern trace? |
-| **Anchor** | Can a player stand in front of it? (Bonus: in London.) |
+| **Anchor** | Can a reader or player stand in front of it? (Bonus: in London.) |
 
 ---
 
@@ -51,22 +60,23 @@ Four more properties, from taking San Greal apart:
 
 | Candidate | The reveal | Truth | Notes |
 |---|---|---|---|
-| **nowhere = now here** | Same letters, split moved one place, opposite meaning | pure mechanism (no history) | The mechanically perfect specimen. Precedent: Butler's *Erewhon* (1872). See Fedora note below. |
-| **mortgage = mort gage** | "Death pledge" — Old French, via Norman law | **T1** | Top five. |
-| **atone = at one** | The doctrine spelled out in the word; *at-onement* | **T1** | And **alone = all one**. Quiet, perfect, aloud-proof. |
-| **scapegoat = "escape goat"** | Tyndale's 1530 misdivision of *Azazel* as *ez ozel* | **T1** (textual history) | Top five. |
+| **nowhere = now here** | Same letters, split moved one place, opposite meaning | pure mechanism (no history) | The mechanically perfect specimen. Precedent: Butler's *Erewhon* (1872). Shortlisted. |
+| **mortgage = mort gage** | "Death pledge" — Old French, via Norman law | **T1** | Shortlisted. |
+| **atone = at one** | The doctrine spelled out in the word; *at-onement* | **T1** | And **alone = all one**. Quiet, perfect, aloud-proof. Near miss. |
+| **scapegoat = "escape goat"** | Tyndale's 1530 misdivision of *Azazel* as *ez ozel* | **T1** (textual history) | Shortlisted. |
+| **tawdry = (Sain)t Audrey's lace** | A documented misdivision, 1540s | **T1** | Shortlisted — see class B for the story. |
 | **helpmeet** | KJV's "an help meet for him" (*meet* = suitable), misread into a word | T1 | Small but a clean specimen of a word born from misreading scripture. |
-| **ampersand = "and per se and"** | The 27th character, slurred off the end of the alphabet | T1 | A society named for the letter everyone writes and nobody counts. |
+| **ampersand = "and per se and"** | The 27th character, slurred off the end of the alphabet | T1 | A society named for the letter everyone writes and nobody counts. Near miss. |
 | **goodbye = God be with ye** | God contracted out of the parting | T1 | Known, gentle. |
 | **Halloween = All Hallows' E'en** | The spooky word means "the holy evening" | T1 | Nice inversion; well known. |
 | **the wandering N** | *a napron* → *an apron*; *a naddre* → *an adder*; *a noumpere* → *an umpire*; *an ekename* → *a nickname*; *a norange* → *an orange* | T1 | Not one reveal but a **motif**: words that traded a letter with the article. Puzzle-mechanic gold (an Order of the Wandering N); too diffuse for a clincher. |
-| **island's silent s** | Inserted by scribes who wrongly assumed kinship with *isle*; the s is a 500-year-old mistake that stuck | T1 | "The map has a letter in it that was never true." Lovely texture, thin story. |
+| **island's silent s** | Inserted by scribes who wrongly assumed kinship with *isle*; a 500-year-old mistake that stuck | T1 | "The map has a letter in it that was never true." Lovely texture, thin story. |
 
 ### B — Buried names: saints, gods, demons
 
 | Candidate | The reveal | Truth | Notes |
 |---|---|---|---|
-| **tawdry = (Sain)t Audrey** | Cheap finery carries the name of Æthelthryth of Ely, who blamed her fatal throat tumour on the necklaces of her vanity; *St Audrey's lace* → *tawdry lace* → tawdry | **T1** | The saint punished by jewellery became the word for cheap jewellery. London anchor: St Etheldreda's, Ely Place. Near-miss for the five. |
+| **tawdry = St Audrey** | Cheap finery carries the name of Æthelthryth of Ely, who (per Bede) blamed her fatal neck tumour on the jewelled necklaces of her youth; the lace necklaces sold at her fair took her name, then went downmarket | **T1** | Shortlisted. |
 | **bedlam = Bethlehem** | The word for chaos is the name of the holy town, via the Hospital of St Mary of Bethlehem | T1 | London anchor (Liverpool St; the Imperial War Museum building). |
 | **trivia = the Three Roads** | *Trivium*, the crossroads — where Hecate (epithet *Trivia*) was worshipped; pub-quiz trivia carries the crossroads goddess | T1 with hedge on the sense-path | Charming; chain has two links to defend. |
 | **money = Moneta** | Minted in the temple of Juno *Moneta* — "the Warner" (*monere*) | T1 (temple), hedged (epithet's own etymology) | "All money is named for a warning." |
@@ -77,13 +87,13 @@ Four more properties, from taking San Greal apart:
 
 | Candidate | The reveal | Truth | Notes |
 |---|---|---|---|
-| **ruler / ruler** | *Regula*, the straight stick, from *regere*, to keep straight, to rule; *rex* the same root; **right = straight** (*rectus*); **wrong = wrung, crooked** (Old Norse *rangr*) | **T1** | Top five — the measurement clincher. |
+| **ruler / ruler** | *Regula*, the straight stick, from *regere*, to keep straight, to rule; *rex* the same root; **right = straight** (*rectus*); **wrong = wrung, crooked** (Old Norse *rangr*) | **T1** | Shortlisted. |
 | **standard** | The battle flag (*estendart*) and the exemplar measure are one word: the King's colours, the rallying point, the authorized thing | T1 with an etymological hedge | "The standards of measure are literally the King's colours." Strong support beam for any metrology story. |
 | **talent** | A weight of silver → a gift of the soul, through one parable (Matthew 25) | T1 | "Your talents were always money on a scale." |
 | **fathom** | Old English *fæthm*: the outstretched arms, an embrace. To fathom is to get your arms around; what you cannot fathom, your arms are too short for | T1 | Body-measure of understanding. Six feet; the grave. |
-| **apocalypse** | Greek *apokálypsis*: an **uncovering**. The word for the end of the world means *the reveal* | T1 | "The apocalypse is not coming; it is what happens when you finally read the word." Near-miss for the five — slightly QI-worn. |
+| **apocalypse** | Greek *apokálypsis*: an **uncovering**. The word for the end of the world means *the reveal* | **T1** | Shortlisted. |
 | **conspiracy** | *Con spirare* — to breathe together | T1 | Self-referential furniture for any conspiracy narrative. |
-| **clue = clew** | A ball of thread — Ariadne's, specifically (Chaucer: "a clewe of twyn") | **T1** | Top five. |
+| **clue = clew** | A ball of thread — Ariadne's, specifically (Chaucer: "a clewe of twyn") | **T1** | Shortlisted. |
 
 ### D — Instrument fossils: the balance in the mind
 
@@ -96,16 +106,16 @@ All T1, verified 18 Aug 2026 (etymonline / Wiktionary / Merriam-Webster):
 - **grave / gravity** — *gravis*, heavy; a grave matter has weight
 - **moment** — *momentum*, movement: in particular the small push that tips a beam — hence "of great moment" (sense-path hedged, endpoints T1)
 
-Not one reveal — **six**, all pointing at the same buried instrument. Top five
-as a cluster.
+Not one reveal — **six**, all pointing at the same buried instrument.
+Shortlisted as a cluster.
 
 ### E — Anagrams and letter games
 
 | Candidate | The reveal | Truth | Notes |
 |---|---|---|---|
-| **eleven plus two = twelve plus one** | Mutual anagrams; both equal thirteen; both are thirteen letters | T1 (arithmetic) | The only anagram in English that audits itself, three ways. Clincher for a clock-face narrative. |
+| **eleven plus two = twelve plus one** | Mutual anagrams; both equal thirteen; both are thirteen letters | **T1** (arithmetic) | The only anagram in English that audits itself, three ways. Shortlisted. |
 | aptagrams: *astronomer/moon starer, the eyes/they see, a decimal point/I'm a dot in place, Statue of Liberty/built to stay free, listen/silent* | | T1 (mechanical) | Pretty, but see the caution below. |
-| **honorificabilitudinitatibus** | Shakespeare's longest word, claimed by Baconians as the Latin anagram *hi ludi F. Baconis nati tuiti orbi* — "these plays, F. Bacon's offspring, are preserved for the world" | T1 that the claim was made; the claim itself is crankery | Not a reveal — a **cautionary tale**, and a gift: the Bacon-cipher literature is the Smyth of philology. |
+| **honorificabilitudinitatibus** | Shakespeare's longest word, claimed by Baconians as the Latin anagram *hi ludi F. Baconis nati tuiti orbi* — "these plays, F. Bacon's offspring, are preserved for the world" | T1 that the claim was made; the claim itself is crankery | Not a reveal — a **cautionary tale**, and a gift: the Bacon-cipher literature is the pyramidology of philology. |
 
 **Caution on the whole class:** anagrams are the weakest genre for
 "meant-to-be-there", because letter-shuffling visibly *permits* anything — the
@@ -116,7 +126,7 @@ an external audit (as *eleven plus two* has) or it reads as construction.
 
 | Candidate | The reveal | Truth | Notes |
 |---|---|---|---|
-| **meantime** | "In the meantime" — and Greenwich **Mean Time**: *we all live in the mean time* | pun, not etymology (the two *means* differ) | Graded honestly it is a pun. As a closing line for a meridian narrative it sings. |
+| **meantime** | "In the meantime" — and Greenwich **Mean Time**: *we all live in the mean time* | pun, not etymology (the two *means* differ) | Graded honestly it is a pun. As a closing line for a meridian narrative it sings. Near miss. |
 | **noon = the ninth hour** | *Nona hora* — noon was 3 p.m. and drifted to midday (the monks' office moved) | T1 | "Even midday has moved." |
 | **second = the second minute** | *Pars minuta secunda* — the minute is the *first* minute | T1 | Small, perfect, time-flavoured. |
 
@@ -124,8 +134,8 @@ an external audit (as *eleven plus two* has) or it reads as construction.
 
 | Candidate | The reveal | Truth | Notes |
 |---|---|---|---|
-| **CABAL** | The word does **not** come from Charles II's ministry — it is from *kabbalah* — but the 1670s ministry Clifford–Arlington–Buckingham–Ashley–Lauderdale genuinely initialled CABAL and contemporaries noticed | both halves T1 | The rare specimen where the *false origin story* is itself a true, datable coincidence. Exactly the Southampton move. |
-| **the Exchequer cluster** | *Exchequer* = the chessboard (the chequered counting cloth); *check*, *cheque*, *checkmate* all descend from *shah*, the Persian king — *shah mat*, the king is helpless. **In 1834 the chessboard-office's tally sticks burned the King's palace down.** Every "checkmate" announces the death of a king; that year the Exchequer delivered one | check-chain T1; "bank *stock* from the tally stock" is contested — flag it | Made for chapter 2. *Counterfoil* (the cheque-book stub) is the tally's foil, surviving in every wallet. |
+| **CABAL** | The word does **not** come from Charles II's ministry — it is from *kabbalah* — but the 1670s ministry Clifford–Arlington–Buckingham–Ashley–Lauderdale genuinely initialled CABAL and contemporaries noticed | both halves T1 | The rare specimen where the *false origin story* is itself a true, datable coincidence. |
+| **the Exchequer cluster** | *Exchequer* = the chessboard (the chequered counting cloth); *check*, *cheque*, *checkmate* all descend from *shah*, the Persian king — *shah mat*, the king is helpless. In 1834 the chessboard-office's tally sticks burned the King's palace down. *Counterfoil* — the cheque-book stub — is the tally's foil, surviving in every wallet | check-chain T1; "bank *stock* from the tally stock" is contested — flag it | Shortlisted. |
 
 ### The traps — famous, false, and therefore useful
 
@@ -138,10 +148,34 @@ English *cierring*, the river's turn), *Rotten Row* ≠ *Route du Roi*
 **The observation worth keeping:** folk etymology is to philology what the
 pyramid inch is to metrology — the same desire for pattern, operating on real
 objects, producing confident readings the record does not support. In a
-Smyth-shaped narrative the false etymologies belong to the crank — and the
-horror move is that some of his kind are **true** (tawdry, bonfire = bone-fire,
-scapegoat all sound invented and are not). He was right that there was a
-pattern. He was wrong about whose.
+crank-shaped narrative the false etymologies belong to the crank — and the
+horror move is that some of his kind are **true** (tawdry, bonfire =
+bone-fire, scapegoat all sound invented and are not). He was right that there
+was a pattern. He was wrong about whose.
+
+---
+
+## The shortlist — ten candidates
+
+Drawn from the longlist before any ranking; every class that produced a
+summit-grade candidate is represented.
+
+| # | Candidate | Class | Snap | Truth | Fresh | Story | Anchor |
+|---|---|---|---|---|---|---|---|
+| 1 | **Ruler / ruler** | semantic fossil | ★★★★★ | T1 | ★★★★ | ★★★★★ | ★★★★ any ruler, any standard |
+| 2 | **Clue = clew** | semantic fossil | ★★★★★ with a cord in hand | T1 | ★★★★ | ★★★★★ | ★★★ needs the prop |
+| 3 | **Mortgage = mort gage** | boundary re-split | ★★★★★ | T1 | ★★★ | ★★★★ | ★★★ everyone's own deed |
+| 4 | **Scapegoat / Azazel** | misdivision + buried name | ★★★★ | T1 | ★★★★★ | ★★★★ | ★★ |
+| 5 | **The balance in the mind** | instrument fossil (cluster) | ★★★ | T1 | ★★★★★ | ★★★★ | ★★★ any courtroom |
+| 6 | **Apocalypse = unveiling** | semantic fossil | ★★★★★ | T1 | ★★ | ★★★ | ★★ |
+| 7 | **Nowhere = now here** | boundary shift | ★★★★★ | none — pure pun | ★★★ | ★★★★ for disappearances | — |
+| 8 | **Tawdry = St Audrey** | misdivision + buried name | ★★★ | T1 | ★★★★ | ★★★★ | ★★★★ Ely; St Etheldreda's, Ely Place, London |
+| 9 | **The Exchequer cluster** | coincidence tapestry | ★★★ | T1 + one contested link | ★★★★ | ★★★★ | ★★★★★ Westminster |
+| 10 | **Eleven plus two = twelve plus one** | anagram | ★★★★ | T1 arithmetic | ★★★ | ★★ | ★★★ every clock face |
+
+Near misses for the tenth place, in rough order: atone/alone, ampersand,
+meantime, bonfire = bone-fire, fathom, standard, second = the second minute,
+noon = the ninth hour, talent, trivia, bedlam, the wandering N.
 
 ---
 
@@ -282,31 +316,139 @@ chapters, one word per turn, and collected at the end.
 
 ---
 
-## Fedora fit (separable from the general ranking)
+## Appendix — ranks six to ten
 
-The book already ends on a withheld loop (Southampton is a coincidence; the
-researcher is never found; nobody comes). A San Greal-class reveal slots in
-without breaking any locked decision, because wordplay is a **reading of the
-language** — unrefutable by construction, exactly where the red-team said
-fiction must live, and yet built on T1s a player can check and find true.
+The five that made the shortlist but not the summit, in order, with the same
+treatment and the reason each fell short.
 
-Candidate placements, no decisions implied:
+### 6 · APOCALYPSE — *"The end of the world means the unveiling."*
 
-| Candidate | Where it lands |
-|---|---|
-| **Clew** | The cord. The players carry a marked string through London following crossword clues; the debrief tells them what the word *clue* has meant for a thousand years. Retroactively reframes the entire mechanic — the project's favourite move, applied to itself. Costs nothing; the prop already exists. |
-| **Ruler** | Chapter 21's thesis-sentence. The whole spine — the king's arm, the burned yard, the regency of the commission, right/straight, wrong/crooked, the state measuring men — compresses into *"the ruler is the ruler"*. Unlike Southampton, a coincidence that isn't one. |
-| **Nowhere = now here** | D22, the researcher. A last margin note reading "I am nowhere" that the narrator — or a player — eventually re-splits. One letter's move turns an absence into a location, which is precisely what (b)-variant D11 does physically. If D11(b) is chosen, this is its epigraph. Pure mechanism, no historical substrate: honest to grade as a pun, and as a pun about disappearance it is the best in English. |
-| **The Exchequer cluster** | Chapter 2. The chessboard-office, *shah mat*, the counterfoil in every chequebook, the tally fire as a checkmate delivered to William IV. The check-chain is T1; keep "bank stock from tally stock" out or hedged — it is contested. |
-| **Meantime** | Chapter 9, the fortnight. *"Britain paid in September and collected in October, and everyone since has lived in the mean time."* A pun, graded honestly, placed as a reading. |
-| **Balance cluster** | Chapter 21's consolation, after the debrief separates fact from fiction: measurement moved out of bodies and into paper — but it had already moved into the language, where it cannot be lost. Answers the book's own thesis. |
-| **Noon moved** | Texture for 9 or 14: even midday has drifted; nothing holds still, including the words for stillness. |
+**The wordplay.** Greek *apokálypsis*: an uncovering, a disclosure — *apo-*
+(away) + *kalyptein* (to cover). The Book of Revelation **is** "The
+Apocalypse": *revelation* is simply the Latin twin (*revelare*, to pull back
+the veil). English holds both words, uses both daily, and never connects
+them. The destruction sense is late drift from the book's contents; the word
+itself only ever meant *the reveal*. T1.
 
-**One warning, from the anatomy.** These reveals are strongest one at a time.
-San Greal works because it is alone at the summit of its book; five stacked
-clinchers would read as a listicle. If the book takes any of this, it takes
-**one** as the summit (Clew or Ruler), one as an epigraph-scale grace note
-(Now Here), and leaves the rest as connective tissue or nothing.
+**The backworked story.** A doomsday narrative in which the prophesied
+apocalypse is dreaded for three hundred pages — and the turn is that it
+already happened, quietly, the moment the founding document was finally read
+correctly. The world does not end; the veil does. Clincher: *"The apocalypse
+is not coming. It is what happens when you finally read the word."*
+
+**Why it missed the five.** It is a definitional reveal — one gloss, no
+split, no buried name, no chain to follow — and it is the most QI-worn item
+on the shortlist. The story it backworks also tends toward generic cult
+territory. But as a single closing line it outperforms almost everything, so
+it leads the appendix.
+
+### 7 · NOWHERE = NOW HERE — *"Move one letter's split, and an absence becomes an address."*
+
+**The wordplay.** The purest mechanical specimen in English: the same
+letters, the boundary moved one place, the meaning inverted — exactly the
+san greal move. Precedent for the class: Butler's *Erewhon* (1872), the
+utopia named by disordering "nowhere". But note what it lacks: **substrate**.
+It is not an etymology; there is nothing to check and be found right about.
+
+**The backworked story.** A disappearance narrative. The vanished person's
+last note reads *"I am nowhere."* Grief reads it one way for the whole book.
+At the end someone reads it aloud slowly — *I am now here* — and it was
+never a farewell; it was an address, and the searcher is standing in it.
+
+**Why it missed the five.** The San Greal launder requires a T1 kernel — a
+fact the checking reader finds true. A pure pun cannot anchor a book's
+credibility, however perfect its mechanism. It is an epigraph, a last margin
+note, a grace note — the best pun about disappearance in English, and not a
+summit.
+
+### 8 · TAWDRY — *"Every time you call something tawdry, you say her name."*
+
+**The wordplay.** A documented misdivision, same class as san greal:
+**St Audrey's lace** → *tawdry lace* (1540s) → *tawdry*. Audrey is
+Æthelthryth of Ely (d. 679), whose story Bede tells: she died of a great
+tumour of the neck, which she called God's punishment for the jewelled
+necklaces of her vain youth. The lace neckties sold at her October fair at
+Ely took her name; the fair's trinkets went downmarket; the saint's name
+became the word for cheap glitter. T1 end to end, OED-solid.
+
+**The backworked story.** Two available. The relic thriller: the pilgrim tat
+sold at Ely was a touch-relic economy, and somewhere in the surviving
+"tawdry" — a ribbon, a lace, a box of fairings in a county archive — is a
+real one. Or the moral fable read straight: the woman punished by jewellery
+became the word for jewellery's cheapness, and the language finished her
+penance for her — a slur a saint wears forever.
+
+**Why it missed the five.** The history is exquisite and the mechanism
+exact, but the engine of this class is audience ownership of the word, and
+*tawdry* is fading from daily speech; the snap also needs a paragraph of
+saint's-life setup before it lands. Anchor is a genuine strength — Ely, and
+St Etheldreda's church in Ely Place, London.
+
+### 9 · THE EXCHEQUER CLUSTER — *"Every cheque is drawn on a chessboard, and checkmate announces the death of a king."*
+
+**The wordplay.** *Exchequer* is *scaccarium* — the chessboard, for the
+chequered cloth the medieval counting-table used. *Check*, *cheque* and
+*chess* all descend, via Old French *eschec*, from Persian **shah** — the
+king; *checkmate* is *shah mat*, the king is helpless (the "king is dead"
+gloss is folk, but ancient folk). The *counterfoil* in a chequebook is the
+**foil** half of the split tally stick, the Exchequer's wooden receipt. And
+the historical detonation: in 1834 the Exchequer's obsolete tally sticks,
+burned in the stoves under the House of Lords, took the Palace of
+Westminster down with them. One contested link to keep flagged: "bank
+*stock* from the tally's stock half" is popular and unproven — leave it out
+or hedge it.
+
+**The backworked story.** A financial thriller in which the language of
+money is discovered to be the language of regicide: every current-account
+"check" invokes the king, every "checkmate" his death — and in 1834 the
+metaphor went literal, when the counting-house burned the King's palace with
+the King's own cancelled debts as the kindling. The counting-house
+checkmated the Crown, and the evidence is in every wallet, on every stub.
+
+**Why it missed the five.** It is a tapestry, not a knife: three links of
+chain before the snap, one of them contested, and the audience must hold
+Persian, Old French and medieval accounting in mind at once. Superb
+connective tissue for a book — the best *supporting* material on the whole
+list, with a five-star London anchor — but too slow for the summit.
+
+### 10 · ELEVEN PLUS TWO = TWELVE PLUS ONE — *"The only anagram in English that audits itself."*
+
+**The wordplay.** *Eleven plus two* and *twelve plus one* are perfect mutual
+anagrams; both equal thirteen; and each phrase spells its claim in exactly
+thirteen letters. Triple-locked, and verifiable with a pencil in under a
+minute — the rare anagram with an external audit. (The discovery is usually
+attributed to Melvin Wellman; hedge the attribution, never the arithmetic.)
+
+**The backworked story.** A clock-face mystery. The two hours flanking
+midnight conceal the equation; thirteen — the hour no dial shows — is
+written twice around every clock face on Earth, in the letters. A
+numerological society holds it as proof that English was designed; the sane
+protagonist spends the book failing to explain it away, because it cannot be
+explained away, only accepted as the coincidence it is.
+
+**Why it missed the five.** The class, not the specimen. Anagram-shuffling
+visibly permits anything — the Baconian cipher literature spent a century
+proving it — so even a perfect anagram reads as *constructed* rather than
+*discovered*, and it has no history, no keeper, no loss to backwork. Best of
+its class by a distance, which is exactly enough for tenth.
+
+---
+
+## Crossover notes (Fedora) — records possibilities only
+
+Kept here, not in Fedora's docs; nothing in that project references this
+file, and nothing here changes any of its locked decisions.
+
+- **Clew** would retroactively reframe the cord mechanic at zero cost — the
+  players already carry a ball-of-thread's descendant while following clues.
+- **Ruler** compresses that book's whole spine (the king's arm, the burned
+  yard, right/straight, wrong/crooked) into one sayable thesis-sentence.
+- **Nowhere = now here** rhymes with a researcher who is never found and a
+  finish that turns out to be a place.
+- **The Exchequer cluster** and **meantime** sit naturally beside the 1834
+  fire and the 1884 fortnight respectively.
+- **One warning from the anatomy:** these reveals work one at a time. One
+  summit, at most one grace note; stacked clinchers read as a listicle.
 
 ## Sources checked 18 Aug 2026
 
@@ -314,4 +456,5 @@ clinchers would read as a listicle. If the book takes any of this, it takes
 - examine < *examen*, tongue of a balance: [Wiktionary](https://en.wiktionary.org/wiki/examen), [Dictionary.com](https://www.dictionary.com/browse/examen)
 - clue < clew, Chaucer's "clewe of twyn", figurative from 1620s: [etymonline](https://www.etymonline.com/word/clue), [wordhistories.net](https://wordhistories.net/2017/05/15/clue/)
 - scapegoat, Tyndale 1530, *ez ozel* / Azazel: [wordorigins.org](https://www.wordorigins.org/big-list-entries/scapegoat), [phrases.org.uk](https://www.phrases.org.uk/meanings/scapegoat.html)
-- Everything else graded from standard references (OED-derived summaries, etymonline); anything marked *hedged* or *contested* needs its own minute of checking before it goes near a clue or a page.
+- tawdry < "St Audrey's lace", 1540s misdivision; Bede on Æthelthryth's necklaces: [etymonline](https://www.etymonline.com/word/tawdry), [Merriam-Webster](https://www.merriam-webster.com/wordplay/history-of-tawdry), [wordorigins.org](https://www.wordorigins.org/big-list-entries/tawdry)
+- Everything else graded from standard references (OED-derived summaries, etymonline); anything marked *hedged* or *contested* needs its own minute of checking before it is built on.
