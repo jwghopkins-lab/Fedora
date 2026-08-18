@@ -25,6 +25,9 @@ the mapping found: the missing twentieth century, the missing light thread, and
 an ending that landed on nothing. **`EDITS.md`** is the v4 edit list — every
 annotation enumerated with a verdict, three factual corrections, and the
 crossing-point geometry computed. `crossing_point.py` reproduces it.
+**`WORDPLAY.md`** is the San Greal shelf — reveal-grade wordplay (splits,
+buried names, anagrams) surveyed, graded T1/hedged/false, ranked to a top
+five, with candidate placements in this book; research only, no decisions.
 
 ---
 
