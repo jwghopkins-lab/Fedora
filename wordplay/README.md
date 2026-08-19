@@ -6,7 +6,9 @@ narrative, and from which a story could be backworked. **Part I** surveys the
 established stratum broadly, shortlists ten, ranks a top five with an
 appendix. **Part II** goes below the listicle layer: niche finds mined from
 the metrology theme itself, by machine sweep and hand pass, verified and
-novelty-checked, ranked the same way.
+novelty-checked, ranked the same way. **Part III** widens to the whole
+mystery genre: ten themes × ten keywords, all machine-swept and hand-worked,
+with one ranked winner per theme.
 
 **This is a separate project.** It shares a repository with the Fedora hunt
 for convenience only. Nothing in Fedora's `docs/` references this file, and
@@ -717,6 +719,254 @@ crowns a book rather than detonating a scene — a thesis, not a snap.
 - "Airy nothing… a local habitation and a name", Theseus, MSND V.i: [myShakespeare](https://myshakespeare.com/midsummer-nights-dream/act-5-scene-1-popup-note-index-item-airy-nothing); Airy-0 on Mars: [Wikipedia](https://en.wikipedia.org/wiki/Airy-0)
 - "SMYTH AT THE GREAT PYRAMIDE" parody anagram: [Bob Forrest, *Indigesta Shakespeareana*](https://www.bobforrestweb.co.uk/Miscellaneous/Fortean_Times/Indigesta_Shakespeareana.htm)
 - *Linea* = linen thread, *chorda* = gut string, the log-line knot, *conter/compter*, French *livre*, Clark(e) = clerk: standard references (OED-derived summaries, etymonline); each is a one-minute check.
+
+---
+
+# PART III — the 10×10: ten mysterious themes, one hundred keywords
+
+Added 19 Aug 2026. Brief: forget any one project — sweep the whole
+mystery-genre landscape. Ten themes, ten keywords or phrases each, every one
+tried for anagrams, re-splits and root-wordplay (`themes_sweep.py`, this
+folder — same wordlists as `sweep.py`; every anagram below is
+script-verified). Then a hand pass over each theme's roots, verification of
+the load-bearing facts, and novelty searches on the leaders.
+
+## The grid
+
+| Theme | Keywords tried |
+|---|---|
+| Grail & Templars | knights templar, templar, holy grail, grail, baphomet, priory of sion, mary magdalene, rosslyn chapel, jacques de molay, last supper |
+| Freemasonry | freemason, masonic, illuminati, lodge, grand master, hiram abiff, all seeing eye, square and compass, mosaic pavement, initiation |
+| Ancient Egypt | pyramid, sphinx, pharaoh, rosetta stone, hieroglyph, cartouche, obelisk, tutankhamun, valley of the kings, cleopatra |
+| Alchemy & occult | alchemy, philosophers stone, elixir, tarot, pentagram, grimoire, abracadabra, hocus pocus, occult, nostradamus |
+| Shakespeare & ciphers | shakespeare, william shakespeare, stratford, first folio, francis bacon, anagram, cipher, cryptogram, quill, globe theatre |
+| The Ripper's London | jack the ripper, whitechapel, leather apron, from hell, mitre square, scotland yard, east end, autumn of terror, mary kelly, lantern |
+| Arthur & Avalon | king arthur, round table, camelot, excalibur, avalon, merlin, guinevere, lancelot, pendragon, glastonbury |
+| Vatican & relics | vatican, conclave, pontiff, apocrypha, relic, shroud of turin, sistine chapel, swiss guard, papal bull, canonization |
+| Lost lands | atlantis, el dorado, roanoke, croatoan, lemuria, shangri la, lost city, seven cities of gold, terra incognita, thule |
+| Modern conspiracy | roswell, area fifty one, dreamland, men in black, flying saucer, weather balloon, zodiac killer, majestic twelve, hangar eighteen, crop circle |
+
+## Theme by theme — the winner and its supports
+
+**Grail & Templars — winner: TEMPLAR = TRAMPLE** (top ten, below). Supports:
+**HOLY GRAIL = HAIL GLORY** — the quest's object anagrams to a liturgical
+shout, and to the quest's real motive; **GRAIL = ARGIL** — potter's clay:
+the cup of a carpenter was common clay, says the word; **LAST SUPPER
+re-split: LASTS UPPER** — it happened in the Upper Room, and it is the meal
+that lasts. Spent/known: *san greal / sang real* itself; Baphomet as Atbash
+for *Sophia* (published scholarship).
+
+**Freemasonry — winner: FREEMASON = FORENAMES** (top ten). Supports:
+**MASONIC = MOSAIC + N** — and the lodge floor *is* the mosaic pavement,
+while the craft's legend leans on Solomon and Moses: mosaic, Mosaic,
+Masonic, one letter apart; **SHANGRI-LA = ASHLARING** — the mythical
+paradise anagrams to the mason's word for stone dressed perfect (the rough
+and perfect ashlar are core lodge symbols) — a cross-theme accident almost
+too neat to waste.
+
+**Ancient Egypt — winner: TUTANKHAMUN = THANK AUTUMN** (top ten). Supports:
+**OBELISK = OBELUS** — the editor's dagger † is literally named "obelisk":
+Cleopatra's Needle is a punctuation mark that kills doubtful text;
+**CARTOUCHE** — the royal name-rings are named after rifle cartridges, by
+Napoleon's soldiers; **SPHINX = "the strangler"** (*sphingein*, to
+squeeze) — get the riddle wrong and the name explains itself; **PHARAOH =
+"great house"** — Egypt called its king a building; **PYRAMID re-split:
+PYR|AMID** — Greek *pyr*, fire: a pyre amid the sands (folk etymology,
+graded as pun).
+
+**Alchemy & occult — winner: THE LITERACY OCCULT** (top ten). Supports:
+**CIPHER = ZERO** — one Arabic word, *sifr*, "the empty": the word for
+secret writing means *nothing*; **chemistry is alchemy with "the" scraped
+off** — *al-* is the Arabic article (alchemy, alcohol, alkali, elixir);
+**OCCULT visibly contains CULT** (visual only — the roots differ);
+**TAROT = TORTA** (a cake) for the debunking chapter.
+
+**Shakespeare & ciphers — winner: FRANCIS BACON = CANON FABRICS** (top
+ten). Supports: **GLOBE THEATRE = ABLE TOGETHER** — a fair definition of a
+playing company; **CIPHER = ZERO** doubles here: the dying scholar "left a
+cipher" — left nothing. Spent/known: WILLIAM SHAKESPEARE = "I AM A WEAKISH
+SPELLER"; the Psalm 46 shake/spear curiosity; the whole Baconian
+honorificabilitudinitatibus industry (see Part I).
+
+**The Ripper's London — winner: AUTUMN OF TERROR = FORTUNATE RUMOR** (top
+ten). Supports: **LEATHER APRON** — the first name the press gave the
+killer contains the wandering-N fossil (*a napron* → *an apron*): even his
+alias had shifted a letter once; WHITECHAPEL is a transparent compound the
+mind stops seeing (*the white chapel*, for a murder district).
+
+**Arthur & Avalon — winner: ROUND TABLE = AND TROUBLE = NOT DURABLE** (top
+ten). Supports: **PENDRAGON re-split: PEN|DRAGON** — Arthur's dynasty name
+visibly contains the instrument that invented him (Geoffrey of Monmouth's
+pen); etymology says "chief dragon", the page says the dragon is a pen;
+**AVALON = the Isle of Apples** (Welsh *afal*); **GUINEVERE = "the white
+phantom"** (from *Gwenhwyfar*) — the queen was a ghost by name; **MERLIN =
+LIMNER** — an illuminator of manuscripts; **CAMELOT = CAME + LOT** (comedy
+tier).
+
+**Vatican & relics — winner: CONCLAVE / APOCRYPHA — the church files its
+secrets under their own names** (top ten). Supports: **VATIC-AN** — *vatic*
+is a real English adjective, "prophetic", from *vates*, the seer said to
+haunt the Vatican hill; **PONTIFF = "bridge-builder"** (*pontifex*);
+**PROPAGANDA** was a Vatican congregation (*de Propaganda Fide*) before it
+was a sin; **SISTINE CHAPEL = CHIP ESSENTIAL** — a sculptor forced to
+paint, says the anagram (curio tier).
+
+**Lost lands — winner: EL DORADO = LEAD DOOR** (top ten). Supports:
+**LEMURIA** — the lost continent is named, via Sclater's lemurs, for the
+*lemures*: Rome's restless ghosts of the dead — Ghost-land by accident of
+taxonomy; **the ATLANTIC is "the sea of Atlas"** — Atlantis means "island
+of Atlas": we never lost Atlantis's name, we sail it (Herodotus already
+calls the ocean *Atlantis thalassa*); **TERRA INCOGNITA = COATING
+TERRAIN** — which is what mapmakers did to it, with dragons; **CROATOAN =
+A CARTOON** (the debunker's tier, played for honesty).
+
+**Modern conspiracy — winner: FLYING SAUCER = LYING SURFACE** (top ten).
+Supports: **DREAMLAND** — no wordplay needed: the US government's own radio
+callsign for Area 51 is *Dreamland*, the reveal pre-installed by the Air
+Force; WEATHER BALLOON and MAJESTIC TWELVE returned nothing — some words
+keep their letters shut.
+
+## The podium — the ten winners, ranked
+
+### 1 · FLYING SAUCER = LYING SURFACE
+
+Exact anagram, internal rhyme — and it is not a joke, it is the
+*explanation*. Every saucer ever explained away was a lying surface: a
+radar duct, a balloon skin, a lens flare, a hubcap thrown past a camera.
+The household name for the mystery contains the solution, rhymed.
+**Backworked story:** a UFO-religion thriller — the founding 1947
+photograph's negative finally examined; the sect's name for the object is
+lovingly lettered on their chapel wall, and the sceptic-protagonist
+rearranges the wall at the end. Clincher: *"Rearrange the saucer and it
+confesses."* Novelty: found in no prior print (searched 19 Aug 2026).
+
+### 2 · ROUND TABLE = AND TROUBLE = NOT DURABLE
+
+A triple mutual anagram that narrates the whole Morte: *Arthur made a
+ROUND TABLE — AND TROUBLE — NOT DURABLE.* One sentence, three spellings of
+the same ten letters, beginning, middle and end. Anagram generators list
+the pairs mechanically (any exact anagram is enumerable); no one appears to
+have noticed what they *say* in sequence. **Backworked story:** a Malory
+scholar finds the three phrases doodled in a fifteenth-century margin (the
+one invented beat) and spends the book failing to prove the scribe meant
+it — the letters knew the ending whether or not anyone did.
+
+### 3 · FRANCIS BACON = CANON FABRICS
+
+The Baconians spent a century mining Shakespeare's texts for hidden
+proof that Bacon fabricated the canon — Donnelly's *Great Cryptogram*, the
+honorificabilitudinitatibus anagram — and never noticed the confession
+sitting in the man's own name. **Backworked story:** the heir to a
+cipher-hunter's archive, contractually obliged to finish the great-uncle's
+book, finds this in the final box — and understands, in the same instant,
+both why the theory felt true and why it never was: *the pattern-hunter is
+the pattern.* The perfect double-edged clincher — in-world it detonates; at
+the debrief it teaches exactly why anagram-proofs prove nothing. Novelty:
+unfound in the Baconian literature (searched 19 Aug 2026).
+
+### 4 · TEMPLAR = TRAMPLE
+
+Of the 127 articles of accusation drawn up against the order in 1307,
+five concern spitting on, urinating on, or **trampling** the cross. The
+order's name is an exact anagram of the charge that destroyed it — filed on
+Friday 13 October 1307. **Backworked story:** an inquisition-archive
+thriller: the notary who engrosses the charge sheet sees the letters
+rearrange under his pen and takes it for either proof or possession.
+Clincher: *"The confession was extracted under torture. The anagram was
+always free."*
+
+### 5 · AUTUMN OF TERROR = FORTUNATE RUMOR
+
+The Ripper's season — the press's own name for late 1888 — anagrams to
+the modern consensus about the case: the "Dear Boss" letter that coined
+*Jack the Ripper* is widely held to have been a journalist's invention, and
+terror was circulation gold. The epithet confesses the business model.
+**Backworked story:** a newspaper-morgue mystery in which the discovery is
+not who Jack was but *who made him* — and the last line hands the season's
+name back to the reader, rearranged.
+
+### 6 · TUTANKHAMUN = THANK AUTUMN
+
+Carter found the first step on 4 November 1922 and breached the sealed
+doorway on 26 November. The most famous discovery in the history of
+archaeology was autumn's gift, and the boy-king's name — filled with
+un-English clusters, the last name anyone would try to anagram — says
+grace for it. **Backworked story:** an excavation-diary novel; the anagram
+sits as an unexplained epigraph and is read aloud only in the final
+chapter, against the November dates.
+
+### 7 · THE LITERACY OCCULT — *"Magic is what reading was called before everyone could do it."*
+
+Not one find but the theme's whole floor, every link T1: **grammar =
+glamour = grimoire** — one word, the book of letters, its Scots magic and
+its French spellbook; a **spell** is a story; the **gospel** is the good
+spell; a **charm** is a *carmen*, a poem; to **enchant** is to sing into
+(*incantare*); a **rune** is a secret; and to **read** (*rædan*, to
+interpret) is the same word as **riddle** (*rædels*) — reading *is*
+riddling. **Backworked story:** the symbologist-thriller ending the genre
+has been circling since 2003: the quest for the hidden book of magic ends
+with no book, because literacy is the magic that survived by turning
+ordinary. Clincher: *"You have been casting since you were five."*
+
+### 8 · FREEMASON = FORENAMES
+
+The fraternity whose central legend is a lost Word — the Master's word,
+lost with Hiram Abiff and replaced by a substitute until it be found —
+anagrams to *forenames*: the words by which brothers know each other.
+**Backworked story:** a lodge-history mystery in which the candidate
+searches records for the genuine Lost Word and is finally shown the
+anagram: the Word was never in the ritual; it is what the brothers call
+each other. Support-lock: MASONIC is MOSAIC plus one letter, on a floor
+that is literally the mosaic pavement.
+
+### 9 · CONCLAVE / APOCRYPHA — *"The church files its secrets under their own names."*
+
+*Conclave*: **cum clave**, "with a key" — the locked room is named Locked.
+*Apocrypha*: **"the hidden-away"** — the suppressed books are catalogued as
+Hidden, and have been for seventeen centuries. **Backworked story:** a
+Vatican archivist realizes the entire classification system is a
+confession in plain Latin — nothing was ever disguised, only labelled in a
+language the world stopped reading. Clincher: *"You asked where the secret
+archive is. Read the spine."*
+
+### 10 · EL DORADO = LEAD DOOR
+
+The city of gold is an exact anagram of gold's alchemical opposite — and
+El Dorado was never a city anyway: *el dorado*, "the gilded one", was a
+man, powdered with gold dust and washed clean in Lake Guatavita; the city
+was rumor's drift. Every expedition that went looking opened the lead
+door. **Backworked story:** a conquistador-archive novel told as a chain
+of expeditions, each inheriting the previous one's map; the anagram is the
+epitaph on the last searcher's grave.
+
+## Part III notes and sources
+
+- Anagram verification: `themes_sweep.py` (this folder). Anagram
+  generators enumerate exact anagrams mechanically — e.g.
+  [anagrams.net](https://www.anagrams.net/generator/round%20table) lists
+  the ROUND TABLE pairs — so "novel" throughout means *the reading is
+  unspent*, not "no machine ever printed the letters."
+- Templar charges (five articles on spitting/trampling/urinating on the
+  cross; Friday 13 Oct 1307): [The Real History Behind the
+  Templars](https://erenow.org/postclassical/the-real-history-behind-the-templars/32.php),
+  [HISTORY](https://www.history.com/articles/knights-templar-downfall-confessions-torture)
+- Baconian cipher background: [Wikipedia: Baconian
+  theory](https://en.wikipedia.org/wiki/Baconian_theory_of_Shakespeare_authorship)
+- Novelty searches for FLYING SAUCER = LYING SURFACE and FRANCIS BACON =
+  CANON FABRICS returned no prior claim (19 Aug 2026).
+- Standard-reference etymologies (each a one-minute check in etymonline /
+  OED-derived summaries): grammar/glamour/grimoire, spell, gospel,
+  charm/*carmen*, *incantare*, rune, *rædan*/*rædels*, *sifr* →
+  cipher/zero, *al-* words, *cum clave*, *apokryphos*, *vates*/vatic,
+  *pontifex*, Propaganda Fide, *sphingein*, *per-aa* (pharaoh), obelus/
+  obelisk, cartouche, *afal*/Avalon, Gwenhwyfar, *lemures*/Lemuria,
+  "el dorado" as the gilded man, Herodotus's *Atlantis thalassa*,
+  Dreamland as the Area 51 callsign. Tutankhamun dates (4 and 26 Nov 1922)
+  are standard record.
+- Spent/known, for the avoidance of reinvention: san greal/sang real;
+  MONA LISA = MON SALAI (claimed in print); SANTA = SATAN; WILLIAM
+  SHAKESPEARE = "I AM A WEAKISH SPELLER"; Psalm 46; Baphomet→Sophia via
+  Atbash; ROSETTA = TOASTER (comedy, and someone has surely toasted it).
 
 ---
 
