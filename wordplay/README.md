@@ -2,8 +2,11 @@
 
 A standalone research project: wordplay in the *san greal / sang real* class —
 reveals that could serve as the final clincher of a Da Vinci Code-shaped
-narrative, and from which a story could be backworked. Surveyed broadly,
-shortlisted to ten, ranked; top five in full, ranks six to ten as an appendix.
+narrative, and from which a story could be backworked. **Part I** surveys the
+established stratum broadly, shortlists ten, ranks a top five with an
+appendix. **Part II** goes below the listicle layer: niche finds mined from
+the metrology theme itself, by machine sweep and hand pass, verified and
+novelty-checked, ranked the same way.
 
 **This is a separate project.** It shares a repository with the Fedora hunt
 for convenience only. Nothing in Fedora's `docs/` references this file, and
@@ -434,6 +437,289 @@ its class by a distance, which is exactly enough for tenth.
 
 ---
 
+# PART II — the deep dive: niche finds
+
+Added 19 Aug 2026. Brief: go below the listicle stratum — wordplay not spent
+before, mined from the theme itself (measurement, the meridian, the 1834
+fire, the cast of the metrology story) rather than from the general stock.
+
+## Method
+
+Two passes, then verification:
+
+1. **Machine sweep** (`sweep.py`, this folder; wordlists: dwyl
+   `words_alpha.txt` 370k, `first20hours` 20k common). Four hunts:
+   single-word anagrams of a ~60-term theme lexicon; two-word anagrams of
+   key targets; unit names as contiguous substrings of common words;
+   re-splits of theme words into dictionary words. Every conjectured anagram
+   in this document is letter-verified by the script.
+2. **Hand pass over the theme lexicon** — every unit, instrument, office and
+   proper name in the metrology story taken back to its roots, hunting
+   doublets, fossils and collisions.
+3. **Verification and novelty**: every load-bearing claim below was checked
+   against sources on 19 Aug 2026 (list at the end of this part), and the
+   top candidates were novelty-searched. Nothing in the ranked ten was found
+   already spent in print; where a near-miss exists it is noted in place.
+   "Novel" here means *unspent in narrative* — machine-enumerable anagrams
+   may well sit in some anagram dictionary.
+
+## The niche shortlist — ten candidates
+
+| # | Candidate | Mechanism | Snap | Truth | Fresh |
+|---|---|---|---|---|---|
+| 1 | **Clarke = clerk** | surname doublet, homophone aloud | ★★★★★ | T1 | ★★★★★ |
+| 2 | **The Grave** (the kilogram's first name) | buried birth-name | ★★★★★ | T1, one hedge | ★★★★★ |
+| 3 | **Airy nothing** | triple coincidence, all attested | ★★★★ | T1 × 3 | ★★★★★ |
+| 4 | **Smyth = myths** | exact anagram + the π forename | ★★★★★ | T1 letters | ★★★★★ |
+| 5 | **The line is a thread** | instrument fossil (linea) | ★★★★ | T1 | ★★★★ |
+| 6 | **Winchester** | letter-coincidence on true history | ★★★★ | coincidence + T1 | ★★★★ |
+| 7 | **Pram = perambulator** | word migration, bounds → nursery | ★★★★ | T1, one hedge | ★★★★★ |
+| 8 | **Delirium = off the furrow** | fossil + the plough cluster | ★★★★ | T1 | ★★★ |
+| 9 | **Inch = ounce** | doublet (uncia twice) | ★★★★ | T1 | ★★★★ |
+| 10 | **The teller's account** | doublet cluster (story = ledger) | ★★★ | T1 | ★★★★ |
+
+## The niche five
+
+### 1 · CLARKE — *"There was always a clerk in the story. The record spells him Clarke."*
+
+**The wordplay.** Clarke is not *like* clerk; it **is** clerk. The surname
+Clark(e) is the occupational name for a clerk — one word, two spellings, and
+in British English still one *sound* (clerk is pronounced "clark"; the
+er→ar drift that also gave Derby and sergeant). Deeper down, *clerk* <
+*clericus* < Greek *klēros*, "the allotted portion" — a clerk is, at the
+root, the keeper of a measured share.
+
+**The backworked story.** A mystery built on two keepers a century apart: a
+parish clerk who holds something back in 1900 and vanishes from the record,
+and a scientist named Clarke who dies in 1914 as the last man alive who
+could have known. The book lets the reader hold them apart for twenty
+chapters; the reveal is one sentence of philology — the surname is the job.
+There was one office all along, spelled two ways. And because clerk and
+Clarke are homophones, the audiobook has been saying a single word from page
+one; only the print reader was ever protected from the truth.
+
+**Why first.** It is San Greal's exact effect transposed onto a name: two
+things the audience believed distinct revealed as one word, the check takes
+a minute in any surname dictionary, and the aloud-test doesn't just pass —
+aloud, the secret was never hidden at all.
+
+### 2 · THE GRAVE — *"The kilogram was born the Grave."*
+
+**The wordplay.** The first metric unit of mass, decreed in France in 1793,
+was not called the kilogram. It was called the **grave** (symbol *gv*: the
+mass of a litre of water). In 1795 it was renamed *kilogramme*. By the usual
+account, the old name had to go partly because *grave* was also a nobleman's
+title — as in margrave and landgrave — and the Republic was abolishing
+titles. The dates, names and symbol are hard record (NIST; the decrees);
+only the motive needs the hedge.
+
+**The cluster.** A metrology story is grave all the way down: standards are
+**engraved**; a grave matter is a heavy one (*gravis*); **gravity** is
+heaviness itself; Airy weighed the Earth by swinging pendulums at the top
+and bottom of a coal mine; and a grave is six feet deep — one fathom, the
+span of a man's arms.
+
+**The backworked story.** The metric system as a haunted house. A researcher
+keeps finding *gv* in the oldest French papers and misreading it as a
+scribal slip; the reveal: *"Before it was the kilogram it was the Grave.
+They renamed it in the Terror, when everything with a title lost it. Every
+weight you have ever trusted is an alias."* Clincher, deadpan: *"What does a
+kilogram weigh? — One Grave."*
+
+**Why second.** The freshest hard fact on either list — checkable at NIST in
+under a minute, unknown even to most people who work in measurement — and
+the word could not be more on-theme if it had been planted. Second only
+because the fact is French-born, though the word sits in English untranslated.
+
+### 3 · AIRY NOTHING — *"The meridian is airy nothing. They gave it a local habitation and a name. The name was Airy."*
+
+**The wordplay.** Three attested facts that click like a lock. One: the
+Prime Meridian has no physical existence — it is, in the plainest sense,
+airy nothing. Two: Shakespeare, *A Midsummer Night's Dream* V.i —
+imagination's work is to give "to airy nothing / A local habitation and a
+name" — and between 1851 and 1884 the airy nothing was given a local
+habitation (Greenwich) and a name: the **Airy Meridian**, after the
+Astronomer Royal whose transit circle defines it. Three: the speech is
+spoken by **Theseus** — the man who followed Ariadne's clew, patron of Part
+I's №2. And a fourth lock nobody needs but the story deserves: the prime
+meridian of **Mars** is defined by the crater **Airy-0**. Two planets hang
+their zero on airy nothing.
+
+**The backworked story.** For the meridian-conference thread: the Shakespeare
+sits as the book's epigraph, read past by everyone; the final chapter reads
+it back out as the literal minutes of 1884 — a committee of poets voting a
+shadow into sovereignty, exactly as Theseus said they would.
+
+**Why third.** As pure meant-to-be-there it may be first: every component is
+famous, checkable, and already adjacent in the record — except the sentence
+joining them, which appears never to have been written (novelty-searched 19
+Aug; the juxtaposition surfaces nowhere). Third because the snap needs the
+quote re-heard, which costs a beat more than a name or a unit.
+
+### 4 · SMYTH = MYTHS — *"His name was an anagram of what he made."*
+
+**The wordplay.** SMYTH — the surname of pyramidology's high priest — is a
+perfect anagram of MYTHS. Five letters; verify it with tiles. The forename
+gilds it: **PI**azzi (for his godfather, the astronomer Giuseppe Piazzi) —
+and the pyramid theory's founding claim is that the Great Pyramid encodes
+**π** in its proportions. The man who found π in a monument carried π at the
+head of his name and myths at the foot of it. Footnote from the record: his
+own century played the joke back — a catalogued Victorian-style jape
+assembled "SMYTH AT THE GREAT PYRAMIDE" as a mock Shakespeare-prophecy
+anagram, Baconian fashion. The letters have been laughing at him for a
+while. (SMYTH = MYTHS itself appears unclaimed in print — searched 19 Aug.)
+
+**The backworked story.** The crank chapter of any measures narrative, closed
+by the letter-mystic being filed by letters. He spent his life reading
+numbers into stone; the only cipher that ever truly contained him was his
+own name, and it judged him precisely. And the record hands over the
+closing scene ready-made: **he is buried at Sharow, near Ripon, under a
+miniature pyramid he designed himself.** Clincher, delivered flat: *"He lies
+under a pyramid in Yorkshire. Rearrange him."*
+
+**Why fourth.** The purest five-second check on the niche list. Docked below
+the top three only because anagram-class reveals read as machine finds
+unless the name itself does narrative work — here it does, twice.
+
+### 5 · THE LINE IS A THREAD — *"There are no lines. There is only string."*
+
+**The wordplay.** *Line* < Latin *linea*: **a linen thread** (*linum*,
+flax). The word for every abstract line in English is a piece of real
+string — the meridian line, the plumb line, the line of verse, the
+bloodline and lineage, the line of the survey. Two siblings complete the
+family: **chord** — geometry's straight line across an arc is *chorda*, a
+gut string stretched tight; and the sailor's **knot** — speed at sea is
+still counted in the knots of an actual knotted cord paid out against a
+sand-glass. Ships log knots; surveyors drew chords; genealogists follow
+lines. All cordage.
+
+**The backworked story.** For any cord-carrying puzzle narrative this is the
+deep floor under Part I's clew: not only is *clue* a ball of thread — *line*
+itself is one. A string pulled straight between two anchors is a chord under
+an arc and a line in the exact Latin sense. Debrief clincher: *"You have
+been asked to trust the Line all day — the meridian, the survey, the
+lineage of the standards. Linea: a linen thread. The Line is a longer piece
+of the string in your hand."*
+
+**Why fifth.** A layer rather than a knife — three etymologies deep — but it
+converts the whole vocabulary of the genre into physical string, and for a
+narrative that literally hands people string that is close to a cheat code.
+
+## Appendix — niche ranks six to ten
+
+### 6 · WINCHESTER — *"The city that kept the measures has an inch in its name."*
+
+W-INCH-ESTER. Etymologically an accident — *Wintanceaster* owes nothing to
+*ynce* — and historically a bullseye: under King Edgar (959–975) it was
+decreed that **all measures must agree with the standards kept at Winchester
+and London**; Henry VII's 1495 exemplars are the *Winchester Standards*; the
+Winchester bushel governed English grain until 1824 and **still governs
+American dry measure today**. The oldest name in English standard-keeping
+carries the smallest English unit inside it, by pure chance. *Why appendix:*
+coincidence-class — the letters lie about the etymology — so under the Part
+I law it decorates but cannot anchor. As a hunt clue, though: *"find the
+inch in the ancient capital."*
+
+### 7 · PRAM — *"The perambulation went to the nursery."*
+
+**Perambulation**: the legal name for beating the bounds — walking the
+boundary so it would hold in court. **Perambulator**: the surveyor's
+measuring wheel (the waywiser) that clicked off distances when the walking
+stopped being law. **Perambulator** again: the baby carriage, shortened by
+the nursery to **pram**. The children once carried around the bounds and
+hurt at the marks so their bodies would remember are now wheeled around the
+park in a word that remembers for them. (Hedge stated: wheel and carriage
+took the name from *perambulate* in parallel, not in sequence — the chain
+is of siblings, not descent.) Coda-clincher: *"Nobody beats the bounds any
+more. The prams still walk them."* *Why appendix:* it fires only after the
+bounds material is fully installed.
+
+### 8 · DELIRIUM — *"Off the furrow."*
+
+Latin *delirare*: to swerve out of the furrow while ploughing — *de* +
+*lira*. **Delirium is a ploughing accident.** And the furrow's family is
+the measurement family: a **furlong** is a furrow-long; an **acre** is a
+day's ploughing; and **verse** is *versus*, the plough's turn at the
+furrow's end — poetry's lines are ploughed. One field gave English its land
+measures, its poetry, and its word for madness: keeping the line, turning
+at the line, leaving the line. For the crank's chapter, one word does the
+work: *"The Latin for what happened to him is exact. He left the furrow
+everyone else was ploughing."* *Why appendix:* semi-known in classics
+circles, and it is texture that wants a book around it.
+
+### 9 · INCH = OUNCE — *"England's smallest length and smallest weight are the same word."*
+
+Latin *uncia*, "a twelfth", entered Old English once as *ynce* — the twelfth
+of a foot — and entered again through French as *unce* — the twelfth of a
+Troy pound. A doublet: the inch and the ounce are **one word that arrived
+twice**, and nobody sees the same word twice. Sibling for the tour: in
+French the inch is still *pouce* — **the thumb** — as in Dutch *duim*,
+Italian *pollice*; English amputated the thumb from its ruler and kept it
+only in the **rule of thumb**. Clincher: *"Give him an inch and he'll take
+an ounce — it was always the same gift."* *Why appendix:* perfect and
+checkable, but a doublet is a fact about the dictionary; it deals as a card,
+not as the hand.
+
+### 10 · THE TELLER'S ACCOUNT — *"Every story is a count."*
+
+Latin *computare* split in Old French into *conter* (tell a tale) and
+*compter* (count), and English inherited the fusion whole: you **tell** a
+story and a bank **teller** tells coins; you **recount** an adventure and
+demand a **recount** of votes; you give an **account** of yourself and keep
+**accounts**; **all told** means *all counted*. Narration and accountancy
+are one verb wearing two hats — a tally is a tale. Cross-language capstone,
+GCSE-familiar: French **livre** is both *book* and *pound* (liber / libra —
+two Latins, one French sound), so a book about measurement can end on its
+own last page: *"This is a livre. Weigh it."* The backworked story: a book
+whose evidence is a ledger reveals that the ledger was always a narrative
+and the narrative always a ledger — in English those were never two things.
+*Why appendix:* the strongest conceptual find on the niche list, but it
+crowns a book rather than detonating a scene — a thesis, not a snap.
+
+## The rest of the harvest — curios, one line each
+
+| Find | Note | Class |
+|---|---|---|
+| **OBSERVATORY = SOBER VOTARY** | exact anagram (script-verified) — and a votary is a person bound by a vow: a fair description of the resident | anagram, apt |
+| **PRIME MERIDIAN = IMPAIRED MINER** | exact anagram — and Airy, the meridian's author, twice failed at mine gravity experiments (Dolcoath 1826, pendulum broken; 1828, flooded) before Harton 1854 | anagram + T1 history |
+| **TURNER = RETURN** | exact — the painter of the 1834 fire, standing where a route returns | anagram |
+| **VERNE = NEVER = NERVE** | exact — and Verne titled his books in units: days, leagues, weeks | anagram + T1 pattern |
+| **MINUTE = MINUET** | anagram *and* cognate (both "small"): the clerk kept minutes while the age danced them | anagram + etym |
+| **MERIDIAN = "I DREAM IN—"** | exact letters; fragment only | anagram |
+| **SACRED = SCARED; s-ACRE-d** | one transposition apart — and the churchyard is *God's Acre*, with an acre sitting inside *sacred* | anagram + visual |
+| **MEASURE = MEA SURE** | bilingual re-split, "my sure thing" — the check-for-yourself thesis in two words | pun |
+| **FACSIMILE = FAC SIMILE** | a frozen Latin imperative: *"make it alike!"* — a standards system in one word (and MILE sits inside it) | T1 |
+| **A.M. / P.M.** | *ante / post meridiem*: everyone on Earth cites the meridian twice a day | T1 |
+| **CEMETERY ⊃ METER** | visual only (*koimeterion*, the sleeping-place): a meter asleep in every cemetery | visual |
+| **GNOMON** | Greek: "the one that knows" — the only part of a sundial that touches the light is named for knowledge | T1 |
+| **ESSAY = ASSAY** | doublet: every school essay is a metallurgical test | T1 |
+| **BISHOP = EPISKOPOS** | "over-seer": the clergy who walked the bounds were surveyors by job title | T1 |
+| **DIARY = DIARIUM** | a day's ration — a diary is a measured portion of days | T1 |
+| **TIME = TIDE** | one Old English word (*tīd*): "time and tide" is a tautology; the river keeps the other clock | T1 |
+| **MÈTRE / MAÎTRE** | French near-homophones: the metre and the master | cross-lang pun |
+| **£ = LIBRA; STERLING** | the pound sign is the zodiac's scales; *sterling* perhaps "little star" (contested): money written in constellations | T1 + contested |
+| **TROY** | gold is weighed in Troy — the fair (Troyes), not the war, but the language cannot tell them apart | homograph |
+| **DRAM = DRACHMA** | every Scottish dram is a Greek silver coin | T1 |
+| **SCOTLAND YARD** | two unrelated *yards* (stick vs enclosure) collide in London: the Yard could investigate the yard | homonym |
+| **"days as an handbreadth"** | Psalm 39:5 — the KJV measures a life in hand-units | T1 quote |
+| **WESTMINSTER = WITNESS TERM** | exact anagram (script) | anagram |
+| **WINCHESTER ⊃ INCH kin**: PINCH, FINCH | a pinch is about an inch; visual only | visual |
+
+## Part II sources (checked 19 Aug 2026)
+
+- The grave → kilogram, 1793/1795: [NIST](https://www.nist.gov/si-redefinition/kilogram/kilogram-past), [Wikipedia: Grave (unit)](https://en.wikipedia.org/wiki/Grave_(unit))
+- Perambulator / waywiser as surveyor's wheel: [Wikipedia: Surveyor's wheel](https://en.wikipedia.org/wiki/Surveyor%27s_wheel), [World Wide Words](https://www.worldwidewords.org/weirdwords/ww-way2.htm)
+- Delirium < *delirare*, "off the furrow": [etymonline](https://www.etymonline.com/word/delirium)
+- Inch and ounce < *uncia* doublets: [etymonline](https://www.etymonline.com/word/ounce), [Saturday Evening Post](https://www.saturdayeveningpost.com/2021/01/in-a-word-give-an-inch-take-an-ounce/), [Wiktionary](https://en.wiktionary.org/wiki/uncia)
+- Winchester measure, Edgar's decree, the 1495 standards, the US bushel: [Wikipedia: Winchester measure](https://en.wikipedia.org/wiki/Winchester_measure), [Britannica](https://www.britannica.com/science/Winchester-bushel)
+- Airy's mine experiments (Dolcoath failures, Harton 1854): [Today in Science](https://todayinsci.com/A/Airy_George/AiryGeorge-Pendulum.htm), [Royal Society](https://royalsocietypublishing.org/rspl/article/doi/10.1098/rspl.1856.0007/107934/Account-of-pendulum-experiments-undertaken-in-the)
+- Smyth's pyramid grave at Sharow: [Atlas Obscura](https://www.atlasobscura.com/places/grave-of-charles-piazzi-smyth), [St John's Sharow](https://www.stjohnssharow.com/the-churchyard.html)
+- "Airy nothing… a local habitation and a name", Theseus, MSND V.i: [myShakespeare](https://myshakespeare.com/midsummer-nights-dream/act-5-scene-1-popup-note-index-item-airy-nothing); Airy-0 on Mars: [Wikipedia](https://en.wikipedia.org/wiki/Airy-0)
+- "SMYTH AT THE GREAT PYRAMIDE" parody anagram: [Bob Forrest, *Indigesta Shakespeareana*](https://www.bobforrestweb.co.uk/Miscellaneous/Fortean_Times/Indigesta_Shakespeareana.htm)
+- *Linea* = linen thread, *chorda* = gut string, the log-line knot, *conter/compter*, French *livre*, Clark(e) = clerk: standard references (OED-derived summaries, etymonline); each is a one-minute check.
+
+---
+
 ## Crossover notes (Fedora) — records possibilities only
 
 Kept here, not in Fedora's docs; nothing in that project references this
@@ -447,6 +733,21 @@ file, and nothing here changes any of its locked decisions.
   finish that turns out to be a place.
 - **The Exchequer cluster** and **meantime** sit naturally beside the 1834
   fire and the 1884 fortnight respectively.
+
+From Part II, the deep dive:
+
+- **Clarke = clerk** is made for that book's exact cast: the invented vestry
+  clerk and the real Alexander Ross Clarke — "the last man alive who could
+  have known" — are one word, and homophones when read aloud.
+- **The Grave** belongs beside the metric thread and the four deaths of the
+  last chapter; **Airy nothing** beside the 1884 fortnight (with the
+  Theseus/clew rhyme free of charge); **Smyth = myths** and **delirium =
+  off the furrow** in the crank's chapter, with the Sharow pyramid grave as
+  its closing image; **the line is a thread** under the cord mechanic,
+  where the players already hold the linea.
+- **Pram = perambulator** is the natural coda to the beating-the-bounds
+  chapter; **the teller's account** fits a book whose evidence is a
+  clerk's ledger; **minutes** (the clerk's and the arc's) is free texture.
 - **One warning from the anatomy:** these reveals work one at a time. One
   summit, at most one grace note; stacked clinchers read as a listicle.
 
