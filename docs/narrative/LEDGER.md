@@ -101,6 +101,10 @@ properties of the record**. Someone trying to catch us out confirms us instead.
 | 1760–1819 | **The Elizabethan yard is broken and repaired somewhere in this window. No source says when, or by whom** | T5 | BAR | ● |
 | **1726** | Voltaire is **beaten** in Paris by servants of the Chevalier de Rohan, briefly held in the Bastille, and released on condition he leave the country — which is why he was in London | T1 | | ● |
 | 1807 | **Turner is elected Professor of Perspective and Geometry at the Royal Academy**, obliged to lecture annually on "the most useful propositions of geometry" | T1 | EYE | ● |
+| **1794–95** | **Richard Brothers** publishes *A Revealed Knowledge of the Prophecies and Times* — many Britons are unknowing Hebrews. The first statement of British Israelism | T1 | ARM | ★ |
+| **1795** | **Brothers is arrested for treasonably prophesying the death of the King and confined as a criminal lunatic** | T1 ⚠ | ARM | ★ |
+| — | **The doctrine that makes the monarch a descendant of David begins with a man imprisoned for prophesying against the monarch** | T2 | ARM | ★ |
+| **1840** | **John Wilson**, *Our Israelitish Origins* — the first modern statement of the doctrine. **It contains no metrology** | T1 | ARM | ★ |
 | 1810 | **The statue's sword, buckles and straps fall off** | T1 | ARM | ● |
 | **1821** | **The King's Champion rides into Westminster Hall at George IV's coronation and makes the challenge for the last time**: *"If any person… shall deny or gainsay our Sovereign Lord George… here is his Champion, who saith that he lieth, and is a false traitor, being ready in person to combat with him"* | T1 | ARM | ★ |
 | 1824 | Weights and Measures Act. The yard is the distance between two gold plugs in a bronze bar **in the custody of the Clerk of the House of Commons**, at 62 °F | T1 | BAR | ● |
@@ -127,7 +131,13 @@ properties of the record**. Someone trying to catch us out confirms us instead.
 | 1851 | William Beatson takes two *Temeraire* chairs to New Zealand. **One is in the Whanganui Regional Museum** | T1 | KEEP | ● |
 | 1855 | The restored standard becomes law — twenty-one years after the fire | T1 | BAR | ● |
 | 1859 | **John Taylor: the pyramid inch, one twenty-fifth of the sacred cubit Newton postulated.** He concludes the British inch is divinely inspired and the restored yard wrong by about a thousandth | T1 | BAR | ● |
+| — | **Nothing documents how the bloodline claim and the measurement claim were welded together between 1840 and 1859, or by whom** | **T5** | ARM BAR | ★ |
 | 1862 | Ordnance Survey definitive maps. **Beating the bounds stops being the legal record** | T1 | | ● |
+| **1864–65** | **The Ordnance Survey surveys Jerusalem** — six Royal Engineers under Capt. Charles Wilson, directed by **Col. Sir Henry James**, engraved at the Ordnance Survey Office, **Southampton**. Funded largely by Angela Burdett-Coutts | **T1** | BAR ARM | ★ |
+| 1865 | The **Palestine Exploration Fund** is founded out of that survey, first meeting 22 June | T1 | BAR | ★ ◇ |
+| **1867–70** | **Lieut. Charles Warren, R.E.** excavates the Temple Mount for the PEF | T1 | BAR | ★ |
+| — | **Newton wanted the sacred cubit in order to reconstruct the Temple. Two centuries later the Royal Engineers were digging under it** | T2 | BAR ARM | ★ |
+| **1868–69** | **The Ordnance Survey surveys the Peninsula of Sinai** — Wilson and Palmer, under James | T1 | BAR | ★ |
 | — | Where a boundary was disputed the Ordnance Survey's own surveyors fell back on the memories of men beaten as children. A man of seventy-five won his parish's case because he had been thrown into nettles on the spot sixty years before. **The pain was the evidence** | T1 | | ● |
 | 1864 | **Smyth**, Astronomer Royal for Scotland, publishes *Our Inheritance in the Great Pyramid* | T1 | BAR | ● |
 | — | **Smyth was a committed British Israelite — the doctrine that the British are the ten lost tribes and that the royal family descends in the male line from King David — and he argued that the Anglo-Saxons had inherited their imperial measures from God by that same descent** | **T1** | **ARM BAR** | ● |
@@ -135,6 +145,11 @@ properties of the record**. Someone trying to catch us out confirms us instead.
 | 1866 | **Clarke's *Comparisons of the Standards of Length*.** From it the **Clarke 1866** ellipsoid, and later **Clarke 1880** | T1 | BAR | ● |
 | — | Clarke 1866 is the basis of NAD27, still the datum of record for older railways, canals and pipelines across North America and in every GIS package; Clarke 1880 underpins several African and French datums. **A defect in the standards is in the ground today** | T1 | BAR | ● |
 | 1866 | The Standard Weights and Measures Department of the Board of Trade is created | T1 | BAR | ◇ |
+| **1869** | **Sir Henry James, Director General of the Ordnance Survey, publishes *Notes on the Great Pyramid of Egypt and the Cubits used in its Design*, Southampton** | **T1** ⚠ | BAR ARM | ★ |
+| — | **Clarke's own director was a pyramid metrologist in print, from the building where the world's standards were compared. "Crank versus establishment" is the wrong frame — both sides were doing it** | T2 | BAR | ★ |
+| **1 Dec 1869** | **Smyth attacks him by name in a lecture title**: *A Poor Man's Photography at the Great Pyramid… Compared with that of the Ordnance Survey Establishment Subsidized by London Wealth, and under the Orders of Henry James* | **T1** ⚠ | BAR | ★ |
+| c.1870 | **St John Vincent Day**, *Papers on the Great Pyramid, including a critical examination of Sir Henry James' Notes* | T1 | BAR | ★ ◇ |
+| **1870s–80s** | **Edward Hine** popularises the doctrine; founds the British-Israel Identity Corporation, 1880. **He and Edward Wheeler Bird fall out**, and what the quarrel was about is thinly recorded | T1 / **T5** | ARM | ★ |
 | 1869–1938 | The department works in the **Jewel Tower**, and leaves because **road traffic vibration** made precise measurement impossible | T1 | BAR | ◇ |
 | **1874** | **The Royal Society rejects Smyth's pyramid paper.** The reasoning deserved it | T1 | BAR | ● |
 | — | *The yard is wrong* and *the yard is wrong because of divine revelation* are two statements, and only one was ever tested | T2 | BAR | ● |
@@ -142,6 +157,11 @@ properties of the record**. Someone trying to catch us out confirms us instead.
 | 1877 | **James Dafforne is the first to remark that the sun in the *Temeraire* is on the wrong side — thirty-eight years after it was painted**, by which time it was one of the best-loved pictures in the country | T1 | EYE | ● |
 | 1878 | The Act provides in statute for standards **"lost, destroyed, defaced or otherwise injured"** to be restored from an imperial standard or parliamentary copy | T1 | BAR | ◇ |
 | 1879–c.88 | The International Institute for Preserving and Perfecting Anglo-Saxon Weights and Measures. Smyth a vice-president. A song, *A Pint's a Pound the World Around* (1883) | T1 | BAR ARM | ◇ |
+| — | Its president was **Charles Latimer**, an American **railway engineer**; its magazine was ***International Standard***; **and it maintained a Committee on Standard Time** | **T1** | BAR SKY | ★ |
+| — | **What that committee argued is not summarised anywhere reachable.** A documented body with an undocumented position, on our exact subject, in the exact years | **T5** | SKY | ★ |
+| **1880–82** | **Flinders Petrie surveys Giza and disproves the pyramid inch.** He went because **his father was a believer** who wanted better numbers to confirm Smyth | **T1** | BAR | ★ |
+| **1884** | **Smyth campaigns for the Great Pyramid to be the prime meridian instead of Greenwich**, against Sandford Fleming | **T1** | BAR SKY ARM | ★ |
+| — | **Smyth fought the yard and the meridian in one campaign, and Airy won both. There is one conflict in this story, not two** | T2 | BAR SKY | ★ |
 | **1880** | **Statutes (Definition of Time) Act: Greenwich Mean Time becomes law in Great Britain — and Dublin Mean Time in Ireland.** Four years before the world was asked | T1 | SKY | ● |
 | 1881 | **Clarke resigns after twenty-seven years at one table rather than accept a posting abroad** | T1 | BAR | ● |
 | — | No source explains why | **T5** | BAR | ● |
@@ -160,6 +180,15 @@ properties of the record**. Someone trying to catch us out confirms us instead.
 | 1914 | **Clarke dies — the last man alive who could have known** | T1 | BAR | ● |
 | 1916 | Ireland gives up Dublin Mean Time for GMT | T1 | SKY | ◇ |
 | **17 Jul 1917** | **George V renames the royal house from Saxe-Coburg and Gotha to Windsor and relinquishes the German titles** | **T1** | ARM | ● |
+| **1919** | **The British-Israel-World Federation is founded in London near Buckingham Palace.** Inaugural congress July 1919, twenty thousand attendees. Patrons include the **Duke of Buccleuch, the Earl and Countess Dowager of Radnor, the Earl of Meath, the Earl of Dysart** | **T1** | ARM | ★ |
+| **to 1981** | **Princess Alice, Countess of Athlone, granddaughter of Queen Victoria, is patron-in-chief of the Federation until her death** | **T1** | ARM | ★ |
+| — | A member of the royal family held the top honorary office in the organisation that says the royal family descends from King David, into the 1980s | T2 | ARM | ★ |
+| **1924** | **David Davidson**, a **structural engineer** who set out to *disprove* Smyth, publishes *The Great Pyramid: Its Divine Message* with Herbert Aldersmith | T1 | BAR | ★ |
+| — | **Petrie checked and was freed of it. Davidson checked and was captured by it.** Same act, opposite outcomes | T2 | BAR | ★ |
+| 1920s | The British movement peaks at about **five thousand** committed adherents by one historian's count — against the Federation's own claim of hundreds of thousands | **T4** | ARM | ★ ◇ |
+| **1928–36** | **Davidson predicts a time of trouble for "the British order" from 29 May 1928, ending with the return of Christ on 16 September 1936.** Nothing happens | T1 ⚠ | ARM | ★ |
+| **Oct 1937** | **Davidson is still giving addresses on pyramid prophecy, at Westminster** | T1 ⚠ | ARM | ★ |
+| 1930s–70 | **Howard Rand**, then **Wesley Swift**, transform the doctrine in America into **Christian Identity** — violently antisemitic and racist. See the warning in `BRITISH_ISRAEL.md` | T1 | | ★ |
 | — | The family changed its name within living memory, in public, by proclamation, and nobody thinks it strange | T2 | ARM | ● |
 | **1936** | Edward VIII abdicates. The line breaks by choice, within living memory, and the crown moves sideways | T1 | ARM | ★ ◇ |
 | 1938 | The Airy Transit Circle leaves service | T1 | SKY | ◇ |
@@ -169,6 +198,7 @@ properties of the record**. Someone trying to catch us out confirms us instead.
 | — | Whether the site was re-surveyed before it was put back. Nobody records it | **T5** | ARM | ● |
 | **1950–51** | **The Stone of Scone is taken from Westminster Abbey on Christmas Day, breaks, is repaired by the stonemason Bertie Gray — who had made two copies of it in 1929 and whose original plan had been to substitute one — and is recovered at Arbroath in April 1951** | **T1** | ARM | ● |
 | — | **Gray kept fragments and distributed them with certificates of authentication.** There is a persistent claim that what went back to Westminster was a decoy | **T4** | ARM KEEP | ● |
+| — | **No reachable record says what the British-Israel-World Federation did or said when its central relic was stolen, broken and repaired by a man who had made copies of it — while a royal patron-in-chief was in post** | **T5** | ARM | ★ |
 | — | **Rivett sold brass as the king with a false provenance in 1650. Gray issued stone with certificates in 1951. Three hundred years apart, the same trade** | T2 | KEEP | ● |
 | 1952 | ⚠ **One source states the Trafalgar terrace plates were re-cut in 1952.** Every other source is silent on whether they are 1876 originals | **T4** ⚠ | BAR | ● |
 | 1955 | St Paul's Rotherhithe is demolished; its *Temeraire* furniture — a communion table, two bishop's chairs, altar rails — moves to St Mary's | T1 | KEEP | ◇ |
@@ -306,8 +336,9 @@ were always decoration.
 | | rows |
 |---|---|
 | **●** in the spine | 108 |
-| **◇** on probation | 13 |
-| **★** new this round | 20 |
+| **◇** on probation | 17 |
+| **★** new — ledger round | 20 |
+| **★** new — British Israel round | 32 |
 | **✕** cut, recoverable | 22 |
 
 | type | share of the spine |
@@ -320,6 +351,14 @@ were always decoration.
 
 Four inventions in a hundred and eight rows, and every one of them sits between
 two facts.
+
+---
+
+## See also
+
+**`BRITISH_ISRAEL.md`** — the movement's full history with a narrative-use
+column, the people, seven ranked places a fiction fits, and a warning about
+Christian Identity that governs how any of this may be used.
 
 ---
 
