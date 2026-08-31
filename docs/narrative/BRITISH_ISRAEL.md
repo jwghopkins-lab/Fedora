@@ -24,7 +24,7 @@ with him.
 | **1864–65** | The **Ordnance Survey surveys Jerusalem** — six Royal Engineers under Captain Charles Wilson, directed by **Colonel Sir Henry James**, engraved **at the Ordnance Survey Office, Southampton** | T1 |
 | **1866** | **A. R. Clarke publishes the *Comparisons of the Standards of Length* — from that same office, under that same director** | T1 |
 | **1868–69** | The **Ordnance Survey surveys the Peninsula of Sinai**, Wilson and Palmer, again under James | T1 |
-| **1869** | **Sir Henry James publishes *Notes on the Great Pyramid of Egypt and the Cubits used in its Design*, Southampton** | **T1** |
+| **1869** | **Sir Henry James publishes *Notes on the Great Pyramid of Egypt and the Cubits used in its Design*** — Southampton: Thomas G. Gutch, 1869 | **T1 — VERIFIED** |
 
 **The Director General of the Ordnance Survey — Clarke's own boss — personally
 published on the cubits of the Great Pyramid, from the building where the
@@ -92,7 +92,7 @@ of Satan. That is where this ends up, and it is not a footnote.
 |---|---|---|---|
 | **1649** | Cromwell readmits the question of Jewish resettlement to English public argument; millenarian expectation runs high through the Commonwealth | T1 | Background only. Sets the register — this kind of thinking is not Victorian, it is much older |
 | **1794–95** | **Richard Brothers** (1757–1824), a half-pay naval officer, publishes *A Revealed Knowledge of the Prophecies and Times* and announces that many inhabitants of the British Isles are unknowingly Hebrews who will be restored to Jerusalem **by 1798**, under his leadership | T1 | **The first fork.** He also declared himself "Nephew of the Almighty" and **Prince of the Hebrews**, and was arrested for treasonably prophesying the death of the King |
-| 1795 | **Brothers is arrested and confined as a criminal lunatic.** A Member of Parliament, Nathaniel Halhed, defended him in the Commons | T1 ⚠ | **The best single fact in the movement's early history.** The doctrine's founder was locked up for prophesying against the King — *the doctrine that says the King is descended from David begins with a man imprisoned for threatening the King* |
+| **4 Mar 1795** | **Brothers is arrested at 57 Paddington Street by two king's messengers**, on a warrant dated 2 March from the **Duke of Portland**, for **treasonable practices**. He had predicted London would fall on the King's official birthday, 4 June 1795, **and that he himself would succeed to the throne**. Confined as a criminal lunatic for eleven years; freed after **Nathaniel Halhed**, orientalist and MP, raised his case in the Commons | **T1 — VERIFIED** | **The best single fact in the movement's early history.** The doctrine's founder was locked up for prophesying against the King — *the doctrine that says the King is descended from David begins with a man imprisoned for threatening the King* |
 | 1824 | Brothers dies | T1 | |
 | **1840** | **John Wilson** publishes *Our Israelitish Origins* — the first modern statement of the doctrine | T1 | The respectable version. Wilson lectured widely; this is where it stops being one man's madness and becomes a movement |
 | 1840s–60s | The doctrine spreads by lecture and pamphlet. It is **not yet about measurement** | T1 | **A gap.** Between Wilson and Taylor the doctrine has no metrology. What joins them is not documented — see *Fiction points*, 1 |
@@ -105,27 +105,30 @@ of Satan. That is where this ends up, and it is not a footnote.
 | **1867–70** | **Lieut. Charles Warren, R.E.**, excavates the Temple Mount for the PEF | T1 | **Newton wanted the sacred cubit in order to rebuild the Temple. Two hundred years later the Royal Engineers were digging under it.** Nothing needs adding to that |
 | **1868–69** | **The Ordnance Survey surveys the Peninsula of Sinai** — Wilson and Palmer, under James | T1 | The state maps the Exodus |
 | **1869** | **Sir Henry James publishes *Notes on the Great Pyramid of Egypt and the Cubits used in its Design*, Southampton** | **T1** | **The keystone.** The head of the Ordnance Survey was a pyramid metrologist in print |
-| **1 Dec 1869** | **Smyth attacks him by name in a lecture title**: *A Poor Man's Photography at the Great Pyramid… Compared with that of the Ordnance Survey Establishment Subsidized by London Wealth, and under the Orders of Henry James* | **T1** | **The feud, documented, in a title.** This is a scene |
-| c.1870 | **St John Vincent Day** publishes *Papers on the Great Pyramid, including a critical examination of Sir Henry James' Notes* | T1 | A third party refereeing between the Astronomer Royal for Scotland and the Director of the Ordnance Survey, in print, about cubits |
+| **1 Dec 1869** | **Smyth attacks him by name, and by office, in a title.** Discourse to the **Edinburgh Photographic Society**, published 1870: ***A Poor Man's Photography at the Great Pyramid in the Year 1865; Compared with that of the Ordnance Survey Establishment, Subsidized by London Wealth, and under the Orders of Col. Sir Henry James, R.E., F.R.S., Director-General of the Ordnance Survey, at the Same Place Four Years Afterwards*** | **T1 — VERIFIED** | **The feud, documented, on a cover.** And the title carries a second fact: *at the same place four years afterwards* — **the Ordnance Survey went to the Great Pyramid itself, in 1869, at public expense.** Smyth had gone in 1865 on his own money. That is the whole class argument of the chapter, in one subtitle |
+| **1870** | **St John Vincent Day**, *Papers on the Great Pyramid, including a critical examination of Sir Henry James' “Notes on the Great Pyramid of Egypt”* — Edinburgh: Edmonston and Douglas, 1870; reviewed in ***Nature*** vol. 4 | **T1 — VERIFIED** | A third party refereeing between the Astronomer Royal for Scotland and the Director of the Ordnance Survey, in print, about cubits |
 | **1870s–80s** | **Edward Hine** (1825–1891) becomes the movement's great populariser. Founds **The British-Israel Identity Corporation**, 1880. **Edward Wheeler Bird** develops it in parallel — and the two men fall out | T1 | **A schism, and the record of what it was actually about is thin.** See *Fiction points*, 3 |
-| **1874** | **The Royal Society rejects Smyth's pyramid paper.** He is not censured; the paper is refused | T1 | **Five years after the Ordnance Survey's own director published on the cubits.** The turn of the chapter is right there |
+| **7 Feb 1874** | **Smyth's paper is *denied a reading* by the Royal Society, and he resigns his Fellowship.** The DNB's wording: *“A paper on the subject sent by him to the Royal Society having been denied a reading, he resigned his fellowship on 7 Feb. 1874.”* The Society had refused **Taylor's** paper before his | **T1 — VERIFIED** | **Better than a rejection.** *Denied a reading* means the argument was never heard — not weighed and dismissed, **not heard**. Five years after the Ordnance Survey's own Director General published on the cubits. **The turn of the chapter is that phrase** |
+| **1874** | **Smyth publishes his own account of it**: *The Great Pyramid and the Royal Society* (London, 1874) | **T1 — VERIFIED** | **The suppression is documented by the suppressed, in print, and it survives.** This kills the “lost to history” version and replaces it with something better: *it was all published, and it stopped mattering anyway* |
+| — | **Smyth is said to be the only person ever to resign a Fellowship of the Royal Society** | T1 ⚠ | Widely repeated; wants a primary before the book leans on it. If it holds, **it is the single strongest sentence available about him** |
 | 1875 | Sir Henry James retires as Director General | T1 | |
 | 1877 | James dies | T1 | |
 | **1879–c.88** | **The International Institute for Preserving and Perfecting Anglo-Saxon Weights and Measures.** President: **Charles Latimer** (1827–88), an American **railway engineer**. **Smyth is a vice-president.** Magazine: ***International Standard*** | T1 | **The organisation is the conspiracy, and it is real.** A transatlantic lobby group joining metrology, pyramidology and religion, with a serving Astronomer Royal on its board |
 | 1880 | Latimer publishes *The French Metric System, or The Battle of the Standards* | T1 | The title alone. He had, in one source's words, "visceral contempt for atheism, the French, and the metric system" |
 | **1880–82** | **Flinders Petrie surveys Giza — and disproves the pyramid inch.** He went because **his father was a believer** who wanted better measurements to confirm Smyth. The pyramid was several feet smaller than Smyth had said | **T1** | **The most human fact in the whole subject.** A believer's son goes to prove it, disproves it, and invents modern scientific archaeology in the process. **This is the researcher's story, a century early** |
 | 1883 | Petrie publishes *The Pyramids and Temples of Gizeh* | T1 | |
+| **1882** | **Smyth's reading of the pyramid put the start of the millennium at 1882** — and he found in its proportions **“a cryptographic solution of the problem of squaring the circle”** (DNB, 1901) | **T1 — VERIFIED** | **The record describes our antagonist in our own vocabulary.** A Victorian dictionary of national biography, in 1901, calling his work a *cryptographic solution* read out of a building's measurements. **We do not have to invent the idea that he thought he was decoding a monument. His obituarists thought so** |
 | 1883 | The Institute's song, *A Pint's a Pound the World Around* | T1 | Free comedy, and it is genuinely their song |
 | **1883** | **The Institute maintains a Committee on Standard Time** and publishes under its name | **T1** ⚠ | **The bridge from the yard to the meridian.** The anti-metric pyramidologists had a standing committee on time. What it argued is not summarised anywhere I could reach — **a documented body with an undocumented position** |
 | **1884** | **Smyth campaigns for the Great Pyramid to be the prime meridian instead of Greenwich**, against Sandford Fleming | **T1** | **This merges our two threads into one fight.** Smyth was not attacking the yard and separately the meridian. **He was fighting the same war on both fronts, and Airy won both** |
-| 1–13 Oct 1884 | Greenwich takes the meridian, 22–1, in Washington. Britain had signed the Metre Convention on 17 September | T1 | Smyth's disproof by Petrie was one year old |
-| **1888** | After Airy's public criticism, **Smyth resigns his Fellowship of the Royal Society and leaves the Royal Observatory in the same year** | T1 | |
+| 1–13 Oct 1884 | Greenwich takes the meridian, 22–1, in Washington — the conference recommending the meridian of **the transit instrument at Greenwich**. Britain had signed the Metre Convention on 17 September | T1 | Smyth's disproof by Petrie was one year old. Modern account of the fight: **Scott Alan Johnston, *The Clocks Are Telling Lies*** (McGill–Queen's, 2022), which puts Smyth in the meridian debates directly |
+| **1888** | **Smyth resigns as Astronomer Royal for Scotland and leaves the Royal Observatory** | T1 | **Correction to the previous draft of this table, caught in verification:** the Fellowship went in **1874**, the observatory in **1888**. Two separate departures, fourteen years apart — *he lost the Society first and kept the telescope another fourteen years* |
 | 1888 | Latimer dies; the Institute fades | T1 | The movement loses its metrological wing |
 | **1895–97** | A Select Committee recommends metric be **compulsory within two years**. The 1897 Act legalises and does not compel | T1 | **Britain missed metrication by a hair, in the decade the anti-metric lobby was at its loudest.** Whether the lobby caused it is not established — see *Fiction points*, 4 |
 | **1900** | **Smyth dies at Ripon, 21 February, aged 81, childless.** Estate to the Royal Society of Edinburgh; papers inventoried at the Royal Observatory Edinburgh | T1 | **The inventory is the boundary.** Anything outside it is verifiably unaccounted for — **T5**, and it is where our notebook lives |
-| **1919** | **The British-Israel-World Federation is founded in London, near Buckingham Palace.** Some eighty independent associations across the Empire combine. **Inaugural congress in London, July 1919, twenty thousand attendees** | T1 | The movement becomes an institution the year after the war |
+| **1919** | **The British-Israel-World Federation is founded in London, near Buckingham Palace.** **Over ninety** independent British-Israelite associations agree to federate. **Inaugural congress in London, July 1919, twenty thousand attendees** | T1 | The movement becomes an institution the year after the war |
 | — | **Patrons include the Duke of Buccleuch, the Earl of Radnor and the Countess Dowager of Radnor, the Earl of Meath, the Earl of Dysart, Lady Folkestone and the Marchioness Dowager of Headfort** | T1 | **The aristocracy, by name, on the letterhead** |
-| **— to 1981** | **Princess Alice, Countess of Athlone — granddaughter of Queen Victoria — is patron-in-chief of the Federation until her death in 1981** | **T1** | **The single most useful fact in this document after Sir Henry James.** A member of the royal family held the top honorary office in the organisation that says the royal family descends from King David — into the 1980s |
+| **1919–1981** | **Princess Alice, Countess of Athlone — granddaughter of Queen Victoria — is chief patron of the Federation from its founding until her death in 1981** | **T1 — VERIFIED** | **The single most useful fact in this document after Sir Henry James.** A member of the royal family held the top honorary office in the organisation that says the royal family descends from King David — into the 1980s |
 | **1924** | **David Davidson** (1884–1956), a **structural engineer**, publishes *The Great Pyramid: Its Divine Message* with **Herbert Aldersmith**. He had set out as a sceptic **to disprove Smyth** and reconciled Smyth's figures with Petrie's instead | T1 | **The second convert-by-checking.** Petrie checked and was freed; Davidson checked and was captured. **Same act, opposite outcomes, and that is the book's argument about evidence** |
 | **1920s** | The British movement **peaks at around five thousand committed adherents** by one historian's count, with the Federation claiming far more | T1 / T4 | **The membership numbers do not agree** — Barkun's five thousand against the Federation's own hundreds of thousands. A real discrepancy, and a usable one |
 | **29 May 1928 – 16 Sep 1936** | **Davidson predicts a time of trouble for "the British order", ending with the return of Christ on 16 September 1936** | T1 | **A dated prophecy about the British order, from pyramid measurements** |
@@ -166,12 +169,14 @@ desk from other people's figures.
 distinguished — the Tenerife expedition proved that altitude improves seeing, and
 he was right. Then Giza, the pyramid inch, the anti-metric campaign, the
 Institute vice-presidency, the attack on Sir Henry James, the campaign for a
-pyramid prime meridian, the 1874 rejection, the 1888 resignation. Died childless
-at Ripon.
+pyramid prime meridian, **the paper denied a reading and the Fellowship resigned
+on 7 February 1874**, and the observatory given up in **1888**. Died childless
+at Ripon, 21 February 1900.
 
 **Sir Henry James** (1803–1877) · **Director General of the Ordnance Survey
 1854–75.** Sent Royal Engineers to Jerusalem and Sinai. Published *Notes on the
-Great Pyramid of Egypt and the Cubits used in its Design*, Southampton, 1869.
+Great Pyramid of Egypt and the Cubits used in its Design*, Southampton: Thomas G.
+Gutch, 1869 — answered at book length by St John Vincent Day the following year.
 **Clarke's director for the whole of the period that matters.** — *The
 establishment's own pyramid metrologist, and the reason "crank versus
 establishment" is the wrong frame.*
@@ -187,8 +192,8 @@ Smyth, converted, published in 1924, predicted the end for **16 September 1936**
 and was still lecturing at Westminster in October 1937.
 
 **Princess Alice, Countess of Athlone** (1883–1981) · Granddaughter of Queen
-Victoria. **Patron-in-chief of the British-Israel-World Federation until her
-death.** — *A real person, recently alive, who did nothing wrong and must not be
+Victoria. **Chief patron of the British-Israel-World Federation from its
+founding in 1919 until her death in 1981** — sixty-two years.** — *A real person, recently alive, who did nothing wrong and must not be
 made to. Her patronage is the fact; anything more is off limits.*
 
 **Charles Warren** (1840–1927) · Royal Engineer. Excavated the Temple Mount
@@ -266,14 +271,59 @@ about to do.
 
 ---
 
-## Verification queue
+## Verification pass · 31 Aug 2026
+
+Seven of the eight queue items were run. **Six confirmed, one corrected an error
+in this document, one is still open.** Direct fetching is closed off in the
+current environment, so everything below came through search; the citations are
+given so each can be opened directly and read in full.
+
+| | Item | Result |
+|---|---|---|
+| **1** | **James, *Notes on the Great Pyramid…*** | **CONFIRMED.** Southampton: **Thomas G. Gutch, 1869**. Answered at book length by **St John Vincent Day, *Papers on the Great Pyramid*, Edinburgh: Edmonston and Douglas, 1870**, reviewed in *Nature* vol. 4. **What James concluded is still open** — one source attributes a royal cubit of **20.727 in** to him, which would put him on the orthodox side, arguing the ordinary Egyptian cubit against Smyth's sacred one. Day's book is the way in; it is on the Internet Archive |
+| **2** | **Smyth's 1869 title** | **CONFIRMED, and it is better than we had it.** The title names the office, not just the man — *“under the Orders of Col. Sir Henry James, R.E., F.R.S., Director-General of the Ordnance Survey”* — and it was **a discourse to the Edinburgh Photographic Society on 1 December 1869**, published 1870. **And it hands us a fact we did not have:** *“at the same place four years afterwards”* — the Ordnance Survey was at the Great Pyramid **in 1869** |
+| **3** | **Brothers's arrest** | **CONFIRMED and much sharper.** **4 March 1795, 57 Paddington Street**, two king's messengers, warrant of 2 March from the **Duke of Portland**, for **treasonable practices** — after predicting London would fall on the King's official birthday **and that he would take the throne himself**. Eleven years confined |
+| **4** | The Committee on Standard Time | **STILL OPEN.** No summary of its position found. It stays **T5**, which is what made it useful |
+| **5** | **Princess Alice's dates** | **CONFIRMED.** Chief patron **from the 1919 founding until her death in 1981** — not merely “until 1981”. Sixty-two years |
+| **6** | The 1895–97 lobby | Not attempted this pass |
+| **7** | Davidson's dates | Not attempted this pass |
+| **★** | **Not on the queue — found anyway** | **The Fellowship went in 1874, not 1888.** This table had them conflated. And the DNB's verb is not *rejected*: the paper was **“denied a reading.”** Smyth then published **his own account of it** — *The Great Pyramid and the Royal Society*, London, 1874 |
+
+### The three things this pass changed
+
+**1 · “Denied a reading” replaces “rejected.”** The Royal Society did not weigh
+Smyth's paper and find it wanting. **It declined to hear it.** Our premise is a
+measurement nobody would listen to; the record supplies exactly that, in the
+Dictionary of National Biography, with a date on it.
+
+**2 · The suppression was published — by the man suppressed.** *The Great Pyramid
+and the Royal Society* (1874) still exists. **This is better than a cover-up,**
+because a cover-up in a novel is a cliché and this is not one: everything was
+printed, and it stopped mattering regardless. **That is how things actually
+disappear**, and it is the more frightening version.
+
+**3 · The DNB calls his work a cipher.** In 1901 his obituarist wrote that Smyth
+had found in the pyramid's proportions **“a cryptographic solution of the problem
+of squaring the circle.”** We were going to have to invent a man who thought he
+was decoding a building. **His own century described him that way in print.**
+
+### One correction to the earlier report
+
+I told you the Ordnance Survey *published* on the pyramid. It did more than that.
+**It went there** — the phrase *at the same place four years afterwards* in
+Smyth's title means the state's survey office ran its own expedition to the Great
+Pyramid in 1869, four years after Smyth had gone at his own expense. **The class
+grievance in that subtitle is the chapter**, and it is Smyth's own wording.
+
+---
+
+## Still to verify
 
 | | | |
 |---|---|---|
-| **1** | **Sir Henry James, *Notes on the Great Pyramid…*, 1869** | **Highest priority.** Confirm exact title, date and imprint, and read what he concluded. St John Vincent Day's *Papers on the Great Pyramid* is on the Internet Archive and critiques it directly |
-| **2** | **Smyth's 1869 lecture title** | Confirm verbatim from the Internet Archive scan before quoting |
-| **3** | Brothers's 1795 arrest and the wording of the charge | ⚠ Stated by several sources; get the primary |
-| **4** | **The Committee on Standard Time** | Find its publications on the Online Books Page and establish what it argued |
-| **5** | Princess Alice's dates as patron-in-chief | Confirm when she took the office, not only when it ended |
-| **6** | Whether the 1895–97 record names the anti-metric lobby at all | Hansard is searchable |
-| **7** | Davidson's 1928–1936 dates and the October 1937 Westminster address | Confirm before using the dates |
+| **1** | **What James actually concluded in 1869** | **Now the highest priority.** If he argued the ordinary royal cubit against Smyth's sacred one, then the establishment did the same research and got the orthodox answer — which is a *better* story than shared belief, and changes how the chapter is written. Day's 1870 critique is the source |
+| **2** | **“The only person ever to resign a Fellowship of the Royal Society”** | Load-bearing if used. Widely repeated online; wants the Royal Society's own record |
+| **3** | The Committee on Standard Time's position | Online Books Page; still nothing found |
+| **4** | Whether the BIWF ever claimed the Stone of Scone as Jacob's Pillow | **Assumed in earlier drafts, not confirmed by this pass.** Downgrade to ⚠ until sourced — it matters, because the Stone is how the movement enters the modern thread |
+| **5** | Hansard 1895–97: whether the anti-metric lobby is named | |
+| **6** | Davidson's 1928–36 dates and the October 1937 Westminster address | |

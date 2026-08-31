@@ -102,7 +102,7 @@ properties of the record**. Someone trying to catch us out confirms us instead.
 | **1726** | Voltaire is **beaten** in Paris by servants of the Chevalier de Rohan, briefly held in the Bastille, and released on condition he leave the country — which is why he was in London | T1 | | ● |
 | 1807 | **Turner is elected Professor of Perspective and Geometry at the Royal Academy**, obliged to lecture annually on "the most useful propositions of geometry" | T1 | EYE | ● |
 | **1794–95** | **Richard Brothers** publishes *A Revealed Knowledge of the Prophecies and Times* — many Britons are unknowing Hebrews. The first statement of British Israelism | T1 | ARM | ★ |
-| **1795** | **Brothers is arrested for treasonably prophesying the death of the King and confined as a criminal lunatic** | T1 ⚠ | ARM | ★ |
+| **4 Mar 1795** | **Brothers is arrested at 57 Paddington Street** by two king's messengers, warrant of 2 March from the Duke of Portland, for **treasonable practices** — he had predicted London would fall on the King's official birthday and **that he would take the throne himself**. Eleven years as a criminal lunatic | T1 | ARM | ● |
 | — | **The doctrine that makes the monarch a descendant of David begins with a man imprisoned for prophesying against the monarch** | T2 | ARM | ★ |
 | **1840** | **John Wilson**, *Our Israelitish Origins* — the first modern statement of the doctrine. **It contains no metrology** | T1 | ARM | ★ |
 | 1810 | **The statue's sword, buckles and straps fall off** | T1 | ARM | ● |
@@ -145,13 +145,18 @@ properties of the record**. Someone trying to catch us out confirms us instead.
 | 1866 | **Clarke's *Comparisons of the Standards of Length*.** From it the **Clarke 1866** ellipsoid, and later **Clarke 1880** | T1 | BAR | ● |
 | — | Clarke 1866 is the basis of NAD27, still the datum of record for older railways, canals and pipelines across North America and in every GIS package; Clarke 1880 underpins several African and French datums. **A defect in the standards is in the ground today** | T1 | BAR | ● |
 | 1866 | The Standard Weights and Measures Department of the Board of Trade is created | T1 | BAR | ◇ |
-| **1869** | **Sir Henry James, Director General of the Ordnance Survey, publishes *Notes on the Great Pyramid of Egypt and the Cubits used in its Design*, Southampton** | **T1** ⚠ | BAR ARM | ★ |
+| **1869** | **Sir Henry James, Director General of the Ordnance Survey, publishes *Notes on the Great Pyramid of Egypt and the Cubits used in its Design*** — Southampton: Thomas G. Gutch, 1869 | **T1** | BAR ARM | ● |
+| **1869** | **The Ordnance Survey ran its own expedition to the Great Pyramid** — established by Smyth's own subtitle, *at the same place four years afterwards*, and publicly funded | **T1** | BAR ARM | ★ |
+| **1870** | **St John Vincent Day answers James at book length**: *Papers on the Great Pyramid, including a critical examination of Sir Henry James' "Notes on the Great Pyramid of Egypt"*, Edinburgh: Edmonston and Douglas; reviewed in *Nature* vol. 4 | T1 | BAR | ★ |
 | — | **Clarke's own director was a pyramid metrologist in print, from the building where the world's standards were compared. "Crank versus establishment" is the wrong frame — both sides were doing it** | T2 | BAR | ★ |
-| **1 Dec 1869** | **Smyth attacks him by name in a lecture title**: *A Poor Man's Photography at the Great Pyramid… Compared with that of the Ordnance Survey Establishment Subsidized by London Wealth, and under the Orders of Henry James* | **T1** ⚠ | BAR | ★ |
+| **1 Dec 1869** | **Smyth attacks him by name and by office, in a title**, before the Edinburgh Photographic Society: *A Poor Man's Photography at the Great Pyramid in the Year 1865; Compared with that of the Ordnance Survey Establishment, **Subsidized by London Wealth**, and under the Orders of **Col. Sir Henry James, R.E., F.R.S., Director-General of the Ordnance Survey**, at the Same Place Four Years Afterwards* | **T1** | BAR | ● |
 | c.1870 | **St John Vincent Day**, *Papers on the Great Pyramid, including a critical examination of Sir Henry James' Notes* | T1 | BAR | ★ ◇ |
 | **1870s–80s** | **Edward Hine** popularises the doctrine; founds the British-Israel Identity Corporation, 1880. **He and Edward Wheeler Bird fall out**, and what the quarrel was about is thinly recorded | T1 / **T5** | ARM | ★ |
 | 1869–1938 | The department works in the **Jewel Tower**, and leaves because **road traffic vibration** made precise measurement impossible | T1 | BAR | ◇ |
-| **1874** | **The Royal Society rejects Smyth's pyramid paper.** The reasoning deserved it | T1 | BAR | ● |
+| **7 Feb 1874** | **Smyth's paper is *denied a reading* by the Royal Society and he resigns his Fellowship.** Not weighed and dismissed — **not heard**. Taylor's had been refused before his | T1 | BAR | ● |
+| **1874** | **Smyth publishes his own account of it**: *The Great Pyramid and the Royal Society* (London, 1874). **The suppression is documented by the suppressed, and survives** | T1 | BAR | ★ |
+| — | ⚠ **Smyth said to be the only person ever to resign a Royal Society Fellowship.** Load-bearing if used; wants the Society's own record | T1 ⚠ | BAR | ★ |
+| **1882** | **Smyth's pyramid put the millennium at 1882, and yielded — the DNB's word — "a cryptographic solution of the problem of squaring the circle"** | T1 | BAR ARM | ★ |
 | — | *The yard is wrong* and *the yard is wrong because of divine revelation* are two statements, and only one was ever tested | T2 | BAR | ● |
 | 1876 | Public imperial standards set into the north terrace at Trafalgar Square, inscribed **"at 62 degrees Fahrenheit"**, triplicated at the Guildhall and the Observatory gate — **outdoors, on purpose, so any citizen could check a tradesman** | T1 | BAR | ● |
 | 1877 | **James Dafforne is the first to remark that the sun in the *Temeraire* is on the wrong side — thirty-eight years after it was painted**, by which time it was one of the best-loved pictures in the country | T1 | EYE | ● |
@@ -170,7 +175,7 @@ properties of the record**. Someone trying to catch us out confirms us instead.
 | — | San Domingo voted against; France and Brazil abstained | T1 ⚠ | SKY | ★ |
 | — | **Two weeks. Britain paid in September and collected in October**, and the two events are filed under different subjects in every history ever written | T2 | SKY | ● |
 | 1887 | **Clarke's Royal Medal — for "comparison of standards of length, and determination of the figure of the earth."** One award, because it was one job | T1 | BAR | ● |
-| 1888 | After Airy's withering public criticism, **Smyth resigns his Fellowship of the Royal Society and leaves the Royal Observatory in the same year** | T1 | BAR | ● |
+| 1888 | **Smyth resigns as Astronomer Royal for Scotland and leaves the Royal Observatory.** *(Corrected 31 Aug 2026: the Fellowship went in 1874, the observatory in 1888 — fourteen years apart, not the same year)* | T1 | BAR | ● |
 | 1892 | Airy dies | T1 | | ● |
 | 1895–97 | A Select Committee recommends metric be **compulsory within two years**. The 1897 Act legalises it and does not compel it | T1 | SKY | ● |
 | **1900** | **Smyth dies at Ripon in February, aged eighty-one, childless. The vestries are abolished the same year** and their property, including their local standards, passes wholesale to twenty-eight new boroughs | T1 | BAR KEEP | ● |
@@ -180,7 +185,8 @@ properties of the record**. Someone trying to catch us out confirms us instead.
 | 1914 | **Clarke dies — the last man alive who could have known** | T1 | BAR | ● |
 | 1916 | Ireland gives up Dublin Mean Time for GMT | T1 | SKY | ◇ |
 | **17 Jul 1917** | **George V renames the royal house from Saxe-Coburg and Gotha to Windsor and relinquishes the German titles** | **T1** | ARM | ● |
-| **1919** | **The British-Israel-World Federation is founded in London near Buckingham Palace.** Inaugural congress July 1919, twenty thousand attendees. Patrons include the **Duke of Buccleuch, the Earl and Countess Dowager of Radnor, the Earl of Meath, the Earl of Dysart** | **T1** | ARM | ★ |
+| **1919** | **The British-Israel-World Federation is founded in London near Buckingham Palace** — **over ninety** associations federate. Inaugural congress July 1919, twenty thousand attendees. Patrons include the **Duke of Buccleuch, the Earl and Countess Dowager of Radnor, the Earl of Meath, the Earl of Dysart** | **T1** | ARM | ★ |
+| **1919–1981** | **Princess Alice, Countess of Athlone, is its chief patron from the founding to her death** — sixty-two years | **T1** | ARM | ★ |
 | **to 1981** | **Princess Alice, Countess of Athlone, granddaughter of Queen Victoria, is patron-in-chief of the Federation until her death** | **T1** | ARM | ★ |
 | — | A member of the royal family held the top honorary office in the organisation that says the royal family descends from King David, into the 1980s | T2 | ARM | ★ |
 | **1924** | **David Davidson**, a **structural engineer** who set out to *disprove* Smyth, publishes *The Great Pyramid: Its Divine Message* with Herbert Aldersmith | T1 | BAR | ★ |
