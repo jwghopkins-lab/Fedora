@@ -62,7 +62,7 @@ measure because of lorries*.
 
 ---
 
-## CH.2 · TRAFALGAR SQUARE — *The Standards on the Wall*
+## CH.2b · TRAFALGAR SQUARE — *The Standards on the Wall*
 
 **The question:** what replaced what burned — and is it right?
 
@@ -91,7 +91,81 @@ yet; it pays at the end.
 
 ---
 
-## CH.3 · THE RIVER — *Leo's Chapter*
+## CH.2 · BLOOMSBURY — *Four Thousand Weights*
+### the pyramid research chapter
+
+**The question:** what is a cubit actually, and who has one?
+
+**The site is the [Petrie Museum of Egyptian and Sudanese Archaeology](https://www.ucl.ac.uk/museums-collections/petrie-museum-egyptian-and-sudanese-archaeology), Malet Place, UCL.** Free, no booking.
+
+**It could not be more exactly ours if we had built it.** Petrie is already the
+hinge of the book — the believer's son who went to Giza to confirm the pyramid
+inch and disproved it. **This is his collection**, and the specific thing it is
+famous for is **metrology**:
+
+| | |
+|---|---|
+| **Over 4,000 Egyptian weights** | The basis of his *Ancient Weights and Measures* (1926). **The objects he examined are the objects in the cases** |
+| **Cubit rods** | ~52.5 cm, quadrangular, ruled in digits and palms. **The physical thing Newton spent years trying to reconstruct from books — in a case, in Bloomsbury, for free** |
+| **Eight identified weight standards** | Not one standard. **Eight.** The ancient world could not agree either |
+
+**The puzzle answer is a disagreement, and it is Petrie's own.** He recorded that
+his rods did not match the accepted figure:
+
+> *“the lesser cubit is usually stated to be 24 digits, it is distinctly limited
+> as not over 23 digits on the two most detailed cubits”*
+
+**So the answer is 23, where every book says 24.** A team standing at the case
+can see the man who disproved one false measure quietly recording that another
+one is off by a digit. **That is the entire hunt in a single object**, it is
+verifiable in a minute, and we did not have to invent a word of it.
+
+**Mechanic:** the diary carries a **stencil of a cubit rod's divisions**. Laid
+against the real rods it does not fit — and the amount by which it fails is the
+number the team needs. The cord measures length; **the stencil measures
+disagreement.** This is the clearest justification the two-tool system has had.
+
+### One thing we must handle rather than dodge
+
+**Petrie was a eugenicist**, a close associate of Galton and Pearson, and his
+racial theory ran directly through his archaeological interpretation. **UCL has
+publicly reviewed whether the museum should keep his name**, and some propose
+naming it instead for **Amelia Edwards**, who founded the collection.
+
+**Teams will read this on UCL's own panels, so the diary should get there
+first.** And it does not damage the theme — it sharpens it. Our Petrie is *the
+man who checked, and was freed of a delusion.* The fact that he checked one
+thing rigorously and **stayed catastrophically wrong about another** is not a
+blemish on that idea. **It is the idea.** Rigour is local. It does not
+generalise, it does not make you good, and believing it does is how the whole
+Smyth disaster happened in the first place.
+
+*Also worth the diary's attention: the woman founded it, the man's name is on
+the door. A story about whose measurements got credited has no business
+stepping over that.*
+
+---
+
+## CH.3 · PICCADILLY — *The Room Where It Was Not Read*
+
+**Free, outdoors, and eight minutes from Trafalgar Square.**
+
+**The Royal Society was at [Burlington House](https://en.wikipedia.org/wiki/Burlington_House), Piccadilly, from 1857 until 1967.**
+**Which means 7 February 1874 happened here** — the paper denied a reading, the
+Fellowship resigned, in this courtyard, through that door.
+
+**And the courtyard supplies its own irony, free.** In **1874** — the same year —
+**the Royal Astronomical Society and the Society of Antiquaries moved into the
+new Burlington House wings.** The RAS is still there today. So Smyth walked out
+of one learned society in this courtyard **in the very year another one he
+belonged to moved in.** He did not leave the building. He left the room.
+
+**This is the strongest possible home for the ending**, and it converts an
+abstract deduction into somewhere you can stand.
+
+---
+
+## CH.4 · THE RIVER — *Leo's Chapter*
 
 **Justified by character:** Leo is a maritime logistics broker. **The water is
 his.** This is the only stretch where he leads and Helen follows.
@@ -115,7 +189,7 @@ rather than an interval between puzzles.
 
 ---
 
-## CH.4 · GREENWICH — *The Man Who Was Not Read*
+## CH.5 · GREENWICH — *Where He Lost*
 
 **Everything needed is outside the paid gate.**
 
@@ -158,6 +232,9 @@ v2.**
 | **The Royal Mint** | Newton's Mint was inside the Tower. Ticketed, far east, breaks the geography |
 | **Westminster Abbey / Newton's tomb** | £30 and a bottleneck. **Newton is better served free, at his own house by Leicester Square** — see decision 3 |
 | **Giza, the ship, the Levant** | Book only |
+| **The British Museum** | Holds cubit rods and opens seven days — **the fallback if the Petrie's hours don't fit.** But it is vast, crowded and almost impossible to write a precise clue into |
+| **Sir John Soane's Museum** | **The sarcophagus of Seti I**, free, and the most atmospheric room in London. Timed entry and tiny capacity kill it for a team hunt — **hold it for v2** |
+| **Freemasons' Hall** | Free, on-theme, and *exactly* the standard-issue conspiracy furniture our whole type system exists to avoid |
 
 ---
 
@@ -198,3 +275,6 @@ thriller to import · what the antagonist dynasty is called.
 | **6** | Jewel Tower — what is readable from outside without a ticket |
 | **7** | Cleopatra's Needle — the 1917 plaque wording, and the sphinxes' orientation |
 | **8** | Time ball — confirm it is running; it has been out of service before |
+| **9** | **Petrie Museum — the cubit rods.** Are they on display, are the digit divisions readable through glass, and **can a stencil be held near the case** without a warden objecting? **Load-bearing** |
+| **10** | **Petrie opening hours.** Free, no booking, closed Mon and Sun; **Saturdays 1–5pm from 8 Aug 2026.** Confirm before fixing a start time — this constrains the whole day |
+| **11** | Burlington House courtyard — public access at weekends, and whether any plaque records the Royal Society's tenure |
