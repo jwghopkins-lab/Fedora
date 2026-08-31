@@ -1,267 +1,336 @@
 # GROUND TRUTH — the London play-along
 
-Played as **Helen and Leo**, using **Arthur's diary**. One central London day,
-five chapters, all free, no tickets, **no river and no Greenwich**. Ends by
-naming **Smyth** and pointing at **Edinburgh**.
+**Self-contained brief.** Everything needed to work on this is below: the
+backstory, the game's premise, the rules we design under, the five chapters, and
+the open decisions. No other file is required.
 
 ---
 
-## Decisions locked
+# PART ONE — THE BRIEF
 
-| | |
-|---|---|
-| **Shape** | Tight central-London day. **Greenwich and the river cut to a second outing** |
-| **Order** | **Chronological**, with one deliberate exception — see the ending |
-| **Newton** | **Opens the hunt, free, at his own house.** No Abbey, no ticket |
-| **Diary** | **Deliberately incomplete.** Pages are missing; the app returns them on check-in |
-| **Final word** | **SMYTH** — five chapters, five letters |
-| **Thriller** | **Light.** Arthur's death is suspicious, someone got there first, nothing is named |
-| **Petrie Museum** | In |
-| **Burlington House** | **In, as the ending** |
+## 1 · The backstory
 
----
+There is a novel. This is its walking companion, set in the same world but not
+required to explain it.
 
-## Running order
+**The novel, compressed.** A physicist finds a microsecond anomaly buried in the
+systems that run global timing. Chasing it, she and a cynical logistics broker
+find that the anomaly is old — that the modern definition of a metre, and behind
+it the second and the yard, rests on a chain of nineteenth-century decisions that
+were contested at the time and then closed. The people who lost that argument
+were not cranks at the fringe. They were inside the same institutions, and they
+were beaten by rivals, not by evidence.
 
-| | Chapter | Where | Date | Access |
-|---|---|---|---|---|
-| **1** | **The Master of the Mint** | 35 St Martin's Street, Leicester Square | 1710–25 | Free, street |
-| **2** | **The Night the Yard Burned** | Old Palace Yard & the Jewel Tower | 1834 | Free, street |
-| **3** | **The Standards on the Wall** | Trafalgar Square north terrace | 1876 | Free, street |
-| **4** | **Four Thousand Weights** | Petrie Museum, Malet Place | 1880s–1926 | **Free, indoor — hours bind** |
-| **5** | **The Room Where It Was Not Read** | Burlington House courtyard | **1874** | Free, courtyard |
+**The real history underneath it is the good part, and almost all of it is true.**
 
-**Walking:** Leicester Sq → Westminster 15 · → Trafalgar 12 · → Bloomsbury 20
-(or one tube stop) · → Piccadilly 20. **About an hour on foot in total.**
+- The **Palace of Westminster burned in 1834** and destroyed the physical
+  Imperial Standard Yard. The fire started in burning centuries of Exchequer
+  **tally sticks** — notched wood, the old English way of recording quantity.
+- The yard had to be **rebuilt from copies** and recast. Public standards were
+  later set into the wall at **Trafalgar Square**, where they still are.
+- **Isaac Newton**, Master of the Mint for 27 years, spent decades trying to
+  recover the ancient sacred cubit — partly to date biblical prophecy.
+- **Charles Piazzi Smyth**, Astronomer Royal for Scotland, believed the Great
+  Pyramid encoded a divine unit that the British had inherited, and campaigned
+  against the metric system on that basis.
+- On **7 February 1874** the Royal Society **denied his paper a reading** — not
+  rejected it, declined to hear it — and he resigned his Fellowship the same day.
+  He published his own account of it.
+- **Flinders Petrie** went to Giza in 1880 **because his father believed Smyth**,
+  measured properly, disproved the whole thing, and invented modern
+  archaeological method doing it.
 
-**The one break in chronology is the point.** 1874 comes last although it
-happened first, **because it is the cause nobody was told about.** The teams do
-not walk to the ending, they walk *back* to it.
-
----
-
-## CH.1 · NEWTON — *The Master of the Mint*
-
-**Reach:** St Martin's Street, off the south-west corner of Leicester Square.
-**See:** the plaque, and the building that stands on the site of his house —
-now the **Westminster Reference Library**, itself free to enter and warm.
-
-**Why here and not the Abbey.** Newton's Westminster is his tomb, which is £30
-and a bottleneck. **His actual London home is two hundred yards from Trafalgar
-Square**, free, on the street, and it puts him where the rest of the day happens.
-He ran the Mint for **27 years** and spent them trying to recover the sacred
-cubit — *to date the end of the world, to two decimal places.*
-
-**Clue options**
-
-| | |
-|---|---|
-| **A** | **The two dates.** The diary says he left in 1727. **Sources disagree — 1710–1727 against 1710–1725** — and the answer is whatever the wall actually says. **T4 on the street, in one minute** *(rec)* |
-| **B** | **Newton's cubit.** The diary gives his figure; the house number does the rest |
-| **C** | **A stencil over the plaque** yields the letter directly |
-
-**Diary:** Arthur's first page — a pasted photograph of the plaque, Newton's
-cubit arithmetic in the margin, and the note that he **never published it**.
-**App on check-in:** the missing page — the Mint, the 27 years, and Chaloner.
+**The join we invent** is narrow: that one line of that argument was worth more
+than the people who won thought, and that somebody kept a record of it.
 
 ---
 
-## CH.2 · WESTMINSTER — *The Night the Yard Burned*
+## 2 · The game
 
-**Reach:** Old Palace Yard and the **Jewel Tower**.
-**See:** the Jewel Tower from outside; Westminster Hall; the river vantage where
-Turner watched it burn.
+**Teams play as Helen and Leo.** They hold **Arthur's diary** — a real physical
+object. Arthur Pendelton was a blacklisted archivist who died in a fall that may
+not have been an accident. He was not writing a book. He was walking London with
+a knotted cord and one question:
 
-**The fact:** the fire began in **burning centuries of Exchequer tally sticks** —
-notched wood, the oldest English measuring-and-recording system. **It destroyed
-the Imperial Standard Yard.** And later, in that same small tower, **the
-Standards Department worked from 1869 to 1938 and left because road-traffic
-vibration made precise measurement impossible.**
+> **Why did the yard change, and who changed it?**
 
-**Clue options**
+The diary is his working notebook: measurements, rubbings, sketches, arithmetic,
+crossings-out, dead ends. **Pages are missing.** The app returns them as teams
+check in on location — which is also the light-touch threat, because somebody
+took those pages out before we did, and the game never says who.
 
-| | |
-|---|---|
-| **A** | **The tally.** The diary teaches notch notation here; teams count something architectural and read it as notches. **This is where the cord's grammar is taught** *(rec)* |
-| **B** | **What beat the Standards Department** — the answer is traffic |
-| **C** | **Big Ben's pennies** — one old penny on the pendulum ≈ 0.4 sec/day |
+**The teams are not solving a conspiracy. They are redoing one man's fieldwork**
+and arriving at the name he was careful never to write down.
 
-**Diary:** Arthur's sketch of the palace burning from the water; a scrap of
-charred paper; *"they burned the sticks to keep warm and lost the yard."*
-**App:** the list of what the fire destroyed.
-
----
-
-## CH.3 · TRAFALGAR SQUARE — *The Standards on the Wall*
-
-**Reach:** the north terrace, below the National Gallery.
-**See:** the **public Imperial Standards** set into the terrace — yard, foot,
-inch, link, chain, perch, pole.
-
-**The heart of the hunt.** This is where **the cord is calibrated against the
-actual public standard**, and the diary's instruction is *cut nothing until you
-have laid the cord on the wall.*
-
-**Clue options**
-
-| | |
-|---|---|
-| **A** | **Calibrate, then catch an error.** Mark the cord on the yard, then measure something nearby that **does not come out right** *(rec — it is the whole premise, proved by hand)* |
-| **B** | **The "E" line.** In 1758 the committee took the standard's length from the *E* line of Bird's bar. Teams find an E |
-| **C** | **One measure is missing** from the diary's list of what should be there |
-
-**Two minutes away, free, and worth the detour:** **Charing Cross**, the point
-from which all distances to London are measured — and **St Martin-in-the-Fields
-crypt**, where the floor is old gravestones and there is a café. **Put the rest
-stop here.**
-
-**The Edinburgh seed:** Arthur's diary has a page of distances from Charing
-Cross in his own hand. **One is wrong. It is Edinburgh.** Nobody needs to notice
-yet.
-
-**Diary:** a rubbing of the standards. **App:** 1876, and what these replaced.
+**The premise stays in the margins.** The light-speed figure, the cubit, the
+metre — Arthur was chasing all of it, and the diary shows him chasing it, and the
+walk never resolves it. Teams finish having proved something small and true, and
+having glimpsed something much larger they cannot yet reach. That is the correct
+ending, and it is also honest: the small local thing is the part that holds up.
 
 ---
 
-## CH.4 · BLOOMSBURY — *Four Thousand Weights*
+## 3 · The principles we design under
 
-**Reach:** the **Petrie Museum**, Malet Place, UCL. Free, no booking.
-**See:** the **cubit rods** and the weights.
+### The evidence types
 
-**The man who disproved the pyramid inch, and his own collection.** Over
-**4,000 Egyptian weights** — the basis of his *Ancient Weights and Measures*
-(1926) — and **eight** identified standards. *Not one standard. Eight. The
-ancient world could not agree either.*
+Every fact in the story carries a type. This is the project's core discipline.
 
-**The answer is Petrie's own disagreement with the books:**
+| | | |
+|---|---|---|
+| **T1** | **FACT** | Verifiable, published, checkable in a minute. The only thing a player may be asked to stand on |
+| **T2** | **READING** | An interpretation of a T1. Not a claim about the record, so it cannot be refuted. Where fiction lives freely |
+| **T3** | **INVENTED** | May only ever be **an edge between two T1 nodes**, never an endpoint |
+| **T4** | **DISPUTED** | The record contradicts itself, and the contradiction is documented. A player who checks finds two answers and no resolution |
+| **T5** | **ABSENT** | The record verifiably stops. Not "we don't know" but "nobody knows, and you can confirm that in a minute" |
 
-> *“the lesser cubit is usually stated to be 24 digits, it is distinctly limited
-> as not over 23 digits on the two most detailed cubits”*
+**Target mix: T1 ~60% · T2 ~15% · T4+T5 ~20% · T3 under 5%.**
 
-**23, where every book says 24.**
+**Why T4 and T5 matter.** When we red-teamed the fabrications, every one scored
+zero corroborations and the tell was always *unverifiable*, never *false*. T4 and
+T5 are verifiable properties of the record — **a player trying to catch us out
+confirms us instead.**
 
-**Clue options**
+### The build rules
 
-| | |
-|---|---|
-| **A** | **The stencil does not fit.** The diary's cubit-rod stencil laid against the real rods fails, and the amount it fails by is the answer *(rec — this is what the second tool is for)* |
-| **B** | **Count the standards** — eight |
-| **C** | **Find the label that contradicts the diary** |
-
-**Diary:** the stencil, and *"P. says 23. Everyone says 24. Which do you trust,
-the book or the stick?"*
-**App:** Petrie went to Giza **because his father believed** — and the note on
-his eugenics and UCL's naming review, which teams will read on the panels
-anyway. **The diary should get there first.**
+1. **Everything free and public.** No chapter requires a ticket or a booking.
+2. **Never print a number the team should measure.** The cord is a pointer, not a
+   ruler — anchor, offset, traverse, go round a corner.
+3. **The app is an oracle with a guess limit**, so it is safe to be generous.
+   Sequential hints on timed waits; an explainer after every correct answer.
+4. **Nothing invented is ever a destination.** Every place, plaque and object a
+   team is sent to is real and says what we say it says.
+5. **AI-resistance is not a goal.** Cohesion and enjoyment are. People will not
+   cheat, and it is hard enough anyway.
 
 ---
 
-## CH.5 · BURLINGTON HOUSE — *The Room Where It Was Not Read*
+# PART TWO — THE FIVE CHAPTERS
 
-**Reach:** through the archway off **Piccadilly** into the courtyard. Free,
-open, and there are places to sit.
-**See:** the societies' nameplates around the court.
+Each is a unit and may have more than one stop. **All clues below are ideas, not
+specifications** — the real ones get chosen on site.
 
-**The Royal Society was here from 1857 to 1967.** So **7 February 1874 happened
-in this courtyard** — the paper *denied a reading*, the Fellowship resigned,
-through that door.
+---
 
-**And the courtyard supplies the puzzle itself.** Six societies sit around it
-today — **Linnean, Royal Astronomical, Society of Antiquaries** in the west
-wing; **Geological, Royal Society of Chemistry** in the east; the **Royal
-Academy** in the main block. **The Royal Astronomical Society moved in in 1874 —
-the same year — and is still there.**
+## CH · WESTMINSTER — *The night the yard burned*
+**1834 · free · outdoors**
+
+**Stops:** the **Jewel Tower** · **Old Palace Yard** and the outside of
+Westminster Hall.
+
+**What's true here.** The fire of 1834 began in burning the Exchequer's tally
+sticks and it destroyed the Imperial Standard Yard. Westminster Hall survived.
+And in that same small stone tower, the **Standards Department worked from 1869
+to 1938 and left because road-traffic vibration made precise measurement
+impossible.**
+
+**Clue ideas**
+- The **tally**: notched wood is a measuring system, and Arthur's cord is knotted
+  like one. Teach the notation here, count something architectural, read it as
+  notches.
+- **What beat the Standards Department** — the answer is traffic.
+- **Big Ben's pennies**: the pendulum is trimmed by stacking old pennies, one
+  penny ≈ 0.4 seconds a day.
+
+**Diary:** the fire, the tally sticks, and the list of what was lost.
+
+---
+
+## CH · TRAFALGAR SQUARE — *The standards on the wall*
+**1876 · free · outdoors**
+
+**Stops:** the **public Imperial Standards** in the north terrace · **Charing
+Cross** · the **crypt of St Martin-in-the-Fields** as the rest stop.
+
+**What's true here.** The terrace carries public standards of length — yard,
+foot, inch, link, chain, perch, pole — set there after the originals burned.
+**Charing Cross is the point from which all distances to London are measured.**
+The crypt floor is made of old gravestones, and there is a café.
+
+**This is the mechanical heart of the day.** The cord gets calibrated against a
+real public standard before it is used anywhere else.
+
+**Clue ideas**
+- **Calibrate, then catch an error** — mark the cord on the yard, then measure
+  something nearby that does not come out right.
+- **The "E" line**: in 1758 the committee took the standard's length from the *E*
+  line of Bird's bar.
+- **One measure is missing** from the list the diary says should be here.
+- Something at **Charing Cross** using the distances-measured-from-here fact.
+
+**Diary:** a rubbing of the standards, and **the map** (see §The map, below).
+
+---
+
+## CH · LEICESTER SQUARE — *The Master of the Mint*
+**1710–25 · free · outdoors**
+
+**Stops:** **35 St Martin's Street**, off the south-west corner of the square —
+Newton's London house, now the Westminster Reference Library, which is free to
+enter and warm.
+
+**What's true here.** Newton ran the Mint for 27 years and spent decades trying
+to recover the sacred cubit, partly to date prophecy. **This is his actual house,
+two hundred yards from the standards** — which is why we do not need the Abbey,
+his tomb, or £30 a head.
+
+**Clue ideas**
+- **The dates disagree.** Sources give 1710–1727 and 1710–1725. The answer is
+  whatever the wall actually says — **T4, on the street, in under a minute.**
+- Newton's own figure for the cubit, against the house number.
+
+**Diary:** Newton's cubit arithmetic in Arthur's margin, and the note that he
+never published it.
+
+---
+
+## CH · BLOOMSBURY — *Four thousand weights*
+**1880s–1926 · free · indoors · hours bind**
+
+**Stop:** the **Petrie Museum of Egyptian and Sudanese Archaeology**, Malet
+Place, UCL. Free, no booking. **Closed Monday and Sunday; Saturdays 1–5pm.**
+
+**What's true here.** Petrie went to Giza because his father believed Smyth, and
+disproved the pyramid inch. **This is his collection**, and what it is famous for
+is metrology: **over 4,000 Egyptian weights**, **eight** distinct standards, and
+**cubit rods** — the physical object Newton spent years trying to reconstruct
+from books.
+
+**And the answer is his own disagreement with every book:**
+
+> *"the lesser cubit is usually stated to be 24 digits, it is distinctly limited
+> as not over 23 digits on the two most detailed cubits"*
+
+**23, where the books say 24.**
+
+**Clue ideas**
+- Something laid against the real rods that **does not fit**, and the amount by
+  which it fails is the answer.
+- Count the standards — eight, not one.
+- Find the label that contradicts the diary.
+
+**Diary:** *"P. says 23. Everyone says 24. Which do you trust, the book or the
+stick?"*
+
+**Handle this rather than dodge it.** Petrie was a eugenicist and a close
+associate of Galton and Pearson, and **UCL has publicly reviewed whether the
+museum should keep his name** — some propose naming it for **Amelia Edwards**,
+who founded the collection. Teams will read this on the museum's own panels, so
+the diary should get there first. It sharpens the theme rather than damaging it:
+**rigour is local.** Checking one thing properly did not make him right about
+anything else — and assuming that it does is how the whole Smyth disaster
+happened.
+
+---
+
+## CH · BURLINGTON HOUSE — *The room where it was not read*
+**1874 · free · courtyard**
+
+**Stop:** the courtyard, through the archway off **Piccadilly**. Open, free,
+places to sit.
+
+**What's true here.** **The Royal Society was at Burlington House from 1857 to
+1967.** So 7 February 1874 happened in this courtyard: the paper denied a
+reading, the Fellowship resigned, through that door.
+
+**Six societies sit around the court today** — Linnean, **Royal Astronomical**,
+and Antiquaries in the west wing; Geological and Royal Society of Chemistry in
+the east; the Royal Academy in the main block. **The Royal Astronomical Society
+moved in in 1874, the same year, and is still there.**
 
 **The Royal Society is not.**
 
-| | |
-|---|---|
-| **A** | **The missing society.** Arthur's list of the courtyard's occupants has one name that is no longer on any door. **The one that would not hear him is the one that is not there.** Teams read the nameplates and find the absence *(rec — free, physical, and it is a T5 you can stand in)* |
-| **B** | **The date and the phrase** — *7 Feb 1874, denied a reading* — resolve to the man |
-| **C** | **Assemble the five letters** and submit |
+**Clue ideas**
+- **The missing society.** Arthur's list of who is in this courtyard has one name
+  that is on no door. **The society that would not hear him is the one that is no
+  longer there** — a T5 you can stand inside.
+- The date and the phrase — *7 Feb 1874, denied a reading* — resolving to a man.
+- The five letters assembled and submitted.
 
 **He did not leave the building. He left the room** — and kept walking through
-the door next to it for the rest of his life.
-
-**Diary:** the last legible page. The DNB sentence with the name torn out.
-**App:** accepts **SMYTH**. Returns Edinburgh, and the distance from Charing
-Cross that was wrong in chapter 3.
+the door beside it for the rest of his life.
 
 ---
+
+# PART THREE — MECHANICS
 
 ## The word
 
-**Five chapters, five letters, SMYTH.** Each chapter's answer is a natural word;
-the diary says which letter to keep.
+**Five chapters, five letters, SMYTH.**
 
-| | Chapter | Word | Letter |
-|---|---|---|---|
-| 1 | Newton | **MINT** | **M** |
-| 2 | Westminster | **STICKS** | **S** |
-| 3 | Trafalgar | **YARD** | **Y** |
-| 4 | Petrie | **TWENTY-THREE** | **T** |
-| 5 | Burlington | **HEARD** | **H** |
+**The diary prints each word with its key letter already missing.** Teams solve
+the chapter, fill the gap, and the five gaps spell the name. The letter can sit
+anywhere in the word, so the words are free to be whatever fits best.
 
-Anagram-and-submit at the end, or the app orders them. **Every word is the
-honest answer to its own chapter** — none is contrived to fit.
+| Letter | Chapter | Candidates |
+|---|---|---|
+| **S** | Westminster | **A_HES** · **_TICKS** · **_TANDARD** |
+| **M** | Leicester Square | **_INT** · **_ASTER** · **_EASURE** |
+| **Y** | Trafalgar Square | **_ARD** · **ASSA_** |
+| **T** | Bloomsbury | **TWEN_Y-THREE** · **CUBI_** · **_ALLY** |
+| **H** | Burlington House | **_EARD** · **_EARING** · **P_OTOGRAPH** |
 
----
+## The map
 
-## Parked: the Greenwich question
+The diary carries **a map with distances from Charing Cross** to British cities,
+in Arthur's hand — which is why Charing Cross is a stop in the Trafalgar chapter,
+and it earns its place.
 
-**Cut from v1, and I think rightly — but here is the strongest case against
-cutting it, so the decision is made on the real evidence.**
+**Edinburgh is on the map with no distance beside it.**
 
-**Against Greenwich:** the wall standards there are **the same measures as
-Trafalgar Square**, so as a cord destination it repeats an object. Two hours of
-travel for a rhyme. **And it is Airy's house.** Our story is Smyth's, and Smyth
-never worked there. **Ending at Greenwich means ending in the winner's home.**
-
-**For Greenwich, the one fact that might change your mind:** **the famous brass
-line is in the wrong place.** Stand on it with a phone and GPS reads
-**00°00'05.3"W** — **zero longitude is about 102 metres east.** The line was
-defined astronomically by the Airy Transit Circle, which depends on the local
-vertical; GPS uses a geocentric reference, and the deflection at Greenwich is
-5.3 arc-seconds. **The most photographed measurement on Earth is off by the
-length of a football pitch, and thousands of people queue every day to stand on
-it and be wrong.**
-
-**That is the single best fact in this entire project.** It is not for v1 — but
-it is a whole day of its own, and it is the obvious v1.5.
+Nobody needs to notice early. **The final reveal is SMYTH → Edinburgh**, and the
+blank on the map is where the second game starts.
 
 ---
 
-## Reference — the three Greenwich things, plainly
+# PART FOUR — OPEN DECISIONS
+
+## 1 · The route order — the live question
+
+**Geography-led is probably right, and here is honestly what it costs.**
+
+A notebook's order is the order a man walked in, not the order events happened.
+**Geographic order is the diegetic order**, and teams can assemble the chronology
+themselves at the end, which is more satisfying than being handed it.
+
+| | Route | Cost |
+|---|---|---|
+| **A** | **Westminster → Trafalgar → Leicester Sq → Bloomsbury → Burlington** | Clean south-west to north-east sweep for four chapters, then **one short tube back** (Holborn → Piccadilly Circus, ~5 min). **Keeps the Burlington ending.** The only travel in the day, and "he went back" is what the chapter is about |
+| **B** | **Westminster → Trafalgar → Burlington → Leicester Sq → Bloomsbury** | **No tube at all** — a small westward jog then straight north-east. **But it ends at the Petrie**, so the day finishes on a number rather than on the name |
+| **C** | **Leicester Sq → Westminster → Trafalgar → Bloomsbury → Burlington** | Chronological. **Newton opens**, which sets the deep-time premise first. Costs ~15 minutes of extra walking and one zigzag |
+
+**What geography costs, precisely:** Newton stops being the opener. That is the
+whole loss. The day then opens on a fire instead of on the origin — which is
+arguably a better opening anyway.
+
+**Recommended: A.** Burlington is the narrative climax and the Petrie is not;
+finishing on the name beats finishing on a measurement.
+
+## 2 · Parked
+
+- **Greenwich and the river** — cut from v1. The wall standards there repeat
+  Trafalgar's, and Greenwich is Airy's house, not Smyth's. **Its own day later,
+  and it has a spine:** the famous brass meridian line is **about 102 metres west
+  of where GPS reads zero** — a phone on the line shows 00°00'05.3"W. The most
+  photographed measurement on Earth is wrong, and people queue to stand on it.
+- **Cleopatra's Needle** — it is from Heliopolis and has nothing to do with Giza
+  or cubits. **Use it as a dead end in Arthur's notebook**: a week wasted. That
+  teaches the discipline the type system encodes.
+- **The antagonist's name.** The novel gives Newton an adversary called Vane, but
+  **Sir Henry Vane was beheaded in 1662, 37 years before Newton reached the
+  Mint.** Options: make 1662 the dynasty's origin, rename the family, or use
+  **William Chaloner** — the counterfeiter Newton really did pursue and get
+  hanged in 1699.
+
+## 3 · Fieldwork gate — nothing is built until these are seen
 
 | | |
 |---|---|
-| **Airy's Transit Circle** | A telescope, built 1850, that **can only swing north–south in one fixed vertical plane.** Longitude 0° *is* that plane. **The Prime Meridian is one instrument's field of view, extended to infinity** — exactly like the yard being one brass bar |
-| **The meridian line** | The strip in the courtyard where that plane meets the ground, plus the green laser at night. **Inside the paid gate**; wrong by 102 m |
-| **The time ball** | A red ball on Flamsteed House. **Rises 12:55, drops 13:00, daily, since 1833.** Ships on the Thames set their chronometers by watching it — accurate time is how you get longitude at sea. **Free to watch, and one of the world's first public time signals** |
-
----
-
-## Cut and parked
-
-| | |
-|---|---|
-| **Greenwich, the river, the clipper** | **v1.5** — and the 102 m fact is its spine |
-| **Cleopatra's Needle** | **Keep as a five-minute passing beat, not a chapter.** It is on the walking line, it is genuinely Egyptian — and it is **from Heliopolis, nothing to do with Giza or cubits.** Use it as *a documented dead end in Arthur's notebook*: a week wasted. **That teaches the discipline the whole type system encodes** — not everything Egyptian is relevant |
-| **Westminster Abbey, the Mint, Soane, Freemasons' Hall** | Out, for the reasons already given |
-
----
-
-## Fieldwork gate
-
-**Nothing is built until these are photographed with a tape in shot.**
-
-| | |
-|---|---|
-| **1** | **Trafalgar Square standards** — condition, which measures survive, **whether a cord can physically be laid on them.** The mechanic dies without this |
-| **2** | **Petrie cubit rods** — on display? digits readable through glass? a stencil held near the case without objection? |
-| **3** | **Petrie hours** — free, no booking, **closed Mon and Sun; Saturdays 1–5pm.** This is the only hard constraint in the day and the timetable is built backwards from it |
-| **4** | **35 St Martin's Street** — is there a plaque, does it name Newton, **and what dates does it give?** |
-| **5** | **Burlington House courtyard** — weekend access through the archway, **and the exact nameplates**, since the ending is an absence among them |
+| **1** | **Trafalgar standards** — condition, which measures survive, **whether a cord can physically be laid on them.** The mechanic dies without this |
+| **2** | **Petrie cubit rods** — on display, digits readable through glass, and whether teams can work at the case |
+| **3** | **Petrie hours** — confirm; this is the only hard constraint in the day |
+| **4** | **35 St Martin's Street** — is there a plaque, does it name Newton, **what dates does it give** |
+| **5** | **Burlington courtyard** — weekend access, **and the exact nameplates**, since the ending is an absence among them |
 | **6** | Charing Cross plaque — how many, exact wording |
 | **7** | St Martin's crypt — hours, and whether teams can sit and work |
 | **8** | Jewel Tower — what is readable without a ticket |
