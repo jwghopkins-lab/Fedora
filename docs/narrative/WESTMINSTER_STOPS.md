@@ -180,3 +180,147 @@ passing beat on the walk north rather than a stop.
 **What to verify for whichever pair you pick:** the 1710 Pyx dispute; Newton's
 cubit figure; the Victoria Tower archive dates; the exact position of the
 walled copy.
+
+---
+---
+
+# Part 2 — the Egyptian link: clue 2 and the road to Trafalgar
+
+Constraints now fixed: A is referenced, C is referenced, B adds little, **D is
+clue 3 and brings in Airy**, the Pyx is a red herring. Clue 2 must be
+reachable, camera-able, and carry the Egyptian thread. The lead-in text is
+Arthur's copy of Newton's private working papers on the pyramid and the cubit.
+
+Everything below was checked this session unless marked ⚠.
+
+## Two facts that change the shape
+
+**Newton got the cubit right, from a book.** His *Dissertation upon the Sacred
+Cubit of the Jews* (published 1737 in Greaves's *Miscellaneous Works*) takes
+John Greaves's 1639 measurements of the King's Chamber and determines the
+cubit of Memphis at **1719/1000 of an English foot — 20.63 inches.** The
+modern figure for the royal cubit is about 20.6 inches. **He was within a
+millimetre, in the 1680s, never having seen a stone of Egypt.** The full text
+is online at the Newton Project, Oxford.
+
+**The Victorians buried a set of imperial weights under an Egyptian obelisk.**
+The time capsule sealed in the pedestal of Cleopatra's Needle on 12 September
+1878 contains, on the record: **a set of imperial weights**, a complete set of
+British coins, a rupee, twelve photographs of "the best-looking English women
+of the day", a box of hairpins, cigars, a razor, a Bradshaw, a Whitaker's, a map
+of London, and the Bible in several languages. The measures and the coins are
+in the same jar. **The red herring is physically buried beside the real
+thing.**
+
+## Ideas
+
+### 1 · The pyramid on his tomb
+**Westminster Abbey, north transept, from Parliament Square** · 51.4996,
+−0.1276 · free · 250 m from the Jewel Tower
+
+**Visual.** The rose window: a circle with tracery, the most stencil-friendly
+shape in Westminster. ⚠ Check the north front is not scaffolded.
+
+**True.** Newton lies in the nave against the choir screen, fifty feet behind
+that wall. His monument (Kent and Rysbrack, unveiled 1731) shows him reclining
+beneath a celestial globe **on a pyramid**. On the sarcophagus relief, boys
+handle a telescope and a prism, **and one weighs the sun and the planets on a
+steelyard.** The men who buried him put a pyramid and a balance on his tomb.
+
+**The lead-in lands here.** The diary text about Arthur's copy of the working
+papers is read standing outside the wall he is behind, with the pyramid in the
+diary's sketch and the number on the page.
+
+**Question.** The diary page carries Greaves's chamber length and Newton's rule.
+"How many thousandths of a foot?" → **1719.** A number the player reads off
+the working, that the app never explains until Bloomsbury.
+
+### 2 · The burnt pages
+**Not a place. A fact for the diary at idea 1.**
+
+**True.** In December 2020 Sotheby's sold **three scorched pages of Newton's
+own notes on the Great Pyramid**, survivors of a fire said to have been
+started by his dog Diamond knocking over a candle, for **£378,000**, to a
+private buyer. They argue the pyramid was designed around the royal cubit.
+
+**Why it matters.** The lead-in says *the only public copy*. That is now
+literally true: the originals are in a private collection since 2020. Newton's
+pyramid notes burned; the standards burned; Arthur's copy is what is left.
+**Nothing invented, and it is the spine of the whole conceit.**
+
+### 3 · The weights under the obelisk
+**Cleopatra's Needle, Victoria Embankment** · 51.5085, −0.1203 · free, always
+· on the walk from Big Ben to Trafalgar Square
+
+**Visual.** The obelisk and one sphinx. A silhouette nobody could mistake.
+
+**True.** Thutmose III, c. 1450 BC, from Heliopolis. Erected 12 September
+1878. Six men died bringing it through the Bay of Biscay in 1877 ⚠ number.
+The two bronze sphinxes by Vulliamy **face inward, towards the obelisk, which
+is backwards** — Egyptian sphinxes guard outward. A 1917 bomb scarred the
+right-hand sphinx and pedestal; a plaque says so. And beneath it, the imperial
+weights, in a jar with the coins.
+
+**The fiction hook.** None needed. *The empire set a copy of its measures under
+an Egyptian stone, facing its guardians the wrong way, and forgot.* The diary
+notes the coins in the same jar and crosses them out.
+
+**Question.** "Which way do the sphinxes face?" → **INWARD** / **TOWARDS IT**.
+Or the year on the shrapnel plaque → **1917.**
+
+### 4 · The sphinx on the bench
+**Victoria Embankment benches, from Westminster Bridge northward** · free ·
+100 m from Big Ben
+
+**Visual.** One cast-iron winged sphinx armrest, at arm's length. A close-range
+camera target, the opposite of a building: it tests the match on something
+small and tests the player's hands.
+
+**True.** Benches by Z. D. Berry & Son, placed **1877 — a year before the
+Needle arrived**, with winged sphinxes and camels for arms. London dressed the
+river in Egypt before the stone got here.
+
+**Use.** A passing camera beat on clue 3, or the first thing the player is
+asked to find on leaving Big Ben for the Needle.
+
+### 5 · The number that carries
+**Not a place. The puzzle thread.**
+
+At idea 1 the player reads **1719** from the diary. At the Petrie Museum the
+cubit rods in the case are 20.6 inches long, and the stencil fails by a digit.
+The app says nothing about the connection until the Bloomsbury after-text:
+*"The number he got from a book in 1680 is the length of the stick in front of
+you."* Newton's number, Petrie's stick, one sentence, two chapters apart.
+
+### 6 · The Nile at Trafalgar
+**Nelson's Column, the base reliefs** · the bridge into the next chapter
+
+**True.** One of the four bronze reliefs is the Battle of the Nile, 1798 ⚠
+which face. The Rosetta Stone came to London as spoils of that campaign in
+1802. **The public standards on the terrace sit fifty metres from a relief of
+the battle that brought Egypt's key to London.** The Egyptian thread does not
+end at the Needle; it walks into the next chapter with the player.
+
+## Recommended sequence
+
+| | Stop | Beat | Letter |
+|---|---|---|---|
+| 1 | Jewel Tower | The fire; what burned; what we say did | |
+| 2 | **Abbey north transept** | Newton behind the wall, the pyramid on his tomb, the burnt pages, **1719** | S · **STEELYARD** ⚠ or from stop 1 |
+| 3 | **Big Ben** | Airy sets the clock; the sphinx bench on the way down to the river | |
+| 4 | **Cleopatra's Needle** | The weights under the obelisk, sphinxes inward, coins as the red herring | |
+| 5 | Trafalgar Square | The Nile relief, then the standards and the cord | Y |
+
+Jewel Tower → Abbey 250 m → Parliament Square 150 m → Embankment → Needle
+800 m → Northumberland Avenue → Trafalgar 500 m. **About 1.7 km, no
+backtracking, and the Egyptian thread arrives on the river exactly when the
+walk does.**
+
+**The honest caveat.** Clue 2's *visual* is Gothic; the Egyptian *visual* comes
+at clue 4. If an Egyptian object is wanted in the camera at clue 2 itself, the
+only one inside Westminster is the sphinx bench, and it is better spent on the
+walk to the Needle.
+
+**Field checks:** the Abbey north front for scaffolding · the nearest sphinx
+bench to Westminster Bridge · the Needle's plaque wording · which face of the
+column carries the Nile.
