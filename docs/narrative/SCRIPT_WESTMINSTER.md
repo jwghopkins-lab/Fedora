@@ -90,36 +90,87 @@ until Bloomsbury.]*
 
 ---
 
-## Stop 3 · Location three → The Clock Tower
+## Stop 3 · Location three → Elizabeth Tower
 
-**Gate:** Parliament Square, east side by Bridge Street · 51.5008, −0.1258 ·
-radius 50 m.
-**Camera:** stencil of the **clock face** *[photo needed, or a geometric
-placeholder: the face is a circle in a square with a known dial]*.
+**No location gate** — it is across the square from the Abbey.
+**Camera:** stencil of the tower from Parliament Square, traced from the
+owner's photo: spire and finial, lucarne, belfry pair, clock stage with the
+west dial and the foreshortened south dial, the corner between the faces, the
+shaft, and a stub of the Palace roofline for scale.
 
-### Body
+### Three drafts for the intro
 
-> The tower was built on the ashes. When they made the clock, the Astronomer
-> Royal, George Airy, demanded that the first stroke of every hour be true to
-> within a second, and had it checked against Greenwich by telegraph twice a
-> day. It is kept to time by stacking old pennies on the pendulum. One penny
-> gains it two fifths of a second a day.
+**A · The tower built on the ashes** *(chronological, sober)*
+
+> This tower did not exist when the fire happened. It was built on the ashes,
+> as part of the new Palace, and the clock inside it started on the
+> thirty-first of May 1859. The Astronomer Royal, George Airy, set the
+> standard it had to meet: the first stroke of every hour true to within one
+> second, and its performance telegraphed twice a day to Greenwich. It is kept
+> to time by stacking old pennies on the pendulum. One penny gains it two
+> fifths of a second a day.
 >
 > Airy is a name you will meet again. He chaired the commission that rebuilt
-> the standards after the fire. He set this clock. He fixed the line from
-> which the world measures time. And he is the man who decided what would not
-> be heard.
+> the yard after the fire. He set this clock. And at Greenwich he drew the
+> line from which the world now measures time.
 
-*[TRUE: Airy's accuracy demand, the telegraph check, the pennies, the 1843
-Standards Commission, the clock, the meridian. "The man who decided what
-would not be heard" is a true fact stated early: the 1874 refusal. Nothing
-invented; the last line is foreshadowing, not a claim.]*
+**B · Airy's file** *(the dossier voice of stop 2, first person at the end)*
 
-**Question:** "What do they stack on the pendulum?" → **PENNIES**.
+> George Airy. Astronomer Royal for forty-six years. Arthur's notes come back
+> to him more than to anyone else.
+>
+> After the fire, Airy chaired the commission that decided what the new yard
+> would be. When they built this tower, Airy wrote the specification for its
+> clock: the first stroke of every hour true to within one second, checked
+> twice a day by telegraph to his observatory at Greenwich. It is kept to time
+> with old pennies laid on the pendulum. One penny is worth two fifths of a
+> second a day. And at Greenwich, in 1851, he set the instrument that fixes
+> the line the world's time is measured from.
+>
+> *[pause 1 s]*
+>
+> The yard, the clock, and the line. One man held all three. Arthur wanted to
+> know what he did with them.
+>
+> Cross the square and find the clock.
 
-**On the way down to the river:** *[passing beat, optional camera]* the benches
-along the Embankment have winged sphinxes for arms. They were put there in
-1877, a year before the stone arrived.
+**C · It is said** *(the turn from stop 1)*
+
+> This tower was built after the fire, and the clock in it was Airy's. George
+> Airy, the Astronomer Royal, demanded that the first stroke of every hour be
+> accurate to a second, and had it telegraphed to Greenwich twice a day to
+> prove it. It is kept to time with old pennies stacked on the pendulum, two
+> fifths of a second a day each.
+>
+> Airy also chaired the commission that rebuilt the yard after the fire, and
+> at Greenwich he fixed the line from which the world measures time. It is
+> said he was the most exact man in England. Arthur's notes say he was exact
+> about one thing above all: what was allowed to be measured, and what was
+> not.
+
+**Chosen: B.** It gives Airy a file in Arthur's hand, ties the three threads
+in one sentence, and ends with a direction. C's last line is good and can be
+saved for Burlington House, where it will be true in a way the player can
+stand in.
+
+*[TRUE, all of it: Astronomer Royal 1835–1881; chaired the commissions of
+1838 and 1843 that restored the standards; laid down the clock's conditions in
+1846, including the one-second rule and the twice-daily telegraph; the
+pennies at two fifths of a second; the transit circle of 1851 that became the
+prime meridian in 1884. FICTION: only what Arthur's notes "come back to" and
+what Arthur "wanted to know". Nothing about Airy is invented. And the name
+the whole game resolves to is never said here.]*
+
+**Question** *(after the camera)*: "What do they lay on the pendulum to keep
+it to time?" → **PENNIES**.
+
+### After
+
+> Twice a day, this clock's performance went down the wire to Greenwich, where
+> Airy's line runs through the floor of his observatory. Since 1884 the world
+> has measured its time from that line. Arthur went there. We haven't, yet.
+
+*[The Greenwich link, and the hook for the second outing.]*
 
 ---
 
